@@ -1,0 +1,49 @@
+[package]
+name = "aurelia-launcher-core"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["launcher", "winit", "wgpu", "gamedev"]
+categories = ["game-development"]
+rust-version = "1.98"
+publish = false
+description = "Everything a game launcher needs that is not a rule set: window and frame loop, browser page, Android activity, music."
+
+# A launcher (lands/launcher, classic/launcher, integration/crates/dev-desktop) registers one module
+# with this crate. It depends on the platform only.
+[lib]
+name = "launcher_core"
+
+[dependencies]
+client = { package = "aurelia-client", path = "../client" }
+kernel = { package = "aurelia-kernel", path = "../kernel" }
+render = { package = "aurelia-render", version = "0.1.0", path = "../render" }
+ui-input = { package = "aurelia-ui-input", version = "0.1.0", path = "../ui-input" }
+egui = "0.36.2"
+egui-wgpu = "0.36.2"
+wgpu = "30.0.1"
+winit = "0.30.13"
+log = "0.4"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rodio = { version = "0.20.1", default-features = false, features = ["symphonia-mp3"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wgpu = { version = "30.0.1", features = ["webgl"] }
+web-time = "1.1.0"
+# Pinned to the wasm-bindgen-cli that lands/tools/web-build.sh installs (the two must match).
+wasm-bindgen = "=0.2.129"
+wasm-bindgen-futures = "0.4.79"
+js-sys = "0.3.106"
+web-sys = { version = "0.3.106", features = ["Window", "Document", "Element", "HtmlCanvasElement", "Location", "Navigator", "Performance", "console"] }
+console_error_panic_hook = "0.1.7"
+
+[target.'cfg(target_os = "android")'.dependencies]
+winit = { version = "0.30.13", features = ["android-native-activity"] }
+android_logger = "0.15.1"
+# cpal's Android audio (oboe, C++). Its default links libc++ statically without libc++abi and the
+# library fails to load ("cannot locate symbol __cxa_pure_virtual", seen on the emulator);
+# the shared libc++ is added to the APK by cargo-apk.
+oboe-sys = { version = "0.6.1", features = ["shared-stdcxx"] }

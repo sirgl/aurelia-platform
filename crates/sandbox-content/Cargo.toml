@@ -1,0 +1,23 @@
+[package]
+name = "aurelia-sandbox-content"
+version = "0.1.0"
+edition = "2021"
+description = "The data pack of the sandbox reference module for the Aurelia kernel."
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["strategy", "content", "gamedev", "example"]
+categories = ["game-development"]
+readme = "README.md"
+rust-version = "1.98"
+
+# The sandbox module's content pack: its own small RON schema (`pack.ron`)
+# compiled into the kernel's source rules. Never a classic-* dependency.
+[lib]
+name = "sandbox_content"
+
+[dependencies]
+kernel = { package = "aurelia-kernel", path = "../kernel", version = "0.1.0" }
+sandbox-rules = { package = "aurelia-sandbox-rules", path = "../sandbox-rules", version = "0.1.0" }
+ron = "0.12.2"
+serde = { version = "1.0.229", features = ["derive"] }

@@ -1,0 +1,6 @@
+{
+  "description": "Sound effects synthesized from oscillators and seeded noise by tools/audio/make_sfx.py (no recordings, no downloads). Dedicated to the public domain (CC0 1.0).",
+  "generator": "tools/audio/make_sfx.py",
+  "format": "WAV, PCM 16-bit, mono, 44100 Hz",
+  "license": "CC0-1.0"
+}

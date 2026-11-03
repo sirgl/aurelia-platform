@@ -1,0 +1,41 @@
+# name ceiling — lower when a platform/PLATFORM.md stage removes coupling
+#
+# Crate graph (stage 5): the platform crates (kernel, render, client) never
+# depend on the Classic rules module or its content.
+module_deps 0
+# Content keys in non-test code.
+kernel_keys 0
+classic_rules_keys 0
+render_keys 0
+client_keys 0
+desktop_keys 0
+terrain_codes 0
+# Classic names in the kernel: its turn and AI contract, its effect
+# vocabulary and table list (stages 3–4), the rows of its tables and the
+# rest of its code (stages 5b–5c: none left; the module's fields on kernel
+# rows, its tables, ids, kinds of player and city state are the module's).
+kernel_mechanics 0
+kernel_vocabulary 0
+kernel_rows 0
+kernel_words 0
+# Classic names in render and client.
+render_words 0
+client_words 0
+# Uses of the Classic module's crates in the app shell (client) and the desktop app
+# outside the registration file the launcher crates (lands/launcher, classic/launcher) (stage 6).
+shell_module_uses 0
+# The sandbox rules module (stage 7) depends on no Classic crate, not even in
+# tests, and names no Classic content key: it is built on the platform alone.
+sandbox_deps 0
+sandbox_keys 0
+# The Lands & Laws rules module (LANDS_AND_LAWS_PLAN.md, step 1) depends on neither
+# the Classic nor the sandbox crates, not even in tests; the platform crates name
+# none of its keys, catalog ids or names.
+lal_deps 0
+lal_keys 0
+# The platform's data files name no module content: its model manifest and animation table hold
+# no content key, no other data file under platform/assets does, and no model in the platform's
+# manifest is drawn by fewer than two modules (a model one module draws is that module's).
+platform_manifest_keys 0
+platform_data_keys 0
+platform_foreign_models 0

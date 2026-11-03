@@ -1,0 +1,26 @@
+[package]
+name = "aurelia-i18n"
+version = "0.1.0"
+edition = "2021"
+description = "Compile-time embedded language bundles and message lookup for the Aurelia games."
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["i18n", "localization", "gamedev"]
+categories = ["internationalization", "game-development"]
+rust-version = "1.98"
+publish = false
+
+# Localization (docs/localization.md): a key-based message catalogue with named arguments,
+# CLDR plural rules, a fallback chain and bundles that load at run time. No dependencies,
+# no threads, no platform APIs: it builds for wasm32 and Android as it is. The bundles of
+# `assets/lang/<code>/` are compiled in (`builtin`); a folder of more bundles is read at run
+# time (`external`).
+[lib]
+name = "i18n"
+
+[dependencies]
+
+[[bin]]
+name = "i18n-check"
+path = "src/bin/i18n_check.rs"

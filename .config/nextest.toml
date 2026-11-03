@@ -1,0 +1,25 @@
+# Test profiles for cargo-nextest (classic/docs/testing.md).
+#
+#   fast:  cargo +1.98.1 nextest run --cargo-profile fasttest --build-jobs 4 --test-threads 4 --workspace
+#   full:  the same with `--profile full`
+#
+# `default` (fast) leaves out the tests that open the GPU; `full` runs every test that
+# `cargo test --workspace` runs. Nothing here changes what a test checks.
+
+[profile.default]
+default-filter = """
+not (
+    (package(=aurelia-sandbox-ui) & (binary(=first_frame) | binary(=journal)))
+  | (package(=aurelia-render) & test(/^gpu::(fog_field|surface_shadows)::tests::gpu_/))
+)
+"""
+fail-fast = false
+failure-output = "final"
+status-level = "fail"
+final-status-level = "slow"
+slow-timeout = { period = "30s" }
+
+[profile.full]
+# Everything `cargo test --workspace` runs, the GPU tests too (they open the machine's GPU).
+default-filter = "all()"
+slow-timeout = { period = "120s" }

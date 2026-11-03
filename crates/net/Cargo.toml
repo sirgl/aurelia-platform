@@ -1,0 +1,30 @@
+[package]
+name = "aurelia-net"
+version = "0.1.0"
+edition = "2021"
+description = "Network protocol and match logic for turn-based games on the Aurelia kernel (no I/O)."
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["multiplayer", "protocol", "turn-based", "gamedev"]
+categories = ["game-development", "network-programming"]
+readme = "README.md"
+rust-version = "1.98"
+
+# Multiplayer (docs/multiplayer.md): the wire protocol, the chat, the per-seat view and the
+# authoritative match server, all transport-agnostic (bytes in, bytes out, the time passed in).
+# No threads, no sockets, no clock, no async runtime: the same code runs in the native server
+# (`net-server`), in a native client, in the browser (WebSocket from the page) and on Android.
+
+[lib]
+name = "net"
+
+[dependencies]
+kernel = { package = "aurelia-kernel", path = "../kernel", version = "0.1.0" }
+# Pure Rust deflate for the snapshots; builds for wasm32.
+miniz_oxide = "0.8"
+
+[dev-dependencies]
+sandbox-rules = { package = "aurelia-sandbox-rules", path = "../sandbox-rules" }
+sandbox-content = { package = "aurelia-sandbox-content", path = "../sandbox-content" }
+kernel = { package = "aurelia-kernel", path = "../kernel", features = ["harness"] }

@@ -1,0 +1,27 @@
+name: Bug report
+description: Something is wrong (a crash, a wrong rule, a visual glitch, a desync).
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A seed, a save or a replay file helps a lot. Attach screenshots for visual problems.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system, GPU and driver (or browser / Android device)

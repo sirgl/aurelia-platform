@@ -1,0 +1,26 @@
+[package]
+name = "aurelia-sandbox-rules"
+version = "0.1.0"
+edition = "2021"
+description = "A minimal reference rules module for the Aurelia kernel: territory, units, cities and simple combat."
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["strategy", "rules", "gamedev", "example"]
+categories = ["game-development", "simulation"]
+readme = "README.md"
+rust-version = "1.98"
+
+# The second rules module (PLATFORM.md stage 7, decision D3): a minimal 4X on
+# the kernel's public contracts only. It must never depend on a classic-* crate
+# (tools/platform-lint.sh, count sandbox_deps).
+[lib]
+name = "sandbox_rules"
+
+[dependencies]
+kernel = { package = "aurelia-kernel", path = "../kernel", version = "0.1.0" }
+
+# The game tests read the module's content pack (as classic-rules reads classic-content).
+[dev-dependencies]
+sandbox-content = { package = "aurelia-sandbox-content", path = "../sandbox-content" }
+kernel = { package = "aurelia-kernel", path = "../kernel", features = ["harness"] }

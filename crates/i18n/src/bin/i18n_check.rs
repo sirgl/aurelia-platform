@@ -1,0 +1,192 @@
+//! `i18n-check`: lint the bundles, compare the keys the code uses with the base language,
+//! report coverage and write translation templates (platform/docs/localization.md).
+//!
+//! ```text
+//! i18n-check lint [--dir DIR] [--missing]     validate every bundle; exit 1 on errors
+//! i18n-check keys                              keys used in the sources vs assets/lang/en
+//! i18n-check coverage [--files]                translated share of every language (per file)
+//! i18n-check glossary [--out FILE] [--skip ru,..]  the glossary of all languages as a Markdown table
+//! i18n-check template TAG [--out DIR]          write the template of TAG (default assets/lang/TAG)
+//! ```
+//! Run from the repository (it finds the parts - folders with a `PART` file - beside the current one). `--dir`
+//! checks a player's `lang` folder together with the built-in bundles.
+
+use std::path::{Path, PathBuf};
+use std::process::ExitCode;
+
+use i18n::diag::Severity;
+use i18n::tool;
+
+/// The part folders of the checkout the command runs in (the current part and its siblings).
+fn find_parts() -> Vec<PathBuf> {
+    std::env::current_dir()
+        .map(|dir| i18n::parts::parts_beside(&dir))
+        .unwrap_or_default()
+}
+
+fn main() -> ExitCode {
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    let Some(command) = args.first().map(String::as_str) else {
+        eprintln!("usage: i18n-check lint|keys|coverage|template TAG [options]");
+        return ExitCode::from(2);
+    };
+    let parts = find_parts();
+    let lang_dirs = i18n::parts::lang_dirs(&parts);
+    if lang_dirs.is_empty() {
+        eprintln!(
+            "i18n-check: no part of the checkout (a folder with a PART file) above {:?}",
+            std::env::current_dir().unwrap_or_default()
+        );
+        return ExitCode::from(2);
+    }
+    let root = parts[0].parent().map(Path::to_path_buf).unwrap_or_default();
+    let flag = |name: &str| {
+        args.iter()
+            .position(|a| a == name)
+            .and_then(|i| args.get(i + 1))
+            .cloned()
+    };
+    let has = |name: &str| args.iter().any(|a| a == name);
+    let (mut catalog, mut diags) = (i18n::Catalog::new(), Vec::new());
+    for dir in &lang_dirs {
+        diags.extend(i18n::external::load_dir(&mut catalog, dir));
+    }
+    if let Some(dir) = flag("--dir") {
+        diags.extend(i18n::external::load_dir(&mut catalog, Path::new(&dir)));
+    }
+    match command {
+        "lint" => {
+            diags.extend(tool::lint(&catalog, has("--missing")));
+            diags.sort_by(|a, b| b.severity.cmp(&a.severity));
+            for d in &diags {
+                println!("{d}");
+            }
+            let errors = diags
+                .iter()
+                .filter(|d| d.severity == Severity::Error)
+                .count();
+            let warnings = diags
+                .iter()
+                .filter(|d| d.severity == Severity::Warning)
+                .count();
+            println!(
+                "i18n-check lint: {} languages, {errors} errors, {warnings} warnings",
+                catalog.tags().len()
+            );
+            if errors > 0 {
+                return ExitCode::FAILURE;
+            }
+        }
+        "coverage" if has("--files") => {
+            let (tags, rows) = tool::coverage_matrix(&catalog);
+            print!("{:<22}{:>7}", "file", "keys");
+            for tag in &tags {
+                print!("{tag:>9}");
+            }
+            println!();
+            let mut totals = vec![0usize; tags.len()];
+            let mut all = 0;
+            for (file, total, done) in rows {
+                print!("{file:<22}{total:>7}");
+                for (i, d) in done.iter().enumerate() {
+                    print!("{:>8.0}%", *d as f32 * 100.0 / total.max(1) as f32);
+                    totals[i] += d;
+                }
+                all += total;
+                println!();
+            }
+            print!("{:<22}{all:>7}", "all");
+            for t in totals {
+                print!("{:>8.0}%", t as f32 * 100.0 / all.max(1) as f32);
+            }
+            println!();
+        }
+        "coverage" => {
+            println!(
+                "{:<10}{:>8}{:>8}{:>9}  status",
+                "language", "keys", "done", "percent"
+            );
+            for (tag, cov, status) in tool::coverage_table(&catalog) {
+                println!(
+                    "{tag:<10}{:>8}{:>8}{:>8.1}%  {}",
+                    cov.total,
+                    cov.translated,
+                    cov.percent(),
+                    status.unwrap_or_default()
+                );
+            }
+        }
+        "glossary" => {
+            let skipped = flag("--skip").unwrap_or_default();
+            let skip: Vec<&str> = skipped.split(',').filter(|t| !t.is_empty()).collect();
+            let table = tool::glossary_table_without(&catalog, &skip);
+            match flag("--out") {
+                Some(path) => {
+                    let text = format!("# Glossary of the core terms\n\nGenerated by `i18n-check glossary --skip ru --out platform/docs/localization-glossary.md` from `assets/lang/*/glossary.ftl`; edit the bundles, not this file. A dot means the language has no entry yet.\n\n{table}");
+                    if let Err(e) = std::fs::write(&path, text) {
+                        eprintln!("cannot write {path}: {e}");
+                        return ExitCode::FAILURE;
+                    }
+                    println!("wrote {path}");
+                }
+                None => print!("{table}"),
+            }
+        }
+        "keys" => {
+            let Some(en) = catalog.bundle("en") else {
+                eprintln!("no en bundle");
+                return ExitCode::from(2);
+            };
+            let uses = {
+                let dirs = i18n::parts::source_dirs(&parts);
+                let dirs: Vec<&Path> = dirs.iter().map(PathBuf::as_path).collect();
+                i18n::extract::scan_dirs(&dirs)
+            };
+            let report = tool::key_report(&en, &uses);
+            for (key, file, line) in &report.missing {
+                let file = Path::new(file)
+                    .strip_prefix(&root)
+                    .unwrap_or(Path::new(file));
+                println!(
+                    "error: {}:{line}: key `{key}` is used but assets/lang/en has no such message",
+                    file.display()
+                );
+            }
+            if has("--unused") {
+                for key in &report.unused {
+                    println!("unused: {key}");
+                }
+            }
+            println!("i18n-check keys: {} keys used in code, {} missing from en, {} en keys never used in code", report.used, report.missing.len(), report.unused.len());
+            if !report.missing.is_empty() {
+                return ExitCode::FAILURE;
+            }
+        }
+        "template" => {
+            let Some(tag) = args.get(1).filter(|t| !t.starts_with("--")) else {
+                eprintln!("usage: i18n-check template TAG [--out DIR]");
+                return ExitCode::from(2);
+            };
+            let out = flag("--out")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| lang_dirs[0].join(tag));
+            if std::fs::create_dir_all(&out).is_err() {
+                eprintln!("cannot create {}", out.display());
+                return ExitCode::FAILURE;
+            }
+            for (name, text) in tool::template(&catalog, tag) {
+                let path = out.join(&name);
+                if let Err(e) = std::fs::write(&path, text) {
+                    eprintln!("cannot write {}: {e}", path.display());
+                    return ExitCode::FAILURE;
+                }
+                println!("wrote {}", path.display());
+            }
+        }
+        other => {
+            eprintln!("unknown command {other}");
+            return ExitCode::from(2);
+        }
+    }
+    ExitCode::SUCCESS
+}

@@ -1,0 +1,173 @@
+Audio for the historical 4X: the Suno generation pack
+12 October 2026. These are tasks and prompts; the audio files have not been created yet.
+
+START WITH THIS
+First M01, M02, M03: 2-3 candidates each. Pick the common musical character,
+then M04-M06. In parallel S01/S02/S03 and U01/U02/U03.
+The durations below are an artistic target, not a guarantee of the generator's exact output.
+For music: Create, Instrumental. For effects: Create -> Sounds -> one-shot/loop.
+Do not paste the name of a game or of a composer in place of a concrete description.
+An original melody is needed. Save the full mix first; stems are useful later.
+
+GENERAL CHARACTER
+Human scale, discovery of the world, warm hope, calm dignity.
+Acoustic instruments, plenty of air, moderate dynamics. No constant epic
+push, loud hits, modern drum kit or vocals.
+The music must survive an hour of planning without tiring by repetition.
+
+M01 - MAIN THEME, target 2-3 minutes, 2-3 candidates
+Instrumental original theme for a historical turn-based strategy game. A warm
+memorable four-note motif, sense of discovery and a civilization beginning.
+72 BPM, modal harmony, intimate strings, wooden flute, plucked lyre, soft frame
+drum, restrained French horn near the middle. Start gently, build one modest
+hopeful crest, return to a quiet open ending. Elegant, human, spacious, organic.
+No vocals, no choir, no trailer booms, no EDM, no rock drums, no huge finale.
+
+M02 - MAP: EARLY MORNING, target 3-4 minutes
+Instrumental background exploration music for a slow historical strategy game.
+64 BPM, warm wooden flute fragments, soft plucked strings, low sustained cello,
+occasional quiet frame drum. Sunlit river valley, patient curiosity, pastoral
+calm. Sparse evolving arrangement, no verse-chorus form, no dominant repeated
+hook, no dramatic climax. Gentle continuous texture suitable for long play.
+No vocals, no choir, no environmental recordings, no abrupt ending.
+
+M03 - MAP: DISTANT LANDS, target 3-4 minutes
+Instrumental historical exploration underscore. 68 BPM, open modal harmony,
+soft harp, breathy wooden flute, viola and cello, tiny scattered hand percussion.
+Wonder at distant coastlines and unknown mountain passes, quietly optimistic.
+Vary short melodic fragments with generous rests. Stable low energy, spacious
+mix, no big crescendo, no vocals, no choir, no modern synth beat, no final hit.
+
+M04 - MAP: PROSPERITY, target 3-4 minutes
+Instrumental chamber music for a thriving historical city in a strategy game.
+76 BPM, light pizzicato strings, gentle lute, lyrical clarinet, warm low strings.
+Craftsmanship, harvest, cooperation, dignified optimism. Flowing and understated,
+not a festival dance. Small melodic developments, quiet endings of phrases.
+No vocals, no crowd sounds, no brass fanfare, no epic percussion, no huge climax.
+
+M05 - TENSION, target 2-3 minutes
+Instrumental restrained strategic tension underscore. 70 BPM, muted low strings,
+sparse deep frame drums, dry plucked notes, distant low horn, suspended harmony.
+A border dispute and uncertain diplomacy, patient caution rather than panic.
+Steady low energy, no action movie climax, no sharp stingers, no vocals or choir.
+
+M06 - WAR, target 2-3 minutes
+Instrumental historical campaign music for deliberate turn-based decisions.
+88 BPM, measured frame drums, low strings, restrained horns, occasional bowed
+string ostinato. Resolve, danger and human cost, no triumphant constant march.
+Moderate energy and clear breathing room. No trailer impacts, no machine-gun
+percussion, no electric guitars, no vocals, no choir, no sudden final hit.
+
+EXTRA MUSIC TASKS AFTER THE THEME IS CHOSEN
+M07: diplomacy - a calm short variant of the main motif, 60-90 seconds.
+M08: victory - a solemn soft resolution, 45-60 seconds.
+M09: defeat - a restrained sad resolution without mockery, 30-45 seconds.
+Later, for each nation: one recognisable theme and its peaceful/tense
+arrangements. Do not generate a separate song for every unit, building or
+technology: they need short sound families and events.
+
+AMBIENCE: SOUNDS, LOOP
+Initial targets 15-30 seconds; if the mode returns less, pick a good
+fragment and build a longer loop when editing. Each environment separately.
+
+S01 - SURF
+Gentle small sea waves washing over a sandy beach, close soft foam hiss, calm
+weather, natural irregular wave rhythm, low background wind. Continuous ambience
+loop. No music, no voices, no gulls, no boats, no large crashing surf.
+
+S02 - RIVER
+Small clear river flowing steadily over shallow stones, soft varied ripples and
+light gurgles, natural outdoor ambience loop. No waterfall roar, no birds,
+no music, no voices, no sudden splashes.
+
+S03 - FOREST
+Quiet breeze moving through pine needles and deciduous leaves, soft spacious
+woodland ambience, subtle irregular rustling. No music, no voices, no footsteps,
+no loud bird calls, no dramatic gusts. Continuous ambient texture.
+
+S04 - TOWN
+Distant small preindustrial town ambience: faint indistinct market murmur,
+occasional soft wooden cart creak and light distant tools. Calm, warm, restrained.
+No intelligible words, no music, no cars, no horns, no church bell foreground.
+
+S05 - MOUNTAINS
+Gentle open mountain wind, airy and distant with occasional low soft gusts.
+No howling storm, no music, no voices, no animals, no rumbling avalanche.
+
+S06 - FIELDS
+Soft breeze rustling dry wheat stalks and meadow grasses, quiet summer field,
+close subtle organic texture. No music, no voices, no machinery, no loud insects.
+
+SHORT EVENTS: SOUNDS, ONE-SHOT
+U01/UI confirm, target 0.15-0.4 s:
+Single soft tactile wooden tap with a tiny warm brass tick, premium historical
+strategy interface confirmation. Very short, dry, gentle, no melody or reverb.
+
+U02/UI back, target 0.2-0.5 s:
+Single soft parchment page turn with a light wooden touch, short and clean.
+No music, no voices, no extra repeated movements, minimal room sound.
+
+U03/Technology discovered, target 2-4 s:
+Short instrumental discovery cue: three ascending delicate harp notes followed
+by one warm sustained woodwind note. Quiet wonder, clear positive resolution.
+No voice, no choir, no loud percussion, short clean reverb tail.
+
+U04/Policy adopted, target 2-4 s:
+Short dignified instrumental affirmation: warm low strings and a soft plucked
+lyre chord opening into a gentle major harmony. No voice, no drums, no epic hit.
+
+U05/Wonder completed, target 5-8 s:
+Short original instrumental wonder-completion fanfare, warm strings, mellow
+horns and shimmering harp, awe and human achievement, one graceful rise and
+resolution. No vocals, no choir, no huge trailer drums, no aggressive cymbals.
+
+U06/City founded, target 2-4 s:
+Short hopeful instrumental settlement cue, soft wooden flute and plucked strings,
+three rising notes and a warm stable chord. Intimate, optimistic, no vocals.
+
+U07/Turn ready, target 0.5-1 s:
+Two soft warm bell notes with a brief clear decay, gentle non-intrusive strategy
+game notification. No music bed, no sharp piercing frequencies, no long reverb.
+
+U08/Unavailable action, target 0.2-0.5 s:
+Single muted low wooden knock, subtle soft negative UI feedback, short and dry.
+No harsh buzzer, no voice, no melody, no repeated knocking.
+
+UNITS: EFFECT SETS, NOT MUSIC
+F01: one step of a leather boot on earth, 4-6 variants.
+F02: one step on stone, 4-6 variants.
+F03: one hoof touch on earth, 4-6 variants.
+F04: a soft short creak of leather/gear, 3 variants.
+F05: a single sword swing + separately a shield contact, 3 variants each.
+F06: a bowstring release + separately an arrow hit, 3 variants each.
+F07: an oar movement + separately a wooden ship hull, 3 variants each.
+F08: a pickaxe and a hammer strike, 3 variants each.
+Template: Single [action and material], isolated dry close foley, short natural
+decay, no music, no voice, no repeated sequence, no background ambience.
+Tie the editing of steps and attacks to the actions/animation; constantly repeated
+idle army sounds are not needed. Speech of units and leaders is a separate localisable project.
+
+ACCEPTANCE AND USE
+1. Listen, discard vocals/hum/artefacts, agree the timbre of the first three tracks.
+2. Keep the original in the highest available quality, the Suno link/ID,
+   the exact prompt, the date and the subscription terms. Do not publish tracks automatically.
+3. A loop needs its seam checked; the word "loop" in the request does not guarantee a seamless one.
+   Trim the fragment in an editor and add a short equal-power crossfade.
+4. Do NOT treat independent generations as synchronised stems. For adaptive music
+   take the parts of one source, or align tempo, length and phase by hand.
+5. In the game keep one music bus, two crossfade slots, a limited pool of
+   spatial ambient/foley voices, separate UI/Music/Ambience levels.
+   Do not start a separate loop per hex. From the visible area pick
+   a few representative sources of sea, river, forest and town.
+6. A city or research screen over the map does not restart the music. Short cues
+   do not stack in a bunch: limit repeats and duck the background slightly under an event.
+7. Stream long music, cache short effects; the offline pack
+   holds the ID, gain, loop points, variants, categories and limits of simultaneous voices.
+
+CHECKED SUNO FEATURES
+Instrumental: https://suno.com/tools/instrumental-generator
+Sounds (one-shots and loops, Pro/Premier):
+https://about.suno.com/release-notes/make-loops-and-samples-from-scratch-with-sounds
+Commercial use, games included, is described here:
+https://help.suno.com/en/articles/9601665
+Access to Studio depends on the plan; this pack does not need Studio.

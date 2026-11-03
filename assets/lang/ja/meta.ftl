@@ -1,0 +1,2 @@
+meta.name = 日本語
+meta.english = Japanese

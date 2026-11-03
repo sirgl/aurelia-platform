@@ -1,0 +1,36 @@
+[package]
+name = "aurelia-prof"
+version = "0.1.0"
+edition = "2021"
+description = "Scope timers and a sampling profiler for deterministic game simulations (zero cost when disabled)."
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["profiling", "timers", "sampler", "gamedev"]
+categories = ["development-tools::profiling", "game-development"]
+readme = "README.md"
+rust-version = "1.98"
+
+# Scoped timers, allocation counters and a stack sampler for the logic profile
+# (docs/session-profile.md). The platform and rules crates call `prof::span`; the calls
+# compile to nothing unless a binary turns on the `enabled` feature (the `session-profile`
+# tool does). No game state is read or written here, so hashes cannot change.
+
+[lib]
+name = "prof"
+
+[features]
+# Spans measure (otherwise `span` is an empty inline function).
+enabled = []
+# The SIGPROF stack sampler (unix; other platforms report it as unavailable).
+sampler = []
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2.189"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web-time = "1.1.0"
+
+[dev-dependencies]
+# The tests of the timers need them on.
+prof = { package = "aurelia-prof", path = ".", features = ["enabled"] }

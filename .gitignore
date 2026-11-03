@@ -1,0 +1,14 @@
+/target
+**/*.rs.bk
+*.log
+.DS_Store
+__pycache__/
+/saves/
+/out/
+/dist/
+/output/
+# Art: concept images stay out of git; the files that include_bytes! reads at build time are tracked.
+/assets/visual/*
+!/assets/visual/fog-serpent-v1.png
+!/assets/visual/fog-kraken-v1.png
+!/assets/visual/fog-compass-v1.png

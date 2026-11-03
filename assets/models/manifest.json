@@ -1,0 +1,7070 @@
+{
+ "schema": "aurelia-models/2",
+ "owner": "platform",
+ "generator": "platform/tools/blender/export_units.py",
+ "note": "Generated. The shared and generic models of the platform; the models of a module are in <module>/assets/models/manifest.json (docs/models-ownership.md). Edit platform/tools/blender/units/catalog.py and run sh platform/tools/blender/export_all.sh.",
+ "axes": "glTF y-up, hex units after `scale`; models face +z (the camera), pivot = ground contact",
+ "fallback": "unit/unknown",
+ "palette": {
+  "aluminum": [
+   0.79,
+   0.81,
+   0.85
+  ],
+  "ash": [
+   0.46,
+   0.44,
+   0.43
+  ],
+  "asphalt": [
+   0.23,
+   0.23,
+   0.24
+  ],
+  "banana": [
+   0.97,
+   0.87,
+   0.31
+  ],
+  "bark": [
+   0.37,
+   0.26,
+   0.17
+  ],
+  "bison": [
+   0.31,
+   0.21,
+   0.14
+  ],
+  "black": [
+   0.08,
+   0.08,
+   0.09
+  ],
+  "blossom": [
+   0.89,
+   0.53,
+   0.63
+  ],
+  "brick": [
+   0.63,
+   0.31,
+   0.21
+  ],
+  "bronze": [
+   0.78,
+   0.55,
+   0.25
+  ],
+  "camel": [
+   0.76,
+   0.6,
+   0.4
+  ],
+  "cane": [
+   0.65,
+   0.75,
+   0.37
+  ],
+  "citrus": [
+   0.99,
+   0.63,
+   0.13
+  ],
+  "cloth": [
+   0.86,
+   0.8,
+   0.64
+  ],
+  "cloth_dark": [
+   0.36,
+   0.33,
+   0.3
+  ],
+  "coal": [
+   0.15,
+   0.15,
+   0.16
+  ],
+  "cocoa": [
+   0.49,
+   0.27,
+   0.15
+  ],
+  "concrete": [
+   0.71,
+   0.71,
+   0.69
+  ],
+  "copper_green": [
+   0.39,
+   0.67,
+   0.59
+  ],
+  "coral": [
+   0.93,
+   0.51,
+   0.43
+  ],
+  "coral_purple": [
+   0.61,
+   0.37,
+   0.63
+  ],
+  "cotton": [
+   0.98,
+   0.97,
+   0.94
+  ],
+  "crab": [
+   0.87,
+   0.33,
+   0.19
+  ],
+  "cream": [
+   0.96,
+   0.91,
+   0.79
+  ],
+  "dark": [
+   0.16,
+   0.17,
+   0.18
+  ],
+  "deck": [
+   0.66,
+   0.52,
+   0.34
+  ],
+  "dye": [
+   0.53,
+   0.23,
+   0.63
+  ],
+  "elephant": [
+   0.52,
+   0.5,
+   0.48
+  ],
+  "feather": [
+   0.2,
+   0.55,
+   0.45
+  ],
+  "field_grey": [
+   0.44,
+   0.47,
+   0.45
+  ],
+  "fire": [
+   0.95,
+   0.55,
+   0.15
+  ],
+  "fish": [
+   0.67,
+   0.73,
+   0.79
+  ],
+  "foam": [
+   0.87,
+   0.93,
+   0.95
+  ],
+  "fur": [
+   0.55,
+   0.42,
+   0.28
+  ],
+  "gem_blue": [
+   0.21,
+   0.43,
+   0.87
+  ],
+  "gem_red": [
+   0.81,
+   0.15,
+   0.27
+  ],
+  "glass": [
+   0.3,
+   0.48,
+   0.6
+  ],
+  "glass_dark": [
+   0.21,
+   0.31,
+   0.39
+  ],
+  "gold": [
+   0.9,
+   0.72,
+   0.3
+  ],
+  "grape": [
+   0.41,
+   0.19,
+   0.41
+  ],
+  "grass": [
+   0.42,
+   0.58,
+   0.26
+  ],
+  "grass_dry": [
+   0.64,
+   0.62,
+   0.34
+  ],
+  "green": [
+   0.22,
+   0.42,
+   0.2
+  ],
+  "hair": [
+   0.22,
+   0.15,
+   0.1
+  ],
+  "hide": [
+   0.63,
+   0.43,
+   0.27
+  ],
+  "horse": [
+   0.48,
+   0.3,
+   0.18
+  ],
+  "horse_dark": [
+   0.24,
+   0.16,
+   0.11
+  ],
+  "horse_light": [
+   0.78,
+   0.7,
+   0.58
+  ],
+  "hull": [
+   0.36,
+   0.24,
+   0.14
+  ],
+  "hull_grey": [
+   0.5,
+   0.53,
+   0.56
+  ],
+  "iron": [
+   0.46,
+   0.48,
+   0.5
+  ],
+  "ivory": [
+   0.94,
+   0.9,
+   0.78
+  ],
+  "jade": [
+   0.37,
+   0.67,
+   0.47
+  ],
+  "jaguar": [
+   0.86,
+   0.62,
+   0.22
+  ],
+  "khaki": [
+   0.62,
+   0.56,
+   0.38
+  ],
+  "lacquer": [
+   0.62,
+   0.11,
+   0.09
+  ],
+  "lava": [
+   0.96,
+   0.36,
+   0.11
+  ],
+  "leaf": [
+   0.27,
+   0.47,
+   0.21
+  ],
+  "leaf_dark": [
+   0.17,
+   0.33,
+   0.16
+  ],
+  "leaf_light": [
+   0.49,
+   0.65,
+   0.27
+  ],
+  "leather": [
+   0.42,
+   0.27,
+   0.15
+  ],
+  "limestone": [
+   0.86,
+   0.78,
+   0.6
+  ],
+  "linen": [
+   0.93,
+   0.9,
+   0.8
+  ],
+  "marble": [
+   0.93,
+   0.92,
+   0.89
+  ],
+  "mudbrick": [
+   0.73,
+   0.57,
+   0.39
+  ],
+  "navy": [
+   0.18,
+   0.22,
+   0.34
+  ],
+  "neon": [
+   0.31,
+   0.83,
+   0.93
+  ],
+  "obsidian": [
+   0.13,
+   0.12,
+   0.14
+  ],
+  "ochre": [
+   0.81,
+   0.59,
+   0.26
+  ],
+  "olive": [
+   0.4,
+   0.42,
+   0.26
+  ],
+  "paper": [
+   0.95,
+   0.93,
+   0.84
+  ],
+  "pink": [
+   0.93,
+   0.71,
+   0.69
+  ],
+  "plaster": [
+   0.93,
+   0.87,
+   0.73
+  ],
+  "purple": [
+   0.42,
+   0.2,
+   0.48
+  ],
+  "red": [
+   0.7,
+   0.16,
+   0.12
+  ],
+  "rock": [
+   0.53,
+   0.51,
+   0.48
+  ],
+  "rock_dark": [
+   0.35,
+   0.33,
+   0.31
+  ],
+  "rock_red": [
+   0.67,
+   0.37,
+   0.23
+  ],
+  "roof_blue": [
+   0.26,
+   0.39,
+   0.63
+  ],
+  "rope": [
+   0.7,
+   0.6,
+   0.4
+  ],
+  "rust": [
+   0.57,
+   0.31,
+   0.19
+  ],
+  "sail": [
+   0.9,
+   0.86,
+   0.74
+  ],
+  "salt": [
+   0.97,
+   0.97,
+   0.95
+  ],
+  "sand": [
+   0.85,
+   0.75,
+   0.53
+  ],
+  "sandstone": [
+   0.8,
+   0.63,
+   0.43
+  ],
+  "silver": [
+   0.81,
+   0.83,
+   0.87
+  ],
+  "skin": [
+   0.8,
+   0.58,
+   0.4
+  ],
+  "skin_dark": [
+   0.52,
+   0.34,
+   0.22
+  ],
+  "sky_glass": [
+   0.56,
+   0.76,
+   0.86
+  ],
+  "slate": [
+   0.31,
+   0.34,
+   0.39
+  ],
+  "snow": [
+   0.95,
+   0.96,
+   0.98
+  ],
+  "soil": [
+   0.49,
+   0.36,
+   0.2
+  ],
+  "soil_dark": [
+   0.32,
+   0.23,
+   0.14
+  ],
+  "spice": [
+   0.81,
+   0.31,
+   0.11
+  ],
+  "steam": [
+   0.93,
+   0.95,
+   0.97
+  ],
+  "steel": [
+   0.68,
+   0.72,
+   0.76
+  ],
+  "stone": [
+   0.6,
+   0.58,
+   0.54
+  ],
+  "team": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "terracotta": [
+   0.75,
+   0.39,
+   0.23
+  ],
+  "turquoise": [
+   0.31,
+   0.76,
+   0.73
+  ],
+  "uranium": [
+   0.49,
+   0.81,
+   0.31
+  ],
+  "water": [
+   0.25,
+   0.51,
+   0.63
+  ],
+  "water_deep": [
+   0.12,
+   0.31,
+   0.46
+  ],
+  "whale": [
+   0.31,
+   0.35,
+   0.41
+  ],
+  "wheat": [
+   0.87,
+   0.72,
+   0.32
+  ],
+  "white": [
+   0.92,
+   0.92,
+   0.88
+  ],
+  "wood": [
+   0.47,
+   0.32,
+   0.17
+  ],
+  "wood_dark": [
+   0.27,
+   0.18,
+   0.11
+  ],
+  "wool": [
+   0.95,
+   0.93,
+   0.87
+  ]
+ },
+ "budgets": {
+  "aircraft": [
+   800,
+   380,
+   200
+  ],
+  "civilian": [
+   1300,
+   600,
+   320
+  ],
+  "figure": [
+   700,
+   320,
+   160
+  ],
+  "great": [
+   900,
+   420,
+   200
+  ],
+  "mounted": [
+   1000,
+   440,
+   240
+  ],
+  "ship": [
+   1500,
+   650,
+   220
+  ],
+  "siege": [
+   1400,
+   640,
+   200
+  ],
+  "vehicle": [
+   700,
+   320,
+   160
+  ]
+ },
+ "formation_lod0_max": 3000,
+ "models": [
+  {
+   "id": "unit/archer",
+   "file": "units/archer.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.1182,
+     0.0017,
+     -0.0627
+    ],
+    "max": [
+     0.1019,
+     0.4187,
+     0.0649
+    ]
+   },
+   "materials": [
+    "cloth_dark",
+    "feather",
+    "leather",
+    "linen",
+    "skin",
+    "team",
+    "wood_dark"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 484
+    },
+    {
+     "node": "LOD1",
+     "tris": 198
+    },
+    {
+     "node": "LOD2",
+     "tris": 72
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 4,
+    "slots": [
+     [
+      0.02,
+      0.1,
+      1.0
+     ],
+     [
+      -0.32,
+      -0.08,
+      0.97
+     ],
+     [
+      0.34,
+      -0.06,
+      1.03
+     ],
+     [
+      0.06,
+      -0.34,
+      0.99
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "bow",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/artillery",
+   "file": "units/artillery.glb",
+   "category": "military",
+   "budget": "siege",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.5670000000000001,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.3704,
+     0.0,
+     -0.3196
+    ],
+    "max": [
+     0.4502,
+     0.4137,
+     0.3214
+    ]
+   },
+   "materials": [
+    "dark",
+    "olive",
+    "skin",
+    "team"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 532
+    },
+    {
+     "node": "LOD1",
+     "tris": 460
+    },
+    {
+     "node": "LOD2",
+     "tris": 80
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "engine",
+   "weapon": "cannon",
+   "baked_yaw": 55
+  },
+  {
+   "id": "unit/cannon",
+   "file": "units/cannon.glb",
+   "category": "military",
+   "budget": "siege",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.5670000000000001,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.3063,
+     0.0,
+     -0.1793
+    ],
+    "max": [
+     0.2847,
+     0.4116,
+     0.1905
+    ]
+   },
+   "materials": [
+    "black",
+    "bronze",
+    "cloth_dark",
+    "iron",
+    "skin",
+    "team",
+    "wood",
+    "wood_dark"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 508
+    },
+    {
+     "node": "LOD1",
+     "tris": 428
+    },
+    {
+     "node": "LOD2",
+     "tris": 56
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "engine",
+   "weapon": "cannon",
+   "baked_yaw": 55
+  },
+  {
+   "id": "unit/caravel",
+   "file": "units/caravel.glb",
+   "category": "naval",
+   "budget": "ship",
+   "variant_of": null,
+   "contact": "water",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.3652,
+     -0.042,
+     -0.2575
+    ],
+    "max": [
+     0.3666,
+     0.5284,
+     0.2117
+    ]
+   },
+   "materials": [
+    "deck",
+    "hull",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 130
+    },
+    {
+     "node": "LOD1",
+     "tris": 122
+    },
+    {
+     "node": "LOD2",
+     "tris": 102
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "vessel",
+   "weapon": "broadside",
+   "baked_yaw": 60
+  },
+  {
+   "id": "unit/catapult",
+   "file": "units/catapult.glb",
+   "category": "military",
+   "budget": "siege",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.5670000000000001,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.2792,
+     0.0,
+     -0.3361
+    ],
+    "max": [
+     0.2792,
+     0.4479,
+     0.2988
+    ]
+   },
+   "materials": [
+    "cloth_dark",
+    "hair",
+    "iron",
+    "rope",
+    "skin",
+    "stone",
+    "team",
+    "wood",
+    "wood_dark"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 652
+    },
+    {
+     "node": "LOD1",
+     "tris": 520
+    },
+    {
+     "node": "LOD2",
+     "tris": 160
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "engine",
+   "weapon": "catapult",
+   "baked_yaw": 55
+  },
+  {
+   "id": "unit/cavalry",
+   "file": "units/cavalry.glb",
+   "category": "military",
+   "budget": "mounted",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.1778,
+     -0.002,
+     -0.1261
+    ],
+    "max": [
+     0.2113,
+     0.712,
+     0.1541
+    ]
+   },
+   "materials": [
+    "black",
+    "horse",
+    "horse_dark",
+    "iron",
+    "leather",
+    "navy",
+    "skin",
+    "steel",
+    "team"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 792
+    },
+    {
+     "node": "LOD1",
+     "tris": 358
+    },
+    {
+     "node": "LOD2",
+     "tris": 188
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 3,
+    "slots": [
+     [
+      0.04,
+      0.16,
+      1.0
+     ],
+     [
+      -0.3,
+      -0.14,
+      0.97
+     ],
+     [
+      0.32,
+      -0.2,
+      1.02
+     ]
+    ]
+   },
+   "rig": "horse",
+   "weapon": "blade",
+   "baked_yaw": 55
+  },
+  {
+   "id": "unit/destroyer",
+   "file": "units/destroyer.glb",
+   "category": "naval",
+   "budget": "ship",
+   "variant_of": null,
+   "contact": "water",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.4659,
+     -0.0336,
+     -0.3029
+    ],
+    "max": [
+     0.515,
+     0.4158,
+     0.2974
+    ]
+   },
+   "materials": [
+    "dark",
+    "hull_grey",
+    "team"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 202
+    },
+    {
+     "node": "LOD1",
+     "tris": 166
+    },
+    {
+     "node": "LOD2",
+     "tris": 122
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "vessel",
+   "weapon": "broadside",
+   "baked_yaw": 60
+  },
+  {
+   "id": "unit/frigate",
+   "file": "units/frigate.glb",
+   "category": "naval",
+   "budget": "ship",
+   "variant_of": null,
+   "contact": "water",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.5017,
+     -0.0504,
+     -0.344
+    ],
+    "max": [
+     0.5229,
+     0.6796,
+     0.3019
+    ]
+   },
+   "materials": [
+    "black",
+    "deck",
+    "hull",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 262
+    },
+    {
+     "node": "LOD1",
+     "tris": 190
+    },
+    {
+     "node": "LOD2",
+     "tris": 154
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "vessel",
+   "weapon": "broadside",
+   "baked_yaw": 60
+  },
+  {
+   "id": "unit/horseman",
+   "file": "units/horseman.glb",
+   "category": "military",
+   "budget": "mounted",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.1778,
+     -0.002,
+     -0.1261
+    ],
+    "max": [
+     0.2113,
+     0.672,
+     0.1541
+    ]
+   },
+   "materials": [
+    "bronze",
+    "cloth_dark",
+    "horse",
+    "horse_dark",
+    "leather",
+    "skin",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 860
+    },
+    {
+     "node": "LOD1",
+     "tris": 352
+    },
+    {
+     "node": "LOD2",
+     "tris": 190
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 3,
+    "slots": [
+     [
+      0.04,
+      0.16,
+      1.0
+     ],
+     [
+      -0.3,
+      -0.14,
+      0.97
+     ],
+     [
+      0.32,
+      -0.2,
+      1.02
+     ]
+    ]
+   },
+   "rig": "horse",
+   "weapon": "polearm",
+   "baked_yaw": 55
+  },
+  {
+   "id": "unit/mechanized-infantry",
+   "file": "units/mechanized-infantry.glb",
+   "category": "military",
+   "budget": "vehicle",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.2198,
+     0.0026,
+     -0.1987
+    ],
+    "max": [
+     0.2198,
+     0.1806,
+     0.1987
+    ]
+   },
+   "materials": [
+    "dark",
+    "olive",
+    "team"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 120
+    },
+    {
+     "node": "LOD1",
+     "tris": 104
+    },
+    {
+     "node": "LOD2",
+     "tris": 64
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 2,
+    "slots": [
+     [
+      0.1,
+      0.12,
+      1.0
+     ],
+     [
+      -0.22,
+      -0.2,
+      0.97
+     ]
+    ]
+   },
+   "rig": "vehicle",
+   "weapon": "autogun",
+   "baked_yaw": 55
+  },
+  {
+   "id": "unit/musketman",
+   "file": "units/musketman.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.0771,
+     0.0017,
+     -0.0538
+    ],
+    "max": [
+     0.0927,
+     0.4397,
+     0.116
+    ]
+   },
+   "materials": [
+    "cloth_dark",
+    "iron",
+    "leather",
+    "skin",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 478
+    },
+    {
+     "node": "LOD1",
+     "tris": 208
+    },
+    {
+     "node": "LOD2",
+     "tris": 102
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 4,
+    "slots": [
+     [
+      0.02,
+      0.1,
+      1.0
+     ],
+     [
+      -0.32,
+      -0.08,
+      0.97
+     ],
+     [
+      0.34,
+      -0.06,
+      1.03
+     ],
+     [
+      0.06,
+      -0.34,
+      0.99
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "firearm",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/rifleman",
+   "file": "units/rifleman.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.0804,
+     0.0017,
+     -0.0721
+    ],
+    "max": [
+     0.0927,
+     0.432,
+     0.123
+    ]
+   },
+   "materials": [
+    "black",
+    "cloth",
+    "dark",
+    "leather",
+    "navy",
+    "skin",
+    "steel",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 480
+    },
+    {
+     "node": "LOD1",
+     "tris": 218
+    },
+    {
+     "node": "LOD2",
+     "tris": 76
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 4,
+    "slots": [
+     [
+      0.02,
+      0.1,
+      1.0
+     ],
+     [
+      -0.32,
+      -0.08,
+      0.97
+     ],
+     [
+      0.34,
+      -0.06,
+      1.03
+     ],
+     [
+      0.06,
+      -0.34,
+      0.99
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "firearm",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/scout",
+   "file": "units/scout.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.1089,
+     0.0017,
+     -0.0721
+    ],
+    "max": [
+     0.1037,
+     0.4956,
+     0.0649
+    ]
+   },
+   "materials": [
+    "cloth",
+    "gold",
+    "leather",
+    "skin",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 456
+    },
+    {
+     "node": "LOD1",
+     "tris": 186
+    },
+    {
+     "node": "LOD2",
+     "tris": 64
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 2,
+    "slots": [
+     [
+      0.1,
+      0.12,
+      1.0
+     ],
+     [
+      -0.22,
+      -0.2,
+      0.97
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "club",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/settler",
+   "file": "units/settler.glb",
+   "category": "civilian",
+   "budget": "civilian",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.52,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.3439,
+     -0.0005,
+     -0.2559
+    ],
+    "max": [
+     0.4363,
+     0.598,
+     0.2918
+    ]
+   },
+   "materials": [
+    "cloth",
+    "cloth_dark",
+    "horse_light",
+    "iron",
+    "ivory",
+    "linen",
+    "skin",
+    "team",
+    "wood",
+    "wood_dark"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 708
+    },
+    {
+     "node": "LOD1",
+     "tris": 584
+    },
+    {
+     "node": "LOD2",
+     "tris": 300
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "none",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/spearman",
+   "file": "units/spearman.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.1092,
+     0.0017,
+     -0.0786
+    ],
+    "max": [
+     0.0988,
+     0.546,
+     0.1324
+    ]
+   },
+   "materials": [
+    "bronze",
+    "cloth_dark",
+    "leather",
+    "skin",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 572
+    },
+    {
+     "node": "LOD1",
+     "tris": 230
+    },
+    {
+     "node": "LOD2",
+     "tris": 98
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 4,
+    "slots": [
+     [
+      0.02,
+      0.1,
+      1.0
+     ],
+     [
+      -0.32,
+      -0.08,
+      0.97
+     ],
+     [
+      0.34,
+      -0.06,
+      1.03
+     ],
+     [
+      0.06,
+      -0.34,
+      0.99
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "polearm",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/swordsman",
+   "file": "units/swordsman.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.1028,
+     0.0017,
+     -0.0582
+    ],
+    "max": [
+     0.1206,
+     0.5536,
+     0.1266
+    ]
+   },
+   "materials": [
+    "bronze",
+    "cloth_dark",
+    "iron",
+    "leather",
+    "skin",
+    "steel",
+    "team"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 550
+    },
+    {
+     "node": "LOD1",
+     "tris": 254
+    },
+    {
+     "node": "LOD2",
+     "tris": 110
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 4,
+    "slots": [
+     [
+      0.02,
+      0.1,
+      1.0
+     ],
+     [
+      -0.32,
+      -0.08,
+      0.97
+     ],
+     [
+      0.34,
+      -0.06,
+      1.03
+     ],
+     [
+      0.06,
+      -0.34,
+      0.99
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "blade",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/tank",
+   "file": "units/tank.glb",
+   "category": "military",
+   "budget": "vehicle",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.2487,
+     0.0032,
+     -0.2224
+    ],
+    "max": [
+     0.2487,
+     0.1772,
+     0.2224
+    ]
+   },
+   "materials": [
+    "dark",
+    "olive",
+    "team"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 160
+    },
+    {
+     "node": "LOD1",
+     "tris": 128
+    },
+    {
+     "node": "LOD2",
+     "tris": 64
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 3,
+    "slots": [
+     [
+      0.04,
+      0.16,
+      1.0
+     ],
+     [
+      -0.3,
+      -0.14,
+      0.97
+     ],
+     [
+      0.32,
+      -0.2,
+      1.02
+     ]
+    ]
+   },
+   "rig": "vehicle",
+   "weapon": "cannon",
+   "baked_yaw": 55
+  },
+  {
+   "id": "unit/trireme",
+   "file": "units/trireme.glb",
+   "category": "naval",
+   "budget": "ship",
+   "variant_of": null,
+   "contact": "water",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.3891,
+     -0.0336,
+     -0.2711
+    ],
+    "max": [
+     0.4285,
+     0.4074,
+     0.2553
+    ]
+   },
+   "materials": [
+    "bronze",
+    "deck",
+    "hull",
+    "team",
+    "white",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 238
+    },
+    {
+     "node": "LOD1",
+     "tris": 168
+    },
+    {
+     "node": "LOD2",
+     "tris": 70
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "vessel",
+   "weapon": "broadside",
+   "baked_yaw": 60
+  },
+  {
+   "id": "unit/warrior",
+   "file": "units/warrior.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.1092,
+     0.0017,
+     -0.0582
+    ],
+    "max": [
+     0.1206,
+     0.5497,
+     0.1324
+    ]
+   },
+   "materials": [
+    "fur",
+    "hair",
+    "leather",
+    "skin",
+    "team",
+    "wood",
+    "wood_dark"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 540
+    },
+    {
+     "node": "LOD1",
+     "tris": 214
+    },
+    {
+     "node": "LOD2",
+     "tris": 94
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 4,
+    "slots": [
+     [
+      0.02,
+      0.1,
+      1.0
+     ],
+     [
+      -0.32,
+      -0.08,
+      0.97
+     ],
+     [
+      0.34,
+      -0.06,
+      1.03
+     ],
+     [
+      0.06,
+      -0.34,
+      0.99
+     ]
+    ]
+   },
+   "rig": "biped",
+   "weapon": "club",
+   "baked_yaw": 20
+  },
+  {
+   "id": "unit/workboat",
+   "file": "units/workboat.glb",
+   "category": "civilian",
+   "budget": "ship",
+   "variant_of": null,
+   "contact": "water",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.3081,
+     -0.0294,
+     -0.2186
+    ],
+    "max": [
+     0.3055,
+     0.3654,
+     0.2184
+    ]
+   },
+   "materials": [
+    "cloth",
+    "cloth_dark",
+    "deck",
+    "hull",
+    "rope",
+    "skin",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 248
+    },
+    {
+     "node": "LOD1",
+     "tris": 224
+    },
+    {
+     "node": "LOD2",
+     "tris": 54
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "vessel",
+   "weapon": "none",
+   "baked_yaw": 60
+  },
+  {
+   "id": "unit/unknown",
+   "file": "units/unknown.glb",
+   "category": "military",
+   "budget": "figure",
+   "variant_of": null,
+   "contact": "ground",
+   "scale": 0.42,
+   "pivot": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "bounds": {
+    "min": [
+     -0.0621,
+     0.0,
+     -0.0621
+    ],
+    "max": [
+     0.1764,
+     0.504,
+     0.0621
+    ]
+   },
+   "materials": [
+    "stone",
+    "team",
+    "wood"
+   ],
+   "team_mask": true,
+   "lods": [
+    {
+     "node": "LOD0",
+     "tris": 56
+    },
+    {
+     "node": "LOD1",
+     "tris": 44
+    },
+    {
+     "node": "LOD2",
+     "tris": 32
+    }
+   ],
+   "lod_px": [
+    14.0,
+    7.0
+   ],
+   "formation": {
+    "figures": 1,
+    "slots": [
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "rig": "static",
+   "weapon": "none",
+   "baked_yaw": 0
+  }
+ ],
+ "world": {
+  "generator": "platform/tools/blender/export_world.py",
+  "note": "Generated. Edit platform/tools/blender/world/*.py and run sh platform/tools/blender/export_all.sh.",
+  "axes": "glTF y-up, hex units; front faces +z (the camera); pivot = tile anchor on the ground",
+  "budgets": {
+   "city-center": [
+    800,
+    340,
+    100
+   ],
+   "city-house": [
+    160,
+    70,
+    24
+   ],
+   "city-landmark": [
+    500,
+    220,
+    64
+   ],
+   "city-walls": [
+    900,
+    360,
+    120
+   ],
+   "improvement": [
+    600,
+    260,
+    120
+   ],
+   "natural-wonder": [
+    3000,
+    1200,
+    400
+   ],
+   "resource": [
+    300,
+    140,
+    48
+   ],
+   "wonder": [
+    2500,
+    1000,
+    300
+   ]
+  },
+  "shapes": {
+   "city-center": [
+    0.3,
+    1.4,
+    -0.08
+   ],
+   "city-house": [
+    0.15,
+    1.0,
+    -0.08
+   ],
+   "city-landmark": [
+    0.26,
+    1.2,
+    -0.25
+   ],
+   "city-walls": [
+    0.86,
+    0.45,
+    -0.08
+   ],
+   "improvement": [
+    1.0,
+    0.9,
+    -0.08
+   ],
+   "natural-wonder": [
+    1.05,
+    2.4,
+    -0.25
+   ],
+   "resource": [
+    0.62,
+    0.6,
+    -0.08
+   ],
+   "wonder": [
+    0.95,
+    2.0,
+    -0.25
+   ]
+  },
+  "city_tile_lod0_max": 6000,
+  "models": [
+   {
+    "id": "city/arena",
+    "file": "world/city/arena.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1857,
+      -0.03,
+      -0.1419
+     ],
+     "max": [
+      0.1857,
+      0.2,
+      0.1458
+     ]
+    },
+    "radius": 0.1862,
+    "size": 0.2,
+    "materials": [
+     "dark",
+     "limestone",
+     "red",
+     "sand",
+     "stone",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 488
+     },
+     {
+      "node": "LOD1",
+      "tris": 144
+     },
+     {
+      "node": "LOD2",
+      "tris": 56
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/broadcast-tower",
+    "file": "world/city/broadcast-tower.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.0874,
+      -0.0217,
+      -0.113
+     ],
+     "max": [
+      0.0874,
+      1.078,
+      0.109
+     ]
+    },
+    "radius": 0.1138,
+    "size": 1.078,
+    "materials": [
+     "concrete",
+     "fire",
+     "red",
+     "steel",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 476
+     },
+     {
+      "node": "LOD1",
+      "tris": 188
+     },
+     {
+      "node": "LOD2",
+      "tris": 36
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/castle",
+    "file": "world/city/castle.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.15,
+      -0.02,
+      -0.149
+     ],
+     "max": [
+      0.146,
+      0.4,
+      0.149
+     ]
+    },
+    "radius": 0.1954,
+    "size": 0.4,
+    "materials": [
+     "dark",
+     "rock",
+     "slate",
+     "stone",
+     "team",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 436
+     },
+     {
+      "node": "LOD1",
+      "tris": 196
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/center-ancient",
+    "file": "world/city/center-ancient.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1868,
+      -0.04,
+      -0.21
+     ],
+     "max": [
+      0.1822,
+      0.345,
+      0.21
+     ]
+    },
+    "radius": 0.2209,
+    "size": 0.345,
+    "materials": [
+     "bronze",
+     "fire",
+     "gold",
+     "grass_dry",
+     "mudbrick",
+     "rock",
+     "sand",
+     "sandstone",
+     "stone",
+     "team",
+     "wheat",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 348
+     },
+     {
+      "node": "LOD1",
+      "tris": 180
+     },
+     {
+      "node": "LOD2",
+      "tris": 56
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/center-atomic",
+    "file": "world/city/center-atomic.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1819,
+      -0.04,
+      -0.21
+     ],
+     "max": [
+      0.1819,
+      1.02,
+      0.21
+     ]
+    },
+    "radius": 0.2114,
+    "size": 1.02,
+    "materials": [
+     "bark",
+     "concrete",
+     "glass_dark",
+     "leaf",
+     "steel",
+     "water"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 328
+     },
+     {
+      "node": "LOD1",
+      "tris": 136
+     },
+     {
+      "node": "LOD2",
+      "tris": 36
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/center-classical",
+    "file": "world/city/center-classical.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1819,
+      -0.04,
+      -0.21
+     ],
+     "max": [
+      0.1819,
+      0.3795,
+      0.21
+     ]
+    },
+    "radius": 0.214,
+    "size": 0.3795,
+    "materials": [
+     "bronze",
+     "dark",
+     "gold",
+     "iron",
+     "leaf_dark",
+     "limestone",
+     "marble",
+     "plaster",
+     "terracotta"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 412
+     },
+     {
+      "node": "LOD1",
+      "tris": 216
+     },
+     {
+      "node": "LOD2",
+      "tris": 44
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/center-industrial",
+    "file": "world/city/center-industrial.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1732,
+      -0.04,
+      -0.2
+     ],
+     "max": [
+      0.1732,
+      0.69,
+      0.2
+     ]
+    },
+    "radius": 0.208,
+    "size": 0.69,
+    "materials": [
+     "brick",
+     "fire",
+     "glass_dark",
+     "gold",
+     "iron",
+     "limestone",
+     "slate",
+     "stone",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 284
+     },
+     {
+      "node": "LOD1",
+      "tris": 136
+     },
+     {
+      "node": "LOD2",
+      "tris": 48
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/center-information",
+    "file": "world/city/center-information.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1819,
+      -0.04,
+      -0.21
+     ],
+     "max": [
+      0.1819,
+      1.1,
+      0.21
+     ]
+    },
+    "radius": 0.21,
+    "size": 1.1,
+    "materials": [
+     "bark",
+     "concrete",
+     "leaf",
+     "leaf_light",
+     "sky_glass",
+     "steel",
+     "water",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 322
+     },
+     {
+      "node": "LOD1",
+      "tris": 108
+     },
+     {
+      "node": "LOD2",
+      "tris": 36
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/center-medieval",
+    "file": "world/city/center-medieval.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1732,
+      -0.04,
+      -0.2007
+     ],
+     "max": [
+      0.1732,
+      0.56,
+      0.2
+     ]
+    },
+    "radius": 0.215,
+    "size": 0.56,
+    "materials": [
+     "cream",
+     "dark",
+     "gold",
+     "limestone",
+     "plaster",
+     "slate",
+     "stone",
+     "terracotta",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 356
+     },
+     {
+      "node": "LOD1",
+      "tris": 160
+     },
+     {
+      "node": "LOD2",
+      "tris": 44
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/center-modern",
+    "file": "world/city/center-modern.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1819,
+      -0.04,
+      -0.21
+     ],
+     "max": [
+      0.1819,
+      0.84,
+      0.21
+     ]
+    },
+    "radius": 0.21,
+    "size": 0.84,
+    "materials": [
+     "bark",
+     "concrete",
+     "copper_green",
+     "cream",
+     "glass_dark",
+     "leaf",
+     "limestone",
+     "team",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 300
+     },
+     {
+      "node": "LOD1",
+      "tris": 128
+     },
+     {
+      "node": "LOD2",
+      "tris": 48
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/center-renaissance",
+    "file": "world/city/center-renaissance.glb",
+    "kind": "city",
+    "budget": "city-center",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1819,
+      -0.04,
+      -0.21
+     ],
+     "max": [
+      0.1819,
+      0.42,
+      0.21
+     ]
+    },
+    "radius": 0.21,
+    "size": 0.42,
+    "materials": [
+     "cream",
+     "glass_dark",
+     "gold",
+     "stone",
+     "team",
+     "terracotta",
+     "water",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 428
+     },
+     {
+      "node": "LOD1",
+      "tris": 218
+     },
+     {
+      "node": "LOD2",
+      "tris": 46
+     }
+    ],
+    "lod_px": [
+     20.0,
+     8.0
+    ]
+   },
+   {
+    "id": "city/factory",
+    "file": "world/city/factory.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.177,
+      -0.02,
+      -0.135
+     ],
+     "max": [
+      0.1883,
+      0.559,
+      0.107
+     ]
+    },
+    "radius": 0.2256,
+    "size": 0.559,
+    "materials": [
+     "brick",
+     "glass",
+     "glass_dark",
+     "iron",
+     "rust",
+     "slate",
+     "steam",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 300
+     },
+     {
+      "node": "LOD1",
+      "tris": 116
+     },
+     {
+      "node": "LOD2",
+      "tris": 36
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/harbor",
+    "file": "world/city/harbor.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.15,
+      -0.04,
+      -0.14
+     ],
+     "max": [
+      0.15,
+      0.2,
+      0.12
+     ]
+    },
+    "radius": 0.1921,
+    "size": 0.2,
+    "materials": [
+     "deck",
+     "hull",
+     "rope",
+     "sail",
+     "stone",
+     "terracotta",
+     "water",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 210
+     },
+     {
+      "node": "LOD1",
+      "tris": 146
+     },
+     {
+      "node": "LOD2",
+      "tris": 44
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/house-ancient-0",
+    "file": "world/city/house-ancient-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1072,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.112,
+      0.0981
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.1416,
+    "materials": [
+     "grass_dry",
+     "mudbrick",
+     "soil",
+     "wheat",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 144
+     },
+     {
+      "node": "LOD1",
+      "tris": 54
+     },
+     {
+      "node": "LOD2",
+      "tris": 18
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-ancient-1",
+    "file": "world/city/house-ancient-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.1075,
+      0.108,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.1416,
+    "materials": [
+     "mudbrick",
+     "sandstone",
+     "soil",
+     "terracotta",
+     "wheat",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 112
+     },
+     {
+      "node": "LOD1",
+      "tris": 54
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-ancient-2",
+    "file": "world/city/house-ancient-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.125,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.1416,
+    "materials": [
+     "grass_dry",
+     "mudbrick",
+     "soil",
+     "wheat",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 104
+     },
+     {
+      "node": "LOD1",
+      "tris": 38
+     },
+     {
+      "node": "LOD2",
+      "tris": 20
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-atomic-0",
+    "file": "world/city/house-atomic-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.44,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.44,
+    "materials": [
+     "concrete",
+     "glass_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 132
+     },
+     {
+      "node": "LOD1",
+      "tris": 48
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-atomic-1",
+    "file": "world/city/house-atomic-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.462,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.462,
+    "materials": [
+     "concrete",
+     "glass_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 144
+     },
+     {
+      "node": "LOD1",
+      "tris": 40
+     },
+     {
+      "node": "LOD2",
+      "tris": 16
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-atomic-2",
+    "file": "world/city/house-atomic-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.42,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.42,
+    "materials": [
+     "concrete",
+     "glass_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 144
+     },
+     {
+      "node": "LOD1",
+      "tris": 60
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-classical-0",
+    "file": "world/city/house-classical-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.12,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.1416,
+    "materials": [
+     "leaf_dark",
+     "limestone",
+     "plaster",
+     "terracotta",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 108
+     },
+     {
+      "node": "LOD1",
+      "tris": 48
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-classical-1",
+    "file": "world/city/house-classical-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.158,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.158,
+    "materials": [
+     "cream",
+     "limestone",
+     "plaster",
+     "red",
+     "terracotta",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 96
+     },
+     {
+      "node": "LOD1",
+      "tris": 60
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-classical-2",
+    "file": "world/city/house-classical-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.1098,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.12,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.1416,
+    "materials": [
+     "leaf_dark",
+     "limestone",
+     "marble",
+     "terracotta",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 126
+     },
+     {
+      "node": "LOD1",
+      "tris": 64
+     },
+     {
+      "node": "LOD2",
+      "tris": 20
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-industrial-0",
+    "file": "world/city/house-industrial-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.12,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.12,
+      0.2428,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.2428,
+    "materials": [
+     "brick",
+     "glass_dark",
+     "rock_dark",
+     "slate",
+     "steam",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 156
+     },
+     {
+      "node": "LOD1",
+      "tris": 56
+     },
+     {
+      "node": "LOD2",
+      "tris": 20
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-industrial-1",
+    "file": "world/city/house-industrial-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.275,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.275,
+    "materials": [
+     "brick",
+     "glass_dark",
+     "limestone",
+     "rock_dark",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 114
+     },
+     {
+      "node": "LOD1",
+      "tris": 42
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-industrial-2",
+    "file": "world/city/house-industrial-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.1205,
+      0.356,
+      0.095
+     ]
+    },
+    "radius": 0.1426,
+    "size": 0.356,
+    "materials": [
+     "brick",
+     "rock_dark",
+     "slate",
+     "steam"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 120
+     },
+     {
+      "node": "LOD1",
+      "tris": 60
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-information-0",
+    "file": "world/city/house-information-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.63,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.63,
+    "materials": [
+     "grass",
+     "leaf",
+     "leaf_light",
+     "sky_glass",
+     "steel",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 128
+     },
+     {
+      "node": "LOD1",
+      "tris": 48
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-information-1",
+    "file": "world/city/house-information-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.56,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.56,
+    "materials": [
+     "bark",
+     "glass",
+     "grass",
+     "leaf_light",
+     "sky_glass",
+     "steel",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 134
+     },
+     {
+      "node": "LOD1",
+      "tris": 54
+     },
+     {
+      "node": "LOD2",
+      "tris": 18
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-information-2",
+    "file": "world/city/house-information-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.302,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.302,
+    "materials": [
+     "glass",
+     "grass",
+     "leaf",
+     "leaf_light",
+     "sky_glass",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 136
+     },
+     {
+      "node": "LOD1",
+      "tris": 60
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-medieval-0",
+    "file": "world/city/house-medieval-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.1752,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.1752,
+    "materials": [
+     "cream",
+     "plaster",
+     "slate",
+     "stone",
+     "terracotta",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 148
+     },
+     {
+      "node": "LOD1",
+      "tris": 40
+     },
+     {
+      "node": "LOD2",
+      "tris": 20
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-medieval-1",
+    "file": "world/city/house-medieval-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.18,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.18,
+    "materials": [
+     "brick",
+     "plaster",
+     "stone",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 100
+     },
+     {
+      "node": "LOD1",
+      "tris": 40
+     },
+     {
+      "node": "LOD2",
+      "tris": 20
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-medieval-2",
+    "file": "world/city/house-medieval-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.1825,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.1825,
+    "materials": [
+     "cream",
+     "plaster",
+     "slate",
+     "stone",
+     "terracotta",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 144
+     },
+     {
+      "node": "LOD1",
+      "tris": 40
+     },
+     {
+      "node": "LOD2",
+      "tris": 20
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-modern-0",
+    "file": "world/city/house-modern-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.32,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.32,
+    "materials": [
+     "asphalt",
+     "concrete",
+     "cream",
+     "glass_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 108
+     },
+     {
+      "node": "LOD1",
+      "tris": 60
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-modern-1",
+    "file": "world/city/house-modern-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.41,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.41,
+    "materials": [
+     "asphalt",
+     "copper_green",
+     "glass_dark",
+     "limestone"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 120
+     },
+     {
+      "node": "LOD1",
+      "tris": 36
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-modern-2",
+    "file": "world/city/house-modern-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.21,
+      0.0977
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.21,
+    "materials": [
+     "asphalt",
+     "bark",
+     "brick",
+     "concrete",
+     "glass_dark",
+     "leaf",
+     "plaster"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 152
+     },
+     {
+      "node": "LOD1",
+      "tris": 60
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-renaissance-0",
+    "file": "world/city/house-renaissance-0.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.2186,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.2186,
+    "materials": [
+     "cream",
+     "ochre",
+     "pink",
+     "stone",
+     "terracotta",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 156
+     },
+     {
+      "node": "LOD1",
+      "tris": 24
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-renaissance-1",
+    "file": "world/city/house-renaissance-1.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.2084,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.2084,
+    "materials": [
+     "glass_dark",
+     "sandstone",
+     "stone",
+     "terracotta",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 84
+     },
+     {
+      "node": "LOD1",
+      "tris": 24
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/house-renaissance-2",
+    "file": "world/city/house-renaissance-2.glb",
+    "kind": "city",
+    "budget": "city-house",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.105,
+      -0.04,
+      -0.095
+     ],
+     "max": [
+      0.105,
+      0.2288,
+      0.095
+     ]
+    },
+    "radius": 0.1416,
+    "size": 0.2288,
+    "materials": [
+     "cream",
+     "glass_dark",
+     "pink",
+     "stone",
+     "terracotta",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 156
+     },
+     {
+      "node": "LOD1",
+      "tris": 48
+     },
+     {
+      "node": "LOD2",
+      "tris": 24
+     }
+    ],
+    "lod_px": [
+     14.0,
+     6.0
+    ]
+   },
+   {
+    "id": "city/market",
+    "file": "world/city/market.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.171,
+      -0.04,
+      -0.14
+     ],
+     "max": [
+      0.16,
+      0.14,
+      0.14
+     ]
+    },
+    "radius": 0.2126,
+    "size": 0.2126,
+    "materials": [
+     "citrus",
+     "grape",
+     "green",
+     "linen",
+     "red",
+     "roof_blue",
+     "stone",
+     "terracotta",
+     "wheat",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 416
+     },
+     {
+      "node": "LOD1",
+      "tris": 140
+     },
+     {
+      "node": "LOD2",
+      "tris": 48
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/military-base",
+    "file": "world/city/military-base.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.16,
+      -0.04,
+      -0.14
+     ],
+     "max": [
+      0.16,
+      0.22,
+      0.1516
+     ]
+    },
+    "radius": 0.2126,
+    "size": 0.22,
+    "materials": [
+     "asphalt",
+     "dark",
+     "khaki",
+     "olive",
+     "steel",
+     "team",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 183
+     },
+     {
+      "node": "LOD1",
+      "tris": 119
+     },
+     {
+      "node": "LOD2",
+      "tris": 51
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/national-national-college",
+    "file": "world/city/national-national-college.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.132,
+      -0.02,
+      -0.112
+     ],
+     "max": [
+      0.132,
+      0.3,
+      0.145
+     ]
+    },
+    "radius": 0.1761,
+    "size": 0.3,
+    "materials": [
+     "copper_green",
+     "glass_dark",
+     "gold",
+     "leaf_dark",
+     "limestone",
+     "slate",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 274
+     },
+     {
+      "node": "LOD1",
+      "tris": 154
+     },
+     {
+      "node": "LOD2",
+      "tris": 46
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/palace",
+    "file": "world/city/palace.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.162,
+      -0.02,
+      -0.112
+     ],
+     "max": [
+      0.162,
+      0.355,
+      0.15
+     ]
+    },
+    "radius": 0.1914,
+    "size": 0.355,
+    "materials": [
+     "copper_green",
+     "cream",
+     "glass_dark",
+     "gold",
+     "leaf_dark",
+     "slate",
+     "team",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 372
+     },
+     {
+      "node": "LOD1",
+      "tris": 198
+     },
+     {
+      "node": "LOD2",
+      "tris": 58
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/seaport",
+    "file": "world/city/seaport.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.16,
+      -0.04,
+      -0.14
+     ],
+     "max": [
+      0.16,
+      0.33,
+      0.13
+     ]
+    },
+    "radius": 0.2062,
+    "size": 0.33,
+    "materials": [
+     "black",
+     "citrus",
+     "concrete",
+     "green",
+     "hull_grey",
+     "ochre",
+     "red",
+     "roof_blue",
+     "steam",
+     "steel",
+     "water",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 282
+     },
+     {
+      "node": "LOD1",
+      "tris": 202
+     },
+     {
+      "node": "LOD2",
+      "tris": 54
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "city/university",
+    "file": "world/city/university.glb",
+    "kind": "city",
+    "budget": "city-landmark",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.15,
+      -0.02,
+      -0.08
+     ],
+     "max": [
+      0.15,
+      0.43,
+      0.16
+     ]
+    },
+    "radius": 0.1942,
+    "size": 0.43,
+    "materials": [
+     "glass",
+     "glass_dark",
+     "grass",
+     "limestone",
+     "sandstone",
+     "slate",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 204
+     },
+     {
+      "node": "LOD1",
+      "tris": 96
+     },
+     {
+      "node": "LOD2",
+      "tris": 44
+     }
+    ],
+    "lod_px": [
+     18.0,
+     7.0
+    ]
+   },
+   {
+    "id": "improvement/ancient-ruins",
+    "file": "world/improvement/ancient-ruins.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.77,
+      -0.05,
+      -0.8726
+     ],
+     "max": [
+      0.7609,
+      0.483,
+      0.7361
+     ]
+    },
+    "radius": 0.9584,
+    "size": 0.9584,
+    "materials": [
+     "bark",
+     "leaf",
+     "leaf_dark",
+     "stone"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 410
+     },
+     {
+      "node": "LOD1",
+      "tris": 236
+     },
+     {
+      "node": "LOD2",
+      "tris": 84
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/city-ruins",
+    "file": "world/improvement/city-ruins.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7186,
+      -0.05,
+      -0.7602
+     ],
+     "max": [
+      0.7064,
+      0.352,
+      0.7108
+     ]
+    },
+    "radius": 0.7956,
+    "size": 0.7956,
+    "materials": [
+     "brick",
+     "leaf",
+     "limestone",
+     "marble",
+     "stone"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 378
+     },
+     {
+      "node": "LOD1",
+      "tris": 200
+     },
+     {
+      "node": "LOD2",
+      "tris": 108
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/customs-house",
+    "file": "world/improvement/customs-house.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.639,
+      -0.05,
+      -0.74
+     ],
+     "max": [
+      0.66,
+      0.455,
+      0.52
+     ]
+    },
+    "radius": 0.8276,
+    "size": 0.8276,
+    "materials": [
+     "brick",
+     "cream",
+     "glass_dark",
+     "gold",
+     "limestone",
+     "rock_dark",
+     "rope",
+     "slate",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 474
+     },
+     {
+      "node": "LOD1",
+      "tris": 234
+     },
+     {
+      "node": "LOD2",
+      "tris": 112
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/farm",
+    "file": "world/improvement/farm.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7834,
+      -0.05,
+      -0.8796
+     ],
+     "max": [
+      0.8364,
+      0.24,
+      0.7082
+     ]
+    },
+    "radius": 0.9291,
+    "size": 0.9291,
+    "materials": [
+     "bark",
+     "leaf",
+     "leaf_dark",
+     "leaf_light",
+     "plaster",
+     "red",
+     "soil",
+     "terracotta",
+     "wheat",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 480
+     },
+     {
+      "node": "LOD1",
+      "tris": 252
+     },
+     {
+      "node": "LOD2",
+      "tris": 88
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/farm-desert",
+    "file": "world/improvement/farm-desert.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.808,
+      -0.05,
+      -0.8892
+     ],
+     "max": [
+      0.8271,
+      0.27,
+      0.7026
+     ]
+    },
+    "radius": 0.8902,
+    "size": 0.8902,
+    "materials": [
+     "bark",
+     "leaf",
+     "leaf_light",
+     "mudbrick",
+     "sand",
+     "soil",
+     "water",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 428
+     },
+     {
+      "node": "LOD1",
+      "tris": 232
+     },
+     {
+      "node": "LOD2",
+      "tris": 88
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/farm-grassland",
+    "file": "world/improvement/farm-grassland.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.8453,
+      -0.05,
+      -0.8796
+     ],
+     "max": [
+      0.8054,
+      0.24,
+      0.7058
+     ]
+    },
+    "radius": 0.9287,
+    "size": 0.9287,
+    "materials": [
+     "bark",
+     "leaf",
+     "leaf_dark",
+     "leaf_light",
+     "plaster",
+     "red",
+     "soil",
+     "terracotta",
+     "wheat",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 496
+     },
+     {
+      "node": "LOD1",
+      "tris": 244
+     },
+     {
+      "node": "LOD2",
+      "tris": 88
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/farm-plains",
+    "file": "world/improvement/farm-plains.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7709,
+      -0.05,
+      -0.8796
+     ],
+     "max": [
+      0.8364,
+      0.24,
+      0.6815
+     ]
+    },
+    "radius": 0.9291,
+    "size": 0.9291,
+    "materials": [
+     "bark",
+     "grass_dry",
+     "leaf",
+     "leaf_dark",
+     "plaster",
+     "red",
+     "soil",
+     "terracotta",
+     "wheat",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 480
+     },
+     {
+      "node": "LOD1",
+      "tris": 244
+     },
+     {
+      "node": "LOD2",
+      "tris": 88
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/fishing-boats",
+    "file": "world/improvement/fishing-boats.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "water",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7747,
+      -0.035,
+      -0.5063
+     ],
+     "max": [
+      0.7168,
+      0.408,
+      0.698
+     ]
+    },
+    "radius": 0.8445,
+    "size": 0.8445,
+    "materials": [
+     "cloth_dark",
+     "deck",
+     "hull",
+     "linen",
+     "red",
+     "rope",
+     "sail",
+     "skin",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 366
+     },
+     {
+      "node": "LOD1",
+      "tris": 142
+     },
+     {
+      "node": "LOD2",
+      "tris": 86
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/fort",
+    "file": "world/improvement/fort.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7448,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.7448,
+      0.36,
+      0.86
+     ]
+    },
+    "radius": 0.86,
+    "size": 0.86,
+    "materials": [
+     "black",
+     "dark",
+     "grass",
+     "stone",
+     "team",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 432
+     },
+     {
+      "node": "LOD1",
+      "tris": 220
+     },
+     {
+      "node": "LOD2",
+      "tris": 120
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/holy-site",
+    "file": "world/improvement/holy-site.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.6278,
+      -0.05,
+      -0.88
+     ],
+     "max": [
+      0.6768,
+      0.775,
+      0.35
+     ]
+    },
+    "radius": 0.9297,
+    "size": 0.9297,
+    "materials": [
+     "banana",
+     "bark",
+     "gold",
+     "green",
+     "leaf",
+     "limestone",
+     "red",
+     "roof_blue",
+     "rope",
+     "white",
+     "wood"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 562
+     },
+     {
+      "node": "LOD1",
+      "tris": 254
+     },
+     {
+      "node": "LOD2",
+      "tris": 100
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/lumber-mill",
+    "file": "world/improvement/lumber-mill.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7476,
+      -0.05,
+      -0.8884
+     ],
+     "max": [
+      0.6778,
+      0.3752,
+      0.6888
+     ]
+    },
+    "radius": 0.8935,
+    "size": 0.8935,
+    "materials": [
+     "bark",
+     "deck",
+     "iron",
+     "leaf_dark",
+     "slate",
+     "steel",
+     "water",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 536
+     },
+     {
+      "node": "LOD1",
+      "tris": 252
+     },
+     {
+      "node": "LOD2",
+      "tris": 90
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/mine",
+    "file": "world/improvement/mine.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7633,
+      -0.072,
+      -0.7954
+     ],
+     "max": [
+      0.632,
+      0.4116,
+      0.2482
+     ]
+    },
+    "radius": 0.8449,
+    "size": 0.8449,
+    "materials": [
+     "black",
+     "iron",
+     "rock",
+     "rock_dark",
+     "rust",
+     "slate",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 266
+     },
+     {
+      "node": "LOD1",
+      "tris": 230
+     },
+     {
+      "node": "LOD2",
+      "tris": 102
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/oil-well",
+    "file": "world/improvement/oil-well.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7399,
+      -0.05,
+      -0.71
+     ],
+     "max": [
+      0.7376,
+      0.77,
+      0.4773
+     ]
+    },
+    "radius": 0.8199,
+    "size": 0.8199,
+    "materials": [
+     "black",
+     "concrete",
+     "dark",
+     "iron",
+     "red",
+     "steel",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 572
+     },
+     {
+      "node": "LOD1",
+      "tris": 256
+     },
+     {
+      "node": "LOD2",
+      "tris": 116
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/pasture",
+    "file": "world/improvement/pasture.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7768,
+      -0.05,
+      -0.9211
+     ],
+     "max": [
+      0.8163,
+      0.3,
+      0.8179
+     ]
+    },
+    "radius": 0.9423,
+    "size": 0.9423,
+    "materials": [
+     "bark",
+     "grass_dry",
+     "leaf",
+     "leaf_dark",
+     "leaf_light",
+     "rock",
+     "soil",
+     "water",
+     "wheat",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 576
+     },
+     {
+      "node": "LOD1",
+      "tris": 204
+     },
+     {
+      "node": "LOD2",
+      "tris": 84
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/terrace-farm",
+    "file": "world/improvement/terrace-farm.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.8054,
+      -0.04,
+      -0.8537
+     ],
+     "max": [
+      0.8054,
+      0.26,
+      0.7802
+     ]
+    },
+    "radius": 0.8716,
+    "size": 0.8716,
+    "materials": [
+     "grass_dry",
+     "leaf_light",
+     "rock",
+     "stone",
+     "wheat",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 572
+     },
+     {
+      "node": "LOD1",
+      "tris": 200
+     },
+     {
+      "node": "LOD2",
+      "tris": 108
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "improvement/trading-post",
+    "file": "world/improvement/trading-post.glb",
+    "kind": "improvement",
+    "budget": "improvement",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.67,
+      -0.014,
+      -0.772
+     ],
+     "max": [
+      0.6313,
+      0.33,
+      0.63
+     ]
+    },
+    "radius": 0.7932,
+    "size": 0.7932,
+    "materials": [
+     "camel",
+     "cotton",
+     "dye",
+     "grass_dry",
+     "linen",
+     "red",
+     "rope",
+     "spice",
+     "team",
+     "wood",
+     "wood_dark",
+     "wool"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 442
+     },
+     {
+      "node": "LOD1",
+      "tris": 168
+     },
+     {
+      "node": "LOD2",
+      "tris": 52
+     }
+    ],
+    "lod_px": [
+     34.0,
+     12.0
+    ]
+   },
+   {
+    "id": "natural-wonder/fountain-of-youth",
+    "file": "world/natural-wonder/fountain-of-youth.glb",
+    "kind": "natural-wonder",
+    "budget": "natural-wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.8227,
+      -0.1415,
+      -0.8787
+     ],
+     "max": [
+      0.8227,
+      0.4903,
+      0.8787
+     ]
+    },
+    "radius": 0.9217,
+    "size": 0.9217,
+    "materials": [
+     "bark",
+     "blossom",
+     "foam",
+     "grass",
+     "leaf",
+     "leaf_dark",
+     "leaf_light",
+     "marble",
+     "neon",
+     "pink",
+     "rock",
+     "rock_dark",
+     "sky_glass",
+     "stone",
+     "turquoise",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 920
+     },
+     {
+      "node": "LOD1",
+      "tris": 510
+     },
+     {
+      "node": "LOD2",
+      "tris": 200
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "natural-wonder/lake-victoria",
+    "file": "world/natural-wonder/lake-victoria.glb",
+    "kind": "natural-wonder",
+    "budget": "natural-wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.8636,
+      -0.04,
+      -0.9747
+     ],
+     "max": [
+      0.8433,
+      0.254,
+      0.9597
+     ]
+    },
+    "radius": 0.9911,
+    "size": 0.9911,
+    "materials": [
+     "bark",
+     "cane",
+     "grass",
+     "hull",
+     "leaf",
+     "leaf_dark",
+     "sail",
+     "sand",
+     "water",
+     "water_deep",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 1104
+     },
+     {
+      "node": "LOD1",
+      "tris": 614
+     },
+     {
+      "node": "LOD2",
+      "tris": 152
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "natural-wonder/mt-fuji",
+    "file": "world/natural-wonder/mt-fuji.glb",
+    "kind": "natural-wonder",
+    "budget": "natural-wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.9021,
+      -0.04,
+      -0.9986
+     ],
+     "max": [
+      0.8936,
+      1.16,
+      0.8787
+     ]
+    },
+    "radius": 1.0003,
+    "size": 1.16,
+    "materials": [
+     "bark",
+     "black",
+     "blossom",
+     "grass",
+     "lacquer",
+     "leaf_dark",
+     "rock_dark",
+     "slate",
+     "snow"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 776
+     },
+     {
+      "node": "LOD1",
+      "tris": 440
+     },
+     {
+      "node": "LOD2",
+      "tris": 188
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "natural-wonder/old-faithful",
+    "file": "world/natural-wonder/old-faithful.glb",
+    "kind": "natural-wonder",
+    "budget": "natural-wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.8513,
+      -0.04,
+      -0.8787
+     ],
+     "max": [
+      0.8495,
+      1.776,
+      0.8787
+     ]
+    },
+    "radius": 0.9262,
+    "size": 1.776,
+    "materials": [
+     "bark",
+     "bison",
+     "cream",
+     "foam",
+     "grass",
+     "ivory",
+     "leaf_dark",
+     "ochre",
+     "salt",
+     "steam",
+     "turquoise",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 1638
+     },
+     {
+      "node": "LOD1",
+      "tris": 784
+     },
+     {
+      "node": "LOD2",
+      "tris": 242
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "natural-wonder/rock-of-gibraltar",
+    "file": "world/natural-wonder/rock-of-gibraltar.glb",
+    "kind": "natural-wonder",
+    "budget": "natural-wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.8675,
+      -0.04,
+      -0.8787
+     ],
+     "max": [
+      0.8227,
+      1.4167,
+      0.8787
+     ]
+    },
+    "radius": 0.8873,
+    "size": 1.4167,
+    "materials": [
+     "bark",
+     "grass_dry",
+     "leaf",
+     "leaf_dark",
+     "limestone",
+     "plaster",
+     "rock",
+     "stone",
+     "terracotta",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 572
+     },
+     {
+      "node": "LOD1",
+      "tris": 408
+     },
+     {
+      "node": "LOD2",
+      "tris": 166
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "natural-wonder/the-barringer-crater",
+    "file": "world/natural-wonder/the-barringer-crater.glb",
+    "kind": "natural-wonder",
+    "budget": "natural-wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "crater",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.84,
+      -0.04,
+      -0.8804
+     ],
+     "max": [
+      0.84,
+      0.3467,
+      0.8804
+     ]
+    },
+    "radius": 0.894,
+    "size": 0.894,
+    "materials": [
+     "khaki",
+     "rock",
+     "rock_dark",
+     "sand",
+     "sandstone"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 912
+     },
+     {
+      "node": "LOD1",
+      "tris": 552
+     },
+     {
+      "node": "LOD2",
+      "tris": 232
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "resource/aluminum",
+    "file": "world/resource/aluminum.glb",
+    "kind": "resource",
+    "budget": "resource",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.3021,
+      -0.062,
+      -0.3698
+     ],
+     "max": [
+      0.3565,
+      0.36,
+      0.1998
+     ]
+    },
+    "radius": 0.3982,
+    "size": 0.3982,
+    "materials": [
+     "aluminum",
+     "rock_red",
+     "rust"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 154
+     },
+     {
+      "node": "LOD1",
+      "tris": 108
+     },
+     {
+      "node": "LOD2",
+      "tris": 42
+     }
+    ],
+    "lod_px": [
+     22.0,
+     9.0
+    ]
+   },
+   {
+    "id": "resource/coal",
+    "file": "world/resource/coal.glb",
+    "kind": "resource",
+    "budget": "resource",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.3392,
+      -0.048,
+      -0.383
+     ],
+     "max": [
+      0.3667,
+      0.24,
+      0.3096
+     ]
+    },
+    "radius": 0.3978,
+    "size": 0.3978,
+    "materials": [
+     "coal",
+     "wood",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 192
+     },
+     {
+      "node": "LOD1",
+      "tris": 120
+     },
+     {
+      "node": "LOD2",
+      "tris": 48
+     }
+    ],
+    "lod_px": [
+     22.0,
+     9.0
+    ]
+   },
+   {
+    "id": "resource/horses",
+    "file": "world/resource/horses.glb",
+    "kind": "resource",
+    "budget": "resource",
+    "ground": "plane",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.346,
+      -0.0112,
+      -0.5654
+     ],
+     "max": [
+      0.3965,
+      0.4054,
+      0.4141
+     ]
+    },
+    "radius": 0.5965,
+    "size": 0.5965,
+    "materials": [
+     "hide",
+     "horse",
+     "horse_dark",
+     "horse_light"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 270
+     },
+     {
+      "node": "LOD1",
+      "tris": 120
+     },
+     {
+      "node": "LOD2",
+      "tris": 32
+     }
+    ],
+    "lod_px": [
+     22.0,
+     9.0
+    ]
+   },
+   {
+    "id": "resource/iron",
+    "file": "world/resource/iron.glb",
+    "kind": "resource",
+    "budget": "resource",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.3448,
+      -0.0776,
+      -0.3315
+     ],
+     "max": [
+      0.3594,
+      0.2397,
+      0.2731
+     ]
+    },
+    "radius": 0.4126,
+    "size": 0.4126,
+    "materials": [
+     "dark",
+     "iron",
+     "rock_red",
+     "rust"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 126
+     },
+     {
+      "node": "LOD1",
+      "tris": 114
+     },
+     {
+      "node": "LOD2",
+      "tris": 40
+     }
+    ],
+    "lod_px": [
+     22.0,
+     9.0
+    ]
+   },
+   {
+    "id": "resource/oil",
+    "file": "world/resource/oil.glb",
+    "kind": "resource",
+    "budget": "resource",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.3828,
+      -0.048,
+      -0.308
+     ],
+     "max": [
+      0.4099,
+      0.144,
+      0.212
+     ]
+    },
+    "radius": 0.4133,
+    "size": 0.4133,
+    "materials": [
+     "black",
+     "dark",
+     "glass",
+     "obsidian",
+     "red",
+     "slate"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 272
+     },
+     {
+      "node": "LOD1",
+      "tris": 98
+     },
+     {
+      "node": "LOD2",
+      "tris": 38
+     }
+    ],
+    "lod_px": [
+     22.0,
+     9.0
+    ]
+   },
+   {
+    "id": "wonder/big-ben",
+    "file": "world/wonder/big-ben.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7448,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.7448,
+      1.76,
+      0.86
+     ]
+    },
+    "radius": 0.869,
+    "size": 1.76,
+    "materials": [
+     "black",
+     "dark",
+     "glass_dark",
+     "gold",
+     "limestone",
+     "ochre",
+     "slate",
+     "stone",
+     "team",
+     "water",
+     "white",
+     "wood_dark"
+    ],
+    "team_mask": true,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 618
+     },
+     {
+      "node": "LOD1",
+      "tris": 280
+     },
+     {
+      "node": "LOD2",
+      "tris": 140
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "wonder/brandenburg-gate",
+    "file": "world/wonder/brandenburg-gate.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.83,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.83,
+      1.099,
+      0.86
+     ]
+    },
+    "radius": 0.876,
+    "size": 1.099,
+    "materials": [
+     "copper_green",
+     "cream",
+     "limestone",
+     "stone"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 1936
+     },
+     {
+      "node": "LOD1",
+      "tris": 752
+     },
+     {
+      "node": "LOD2",
+      "tris": 176
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "wonder/cn-tower",
+    "file": "world/wonder/cn-tower.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7448,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.7448,
+      1.93,
+      0.86
+     ]
+    },
+    "radius": 0.86,
+    "size": 1.93,
+    "materials": [
+     "concrete",
+     "glass_dark",
+     "grass",
+     "red",
+     "silver",
+     "sky_glass",
+     "stone",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 490
+     },
+     {
+      "node": "LOD1",
+      "tris": 350
+     },
+     {
+      "node": "LOD2",
+      "tris": 214
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "wonder/great-library",
+    "file": "world/wonder/great-library.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7448,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.7448,
+      0.49,
+      0.86
+     ]
+    },
+    "radius": 0.86,
+    "size": 0.86,
+    "materials": [
+     "bronze",
+     "cloth",
+     "dark",
+     "hair",
+     "limestone",
+     "linen",
+     "marble",
+     "paper",
+     "skin",
+     "stone",
+     "terracotta",
+     "wood_dark"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 1536
+     },
+     {
+      "node": "LOD1",
+      "tris": 912
+     },
+     {
+      "node": "LOD2",
+      "tris": 136
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "wonder/hanging-gardens",
+    "file": "world/wonder/hanging-gardens.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7448,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.7448,
+      0.87,
+      0.86
+     ]
+    },
+    "radius": 0.86,
+    "size": 0.87,
+    "materials": [
+     "bark",
+     "dark",
+     "foam",
+     "leaf",
+     "leaf_dark",
+     "leaf_light",
+     "mudbrick",
+     "sand",
+     "stone",
+     "water"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 1852
+     },
+     {
+      "node": "LOD1",
+      "tris": 664
+     },
+     {
+      "node": "LOD2",
+      "tris": 124
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "wonder/hubble-space-telescope",
+    "file": "world/wonder/hubble-space-telescope.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.7448,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.7448,
+      1.3542,
+      0.86
+     ]
+    },
+    "radius": 0.86,
+    "size": 1.3542,
+    "materials": [
+     "aluminum",
+     "black",
+     "concrete",
+     "dark",
+     "gold",
+     "navy",
+     "red",
+     "silver",
+     "steel",
+     "stone",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 546
+     },
+     {
+      "node": "LOD1",
+      "tris": 328
+     },
+     {
+      "node": "LOD2",
+      "tris": 212
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "wonder/red-fort",
+    "file": "world/wonder/red-fort.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.753,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.753,
+      0.5595,
+      0.86
+     ]
+    },
+    "radius": 0.86,
+    "size": 0.86,
+    "materials": [
+     "dark",
+     "grass",
+     "marble",
+     "rock_red",
+     "sandstone"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 2024
+     },
+     {
+      "node": "LOD1",
+      "tris": 932
+     },
+     {
+      "node": "LOD2",
+      "tris": 290
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   },
+   {
+    "id": "wonder/uffizi",
+    "file": "world/wonder/uffizi.glb",
+    "kind": "wonder",
+    "budget": "wonder",
+    "ground": "upright",
+    "site": "land",
+    "site_shape": "pad",
+    "scale": 1.0,
+    "pivot": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bounds": {
+     "min": [
+      -0.76,
+      -0.04,
+      -0.86
+     ],
+     "max": [
+      0.76,
+      1.36,
+      0.86
+     ]
+    },
+    "radius": 0.8911,
+    "size": 1.36,
+    "materials": [
+     "dark",
+     "glass_dark",
+     "gold",
+     "plaster",
+     "sandstone",
+     "stone",
+     "terracotta",
+     "water",
+     "white"
+    ],
+    "team_mask": false,
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 998
+     },
+     {
+      "node": "LOD1",
+      "tris": 316
+     },
+     {
+      "node": "LOD2",
+      "tris": 174
+     }
+    ],
+    "lod_px": [
+     40.0,
+     14.0
+    ]
+   }
+  ],
+  "city_kit": {
+   "styles": [
+    "ancient",
+    "classical",
+    "medieval",
+    "renaissance",
+    "industrial",
+    "modern",
+    "atomic",
+    "information"
+   ],
+   "centers": {
+    "ancient": "city/center-ancient",
+    "classical": "city/center-classical",
+    "medieval": "city/center-medieval",
+    "renaissance": "city/center-renaissance",
+    "industrial": "city/center-industrial",
+    "modern": "city/center-modern",
+    "atomic": "city/center-atomic",
+    "information": "city/center-information"
+   },
+   "houses": {
+    "ancient": [
+     "city/house-ancient-0",
+     "city/house-ancient-1",
+     "city/house-ancient-2"
+    ],
+    "classical": [
+     "city/house-classical-0",
+     "city/house-classical-1",
+     "city/house-classical-2"
+    ],
+    "medieval": [
+     "city/house-medieval-0",
+     "city/house-medieval-1",
+     "city/house-medieval-2"
+    ],
+    "renaissance": [
+     "city/house-renaissance-0",
+     "city/house-renaissance-1",
+     "city/house-renaissance-2"
+    ],
+    "industrial": [
+     "city/house-industrial-0",
+     "city/house-industrial-1",
+     "city/house-industrial-2"
+    ],
+    "modern": [
+     "city/house-modern-0",
+     "city/house-modern-1",
+     "city/house-modern-2"
+    ],
+    "atomic": [
+     "city/house-atomic-0",
+     "city/house-atomic-1",
+     "city/house-atomic-2"
+    ],
+    "information": [
+     "city/house-information-0",
+     "city/house-information-1",
+     "city/house-information-2"
+    ]
+   },
+   "houses_by_population": [
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     10
+    ],
+    [
+     10,
+     12
+    ],
+    [
+     12,
+     14
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     20,
+     18
+    ]
+   ],
+   "older_style_share": 3,
+   "max_landmarks": 4,
+   "slots": [
+    [
+     0.34,
+     0.0,
+     -30.0,
+     0.15,
+     "inner"
+    ],
+    [
+     0.17,
+     0.2944,
+     15.0,
+     0.15,
+     "inner"
+    ],
+    [
+     -0.17,
+     0.2944,
+     -15.0,
+     0.15,
+     "inner"
+    ],
+    [
+     -0.34,
+     0.0,
+     30.0,
+     0.15,
+     "inner"
+    ],
+    [
+     -0.17,
+     -0.2944,
+     0.0,
+     0.15,
+     "inner"
+    ],
+    [
+     0.17,
+     -0.2944,
+     -30.0,
+     0.15,
+     "inner"
+    ],
+    [
+     0.5796,
+     0.1553,
+     -15.0,
+     0.14,
+     "outer"
+    ],
+    [
+     0.4243,
+     0.4243,
+     30.0,
+     0.14,
+     "outer"
+    ],
+    [
+     0.1553,
+     0.5796,
+     0.0,
+     0.14,
+     "outer"
+    ],
+    [
+     -0.1553,
+     0.5796,
+     -30.0,
+     0.14,
+     "outer"
+    ],
+    [
+     -0.4243,
+     0.4243,
+     15.0,
+     0.14,
+     "outer"
+    ],
+    [
+     -0.5796,
+     0.1553,
+     -15.0,
+     0.14,
+     "outer"
+    ],
+    [
+     -0.5796,
+     -0.1553,
+     30.0,
+     0.14,
+     "outer"
+    ],
+    [
+     -0.4243,
+     -0.4243,
+     0.0,
+     0.14,
+     "outer"
+    ],
+    [
+     -0.1553,
+     -0.5796,
+     -30.0,
+     0.14,
+     "outer"
+    ],
+    [
+     0.1553,
+     -0.5796,
+     15.0,
+     0.14,
+     "outer"
+    ],
+    [
+     0.4243,
+     -0.4243,
+     -15.0,
+     0.14,
+     "outer"
+    ],
+    [
+     0.5796,
+     -0.1553,
+     30.0,
+     0.14,
+     "outer"
+    ]
+   ],
+   "landmarks": {}
+  }
+ },
+ "terrain": {
+  "generator": "platform/tools/blender/export_terrain.py",
+  "note": "Generated. Edit platform/tools/blender/terrain/*.py and run sh platform/tools/blender/export_all.sh.",
+  "axes": "glTF y-up, model units; the coast props scale the footprint to their radius and stretch the height from the sea floor to their top",
+  "budgets": {
+   "sea-stack": [
+    420,
+    220,
+    90
+   ]
+  },
+  "shapes": {
+   "sea-stack": [
+    0.485,
+    1.0,
+    0.0
+   ]
+  },
+  "models": [
+   {
+    "id": "terrain/sea-stack-0",
+    "file": "terrain/sea-stack-0.glb",
+    "budget": "sea-stack",
+    "bounds": {
+     "min": [
+      -0.4088,
+      0.0,
+      -0.4426
+     ],
+     "max": [
+      0.4248,
+      1.0,
+      0.3926
+     ]
+    },
+    "radius": 0.4609,
+    "materials": [
+     "grass",
+     "limestone",
+     "rock",
+     "rock_dark",
+     "stone"
+    ],
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 280
+     },
+     {
+      "node": "LOD1",
+      "tris": 150
+     },
+     {
+      "node": "LOD2",
+      "tris": 60
+     }
+    ]
+   },
+   {
+    "id": "terrain/sea-stack-1",
+    "file": "terrain/sea-stack-1.glb",
+    "budget": "sea-stack",
+    "bounds": {
+     "min": [
+      -0.4497,
+      0.0,
+      -0.4154
+     ],
+     "max": [
+      0.4403,
+      1.0,
+      0.4336
+     ]
+    },
+    "radius": 0.4636,
+    "materials": [
+     "grass",
+     "limestone",
+     "rock",
+     "rock_dark",
+     "stone"
+    ],
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 280
+     },
+     {
+      "node": "LOD1",
+      "tris": 150
+     },
+     {
+      "node": "LOD2",
+      "tris": 60
+     }
+    ]
+   },
+   {
+    "id": "terrain/sea-stack-2",
+    "file": "terrain/sea-stack-2.glb",
+    "budget": "sea-stack",
+    "bounds": {
+     "min": [
+      -0.4528,
+      0.0,
+      -0.4091
+     ],
+     "max": [
+      0.4198,
+      1.0,
+      0.4271
+     ]
+    },
+    "radius": 0.4641,
+    "materials": [
+     "grass",
+     "limestone",
+     "rock",
+     "rock_dark",
+     "stone"
+    ],
+    "lods": [
+     {
+      "node": "LOD0",
+      "tris": 280
+     },
+     {
+      "node": "LOD1",
+      "tris": 150
+     },
+     {
+      "node": "LOD2",
+      "tris": 60
+     }
+    ]
+   }
+  ]
+ }
+}

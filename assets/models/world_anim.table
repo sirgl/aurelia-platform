@@ -1,0 +1,15 @@
+# World model animation classes of the models this part owns: manifest id (a trailing * takes every id with
+# that prefix), kind, amplitude, angular speed, optional emitter. First match wins; the platform's table is
+# read first, then each module's (platform/crates/render/build.rs). Kinds: sway foliage graze bob geyser plume.
+# The geyser's amplitude (vent height) is read from the mesh, the plume's from the crater.
+resource/horses graze 0.28 0.45
+improvement/farm* sway 0.030 2.4
+improvement/terrace-farm sway 0.025 2.2
+improvement/pasture foliage 0.020 2.0
+improvement/lumber-mill foliage 0.025 1.6
+improvement/holy-site foliage 0.025 1.6
+natural-wonder/fountain-of-youth foliage 0.0 1.8 fountain
+improvement/fishing-boats bob 0.018 1.2
+# Geyser: the cycle takes about twelve seconds; the amplitude (vent height) is read from
+# the mesh.
+natural-wonder/old-faithful geyser 0.0 0.52

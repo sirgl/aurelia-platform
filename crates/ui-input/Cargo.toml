@@ -1,0 +1,39 @@
+[package]
+name = "aurelia-ui-input"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "A small glue between winit and egui: window events to egui input, egui output (cursor, clipboard, links, IME) to the window. Native, Android and wasm32."
+keywords = ["egui", "winit", "input", "gamedev"]
+categories = ["gui", "game-development"]
+publish = true
+
+# The translation core (`event`, `translate`, `output`, `clipboard`) knows egui and plain Rust
+# structs only; `winit_glue` is the thin adapter from winit's `WindowEvent`. docs/split-layout.md
+# explains why this crate exists (the stock `egui-winit` 0.36.2 does not build for wasm32).
+[lib]
+name = "ui_input"
+
+[features]
+default = ["winit", "clipboard", "links"]
+# The adapter from `winit::event::WindowEvent` and the `State` the launchers hold.
+winit = ["dep:winit"]
+# The system clipboard on desktop (arboard); elsewhere the clipboard stays inside the app.
+clipboard = ["dep:arboard"]
+# `egui::OutputCommand::OpenUrl` opens the system browser (a new tab on the web).
+links = ["dep:webbrowser"]
+
+[dependencies]
+egui = { version = "0.36.2", default-features = false }
+log = "0.4"
+web-time = "1.1.0"
+winit = { version = "0.30.13", optional = true }
+webbrowser = { version = "1.2", optional = true }
+
+[target.'cfg(not(any(target_os = "android", target_arch = "wasm32")))'.dependencies]
+arboard = { version = "3.6", default-features = false, optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "0.2.129"
+js-sys = "0.3.106"
+web-sys = { version = "0.3.106", features = ["Window", "Navigator"] }

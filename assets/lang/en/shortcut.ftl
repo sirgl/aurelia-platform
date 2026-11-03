@@ -1,0 +1,81 @@
+# Keyboard shortcuts: the action labels (one message per action id of a shortcut table, `shortcut.<id>`),
+# the group titles and the texts of the shortcuts screens. Keycaps (Enter, F6, Ctrl) are never messages.
+
+shortcut.group.turn = Turn
+shortcut.group.map = Map
+shortcut.group.camera = Camera
+shortcut.group.game = Game
+shortcut.group.screens = Screens
+shortcut.group.units = Units
+shortcut.group.cities = Cities
+
+shortcut.end-turn = End the turn
+shortcut.center-selection = Centre the map on the selection
+shortcut.toggle-grid = Show or hide the hex grid
+shortcut.toggle-yields = Show or hide the tile yields
+shortcut.zoom-in = Zoom in
+shortcut.zoom-out = Zoom out
+shortcut.pan-left = Camera left
+shortcut.pan-right = Camera right
+shortcut.pan-up = Camera up
+shortcut.pan-down = Camera down
+shortcut.pan-left-alt = Camera left (no unit selected)
+shortcut.pan-right-alt = Camera right (no unit selected)
+shortcut.pan-up-alt = Camera up (no unit selected)
+shortcut.pan-down-alt = Camera down (no unit selected)
+shortcut.quick-save = Quick save
+shortcut.quick-load = Quick load
+shortcut.settings = Settings
+shortcut.shortcuts = Keyboard shortcuts
+
+shortcut.encyclopedia = Encyclopedia
+shortcut.overview-economy = Economy overview
+shortcut.overview-military = Military overview
+shortcut.overview-diplomacy = Diplomacy overview
+shortcut.policies = Social policies
+shortcut.technologies = Technology tree
+shortcut.notifications = Notification log
+shortcut.victory = Victory progress
+shortcut.demographics = Demographics
+shortcut.culture = Culture overview
+shortcut.next-unit = Next unit waiting for orders
+shortcut.previous-unit = Previous unit waiting for orders
+shortcut.order-move = Move
+shortcut.order-attack = Attack
+shortcut.order-fortify = Fortify (sleep, for a unit that cannot)
+shortcut.order-sleep = Sleep
+shortcut.order-skip = Skip: do nothing this turn
+shortcut.order-heal = Fortify until healed
+shortcut.order-found-city = Found a city
+shortcut.order-improve = Build an improvement
+shortcut.order-road = Build a road
+shortcut.order-chop = Chop the forest
+shortcut.order-upgrade = Upgrade the unit
+shortcut.order-set-up = Set up
+shortcut.order-pillage = Pillage
+shortcut.order-promote = Promote
+shortcut.order-intercept = Stand ready to intercept enemy aircraft
+shortcut.order-sweep = Air sweep: attack the aircraft over a tile
+shortcut.next-city = Next city
+shortcut.previous-city = Previous city
+
+shortcut.diplomacy = Diplomacy
+shortcut.laws = Laws
+shortcut.projects = Projects
+shortcut.supply-lens = Supply lens on the map
+shortcut.technologies@lal = Research
+
+shortcut.ui.title = Keyboard shortcuts
+shortcut.ui.overlay-note = Change the keys in Settings, Controls.
+shortcut.ui.close = Close
+shortcut.ui.unbound = no key
+shortcut.ui.press-key = Press the new key (Esc cancels)
+shortcut.ui.cancel = Cancel
+shortcut.ui.replace = Replace
+shortcut.ui.change = Change
+shortcut.ui.clear = Clear
+shortcut.ui.reset = Reset
+shortcut.ui.reset-all = Reset all to defaults
+shortcut.ui.show-overlay = Show the list
+shortcut.ui.used-by = { $key } is already used by: { $actions }
+shortcut.ui.settings-note = Click Change and press the new key. Esc, the pointer and text fields are fixed. Your changes are kept in the settings file.

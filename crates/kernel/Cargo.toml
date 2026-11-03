@@ -1,0 +1,35 @@
+[package]
+name = "aurelia-kernel"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic, data-driven turn-based 4X strategy kernel: map, units, cities, effects, replay hashing and the AI contract."
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["strategy", "4x", "deterministic", "gamedev", "simulation"]
+categories = ["game-development", "simulation"]
+readme = "README.md"
+rust-version = "1.98"
+
+# The generic 4X kernel (PLATFORM.md): map, players, cities, units,
+# knowledge, navigation, the effect engine and its vocabulary, the rules
+# compiler, derived state, saves and replay — generic over the rules
+# module (`module::RulesModule`). It depends on no rules module; a game
+# (classic-rules) instantiates it.
+
+[lib]
+name = "kernel"
+
+[dependencies]
+# Scoped timers for the logic profile; empty calls unless a tool turns them on.
+prof = { package = "aurelia-prof", path = "../prof", version = "0.1.0" }
+serde = { version = "1.0.229", features = ["derive"], optional = true }
+
+[features]
+# Deserialize for the vocabulary and source types: the RON fixtures of a
+# rules module's unit tests read them (dev-dependency only).
+test-fixtures = ["dep:serde"]
+# Test helpers that change an existing game outside `execute` (`GameState::debug_*`,
+# `world_mut`): off in every build of the game, on in the dev-dependencies of the test crates
+# and benches and in the dev-tools builds (docs/world-builder.md).
+harness = []

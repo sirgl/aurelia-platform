@@ -1,0 +1,4 @@
+# Raw user-visible string literals per file (platform/tools/i18n-scan.py). Only goes down.
+classic/crates/classic-ui/src/ui/screen_pedia.rs 2
+classic/crates/classic-ui/src/ui/unit_actions.rs 1
+lands/crates/lal-ui/src/view/refusal.rs 4

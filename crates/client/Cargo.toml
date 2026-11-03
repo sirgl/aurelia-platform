@@ -1,0 +1,40 @@
+[package]
+name = "aurelia-client"
+version = "0.1.0"
+edition = "2021"
+description = "The Aurelia application shell on egui: screens, input, saves, settings and the simulation driver."
+license = "MIT OR Apache-2.0"
+authors = ["The Aurelia contributors"]
+repository = "https://github.com/sirgl/aurelia-platform"
+keywords = ["egui", "gamedev", "ui", "shell"]
+categories = ["game-development", "gui"]
+rust-version = "1.98"
+publish = false
+
+[lib]
+name = "client"
+
+[dependencies]
+# std::time::Instant panics in a browser; web-time is std on native.
+web-time = "1.1.0"
+kernel = { package = "aurelia-kernel", path = "../kernel" }
+i18n = { package = "aurelia-i18n", path = "../i18n" }
+render = { package = "aurelia-render", path = "../render" }
+# The app shell (`shell`): egui screens and HUD, painted with wgpu; PNG art and captures.
+egui = "0.36.2"
+egui-wgpu = "0.36.2"
+# The report file is a zip (`shell::report::bundle`): the deflate stream and the CRC come from flate2,
+# already in the lock file through png.
+flate2 = { version = "1.1.10", default-features = false, features = ["rust_backend"] }
+image = { version = "0.25.10", default-features = false, features = ["png", "webp"] }
+pollster = "1.0.1"
+wgpu = "30.0.1"
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+# Process memory for the benches (`perf.rs`): phys_footprint and malloc zone statistics.
+libc = "0.2.189"
+
+[dev-dependencies]
+sandbox-rules = { package = "aurelia-sandbox-rules", path = "../sandbox-rules" }
+sandbox-content = { package = "aurelia-sandbox-content", path = "../sandbox-content" }
+kernel = { package = "aurelia-kernel", path = "../kernel", features = ["harness"] }

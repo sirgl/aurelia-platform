@@ -1,0 +1,26 @@
+# platform: the rules-independent part (kernel, renderer, UI shell, localization, networking, the
+# sandbox module). It builds alone: `cd platform && cargo check --workspace`. It must never depend
+# on classic/ or lands/ (docs/split-layout.md).
+[workspace]
+members = [
+    "crates/prof",
+    "crates/i18n",
+    "crates/kernel",
+    "crates/render",
+    "crates/client",
+    "crates/launcher-core",
+    "crates/ui-input",
+    "crates/net",
+    "crates/sandbox-rules",
+    "crates/sandbox-content",
+    "crates/sandbox-ui",
+]
+resolver = "2"
+
+# The test build, the same as classic's (classic/docs/testing.md): release semantics at opt-level 1,
+# which shares generic instances between crates and keeps incremental rebuilds of tests short.
+[profile.fasttest]
+inherits = "release"
+opt-level = 1
+codegen-units = 256
+incremental = true

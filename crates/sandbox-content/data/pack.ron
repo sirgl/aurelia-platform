@@ -1,0 +1,41 @@
+// The sandbox content pack: every entity of the sandbox game. Keys are
+// `sandbox:<table>/<id>`; the schema is `sandbox_content::pack`.
+(
+    // One terrain per ground the kernel's map generator lays. `code` is the
+    // map terrain code (the renderer draws codes).
+    terrains: [
+        (key: "sandbox:terrain/sea", name: "Sea", ground: Water, code: 4, food: 1, production: 0),
+        (key: "sandbox:terrain/peaks", name: "Peaks", ground: Mountains, code: 6, impassable: true),
+        (key: "sandbox:terrain/highland", name: "Highland", ground: Hills, code: 2, production: 2, moves: 2, defence: 25),
+        (key: "sandbox:terrain/meadow", name: "Meadow", ground: Humid, code: 1, food: 2, production: 1),
+        (key: "sandbox:terrain/steppe", name: "Steppe", ground: Temperate, code: 0, food: 1, production: 1),
+        (key: "sandbox:terrain/dunes", name: "Dunes", ground: Arid, code: 3, production: 1),
+        (key: "sandbox:terrain/taiga", name: "Taiga", ground: Cold, code: 7, food: 1),
+        (key: "sandbox:terrain/glacier", name: "Glacier", ground: Frozen, code: 5),
+    ],
+    // Planted where the generator plants forest.
+    grove: (key: "sandbox:feature/grove", name: "Grove", production: 1, moves: 2, defence: 25),
+    units: [
+        (key: "sandbox:unit/settler", name: "Settler", kind: Settler, cost: 36, moves: 2, model: "unit/settler"),
+        (key: "sandbox:unit/scout", name: "Scout", kind: Scout, cost: 15, moves: 3, strength: 4, model: "unit/scout"),
+        (key: "sandbox:unit/spearman", name: "Spearman", kind: Soldier, cost: 20, moves: 2, strength: 8, model: "unit/spearman"),
+        (key: "sandbox:unit/raider", name: "Raider", kind: Rider, cost: 32, moves: 3, strength: 11, model: "unit/horseman"),
+    ],
+    buildings: [
+        (key: "sandbox:building/seat", name: "Seat of Rule", seat: true, food: 1, production: 2),
+        (key: "sandbox:building/granary", name: "Granary", cost: 30, food: 2),
+        (key: "sandbox:building/workshop", name: "Workshop", cost: 40, production: 2),
+    ],
+    factions: [
+        (key: "sandbox:faction/amber", name: "Amber League", leader: "Ostra", color: (222, 160, 48), cities: ["Ambergate", "Sunhold", "Resin Ford", "Goldmere"]),
+        (key: "sandbox:faction/azure", name: "Azure Compact", leader: "Velin", color: (58, 120, 212), cities: ["Bluewater", "Skyreach", "Coldharbor", "Mistvale"]),
+        (key: "sandbox:faction/crimson", name: "Crimson Host", leader: "Tarrak", color: (196, 52, 52), cities: ["Redkeep", "Emberfall", "Rustmoor", "Cinderpeak"]),
+        (key: "sandbox:faction/jade", name: "Jade Circle", leader: "Imre", color: (52, 168, 104), cities: ["Greenhollow", "Mossbank", "Fernwick", "Willowmere"]),
+    ],
+    // What every faction starts with: its settlers, one unit in each
+    // starting role (defender, explorer).
+    start: (era: "sandbox:era/dawn", settlers: 1, defender: "sandbox:unit/spearman", explorer: "sandbox:unit/scout"),
+    // Art: the colours of the renderer's six ground texture layers, in its
+    // order (plains, grass, hills, desert, snow, mountain).
+    layers: [(176, 170, 96), (118, 166, 82), (140, 150, 96), (214, 186, 120), (226, 230, 236), (110, 112, 128)],
+)

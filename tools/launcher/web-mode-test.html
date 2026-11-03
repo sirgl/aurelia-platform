@@ -1,0 +1,71 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Mode detection tests</title>
+<!-- Serve the repository root and open /platform/tools/launcher/web-mode-test.html: tests of lands/launcher/web/static/mode.js against faked browsers. -->
+<pre id="out">running</pre>
+<script type="module">
+const source = await (await fetch("../../../lands/launcher/web/static/mode.js")).text();
+const out = [];
+
+function run({ ua = "", mobile, touchPoints = 0, coarse = false, hover = true, anyCoarse, width = 1440, height = 900, search = "", stored = null, storageThrows = false }) {
+  const store = new Map(stored ? [["aurelia.mode", stored]] : []);
+  const meta = { attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } };
+  const root = { dataset: {} };
+  const win = {
+    innerWidth: width, innerHeight: height, location: { search, href: `https://example.org/${search}`, assigned: null, assign(u) { this.assigned = u; } },
+    localStorage: storageThrows ? { getItem() { throw new Error("denied"); }, setItem() { throw new Error("denied"); }, removeItem() { throw new Error("denied"); } }
+      : { getItem: (k) => (store.has(k) ? store.get(k) : null), setItem: (k, v) => store.set(k, v), removeItem: (k) => store.delete(k) },
+    matchMedia: (q) => ({ matches: q === "(pointer: coarse)" ? coarse : q === "(hover: none)" ? !hover : q === "(any-pointer: coarse)" ? (anyCoarse ?? coarse) : false }),
+  };
+  const nav = { userAgent: ua, maxTouchPoints: touchPoints };
+  if (mobile !== undefined) nav.userAgentData = { mobile };
+  win.window = win;
+  new Function("window", "navigator", "URLSearchParams", "URL", "document", source)(win, nav, URLSearchParams, URL, { documentElement: root, getElementById: () => meta });
+  return { mode: win.aureliaMode, root, meta, win, store };
+}
+
+let failed = 0;
+const expect = (name, got, want) => {
+  const ok = JSON.stringify(got) === JSON.stringify(want);
+  if (!ok) failed += 1;
+  out.push(`${ok ? "ok  " : "FAIL"} ${name}${ok ? "" : `: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`}`);
+};
+const pick = (r) => [r.mode.mode, r.mode.source];
+
+const IPHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1";
+const PIXEL = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/126.0 Mobile Safari/537.36";
+const IPAD_AS_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15";
+
+expect("iPhone Safari (no userAgentData)", pick(run({ ua: IPHONE, touchPoints: 5, coarse: true, hover: false, width: 390, height: 664 })), ["mobile", "auto"]);
+expect("Android Chrome phone", pick(run({ ua: PIXEL, mobile: true, touchPoints: 5, coarse: true, hover: false, width: 412, height: 800 })), ["mobile", "auto"]);
+expect("Android tablet (mobile=false, touch main pointer)", pick(run({ ua: PIXEL, mobile: false, touchPoints: 5, coarse: true, hover: false, width: 1280, height: 800 })), ["mobile", "auto"]);
+expect("iPad asking for the desktop site", pick(run({ ua: IPAD_AS_MAC, touchPoints: 5, coarse: true, hover: false, width: 1024, height: 768 })), ["mobile", "auto"]);
+expect("desktop Chrome", pick(run({ mobile: false })), ["desktop", "auto"]);
+expect("desktop Firefox (no userAgentData)", pick(run({ ua: "Mozilla/5.0 (X11; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0" })), ["desktop", "auto"]);
+expect("laptop with a touch screen, big window", pick(run({ mobile: false, touchPoints: 10, coarse: false, anyCoarse: true, hover: true })), ["desktop", "auto"]);
+expect("laptop with a touch screen, phone-sized window", pick(run({ mobile: false, touchPoints: 10, coarse: false, anyCoarse: true, hover: true, width: 420, height: 800 })), ["mobile", "auto"]);
+expect("desktop with a mouse, narrow window", pick(run({ mobile: false, width: 420, height: 800 })), ["desktop", "auto"]);
+expect("?mode=desktop on a phone", pick(run({ ua: PIXEL, mobile: true, coarse: true, hover: false, search: "?mode=desktop" })), ["desktop", "query"]);
+expect("?mode=mobile on a desktop", pick(run({ mobile: false, search: "?mode=mobile" })), ["mobile", "query"]);
+expect("stored desktop beats detection", pick(run({ ua: PIXEL, mobile: true, coarse: true, hover: false, stored: "desktop" })), ["desktop", "stored"]);
+expect("query beats stored", pick(run({ mobile: false, stored: "desktop", search: "?mode=mobile" })), ["mobile", "query"]);
+expect("?mode=auto forgets the stored choice", pick(run({ ua: PIXEL, mobile: true, coarse: true, hover: false, stored: "desktop", search: "?mode=auto" })), ["mobile", "auto"]);
+expect("garbage ?mode= is ignored", pick(run({ mobile: false, search: "?mode=tv" })), ["desktop", "auto"]);
+expect("localStorage throws: still decides", pick(run({ ua: PIXEL, mobile: true, coarse: true, hover: false, storageThrows: true })), ["mobile", "auto"]);
+{
+  const r = run({ ua: PIXEL, mobile: true, coarse: true, hover: false, search: "?assets=https://a.example/x/" });
+  expect("mobile mode rewrites the viewport", /user-scalable=no/.test(r.meta.attrs.content) && /viewport-fit=cover/.test(r.meta.attrs.content), true);
+  expect("html data-mode", r.root.dataset.mode, "mobile");
+  r.mode.switchTo("desktop");
+  expect("switch remembers and keeps the other query", [r.store.get("aurelia.mode"), r.win.location.assigned], ["desktop", "https://example.org/?assets=https%3A%2F%2Fa.example%2Fx%2F&mode=desktop"]);
+  const d = run({ mobile: false });
+  expect("desktop keeps the viewport tag", d.meta.attrs.content, undefined);
+}
+{
+  const r = run({ mobile: false, storageThrows: true });
+  r.mode.switchTo("mobile");
+  expect("switch works when storage is blocked", r.win.location.assigned, "https://example.org/?mode=mobile");
+}
+document.getElementById("out").textContent = out.join("\n") + `\n${failed ? failed + " FAILED" : "all passed"}`;
+window.__failed = failed;
+</script>
