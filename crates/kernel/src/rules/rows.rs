@@ -470,8 +470,8 @@ impl<M: RulesModule> NationDefinition<M> {
     pub(crate) fn hash_fields<H: Hasher>(&self, h: &mut H) {
         let NationDefinition {
             key, name, leader, color, start_bias, effects, adjective, ability_name, unique_units,
-            unique_buildings, unique_improvements, start_regions, free_techs, free_units, inert,
-            city_names: _, module,
+            unique_buildings, unique_improvements, start_regions, free_techs, free_units, start_units,
+            inert, city_names: _, module,
         } = self;
         key.hash(h);
         name.hash(h);
@@ -487,6 +487,11 @@ impl<M: RulesModule> NationDefinition<M> {
         start_regions.hash(h);
         free_techs.hash(h);
         free_units.hash(h);
+        // Hashed only when set: a nation without a start-unit rule keeps the
+        // fingerprint it had before the field existed.
+        if !start_units.is_empty() {
+            start_units.hash(h);
+        }
         module.hash_at(NationPlace::AfterFreeUnits, h);
         inert.hash(h);
     }

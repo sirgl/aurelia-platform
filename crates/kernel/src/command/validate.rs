@@ -290,6 +290,9 @@ fn validate_enqueue<M: RulesModule>(
     match item {
         ProductionItem::Unit(kind) => {
             let def = rules.units.get(kind.0 as usize).ok_or(violation("unknown unit kind"))?;
+            if rules.replaced_for(nation, kind) {
+                return Err(CommandError::Refused(Refusal::ReplacedByUniqueUnit));
+            }
             if let Some(req) = def.required_tech {
                 let known = auth.players().techs_of(player).contains(&req);
                 if !known && !unit_unlocked(auth, rules, player, kind) {

@@ -17,6 +17,7 @@ use crate::rules::compile_tables::{check_consistency, compile_classic_tables};
 use crate::rules::compiled::{BuildingDefinition, NationDefinition, CompiledRuleset, FeatureDefinition, FeatureRemoval, ImprovementDefinition, PromotionDefinition, ResourceDefinition, TechYield, TechnologyDefinition, UnitDefinition, WonderProduction, DEFAULT_STRENGTH, MAX_PROMOTIONS};
 use crate::rules::tables::ModuleTables;
 use crate::rules::content::{ContentTable, EraId, ProjectId, SpecialistId, TerrainKindId, Yields};
+use crate::rules::roles::StartingUnit;
 use crate::rules::rows::RowExtension;
 use crate::rules::effects::EffectSet;
 use crate::rules::key_index::{KeyIndex, TableKeys};
@@ -952,6 +953,14 @@ fn compile_nations<M: RulesModule>(
             let kind = UnitKindId(ix.id(ContentTable::Unit, &unit.key.0)?);
             free_units.push((kind, unit.count));
         }
+        let mut start_units: Vec<(StartingUnit, UnitKindId)> = Vec::with_capacity(c.start_units.len());
+        for (slot, unit) in &c.start_units {
+            if start_units.iter().any(|(taken, _)| taken == slot) {
+                return Err(RulesError::Inconsistent(format!("{key}: two start units for the {slot:?} slot")));
+            }
+            let kind = UnitKindId(ix.id(ContentTable::Unit, &unit.0)?);
+            start_units.push((*slot, kind));
+        }
         nations.push(NationDefinition {
             key: key.to_string(),
             name: c.name.clone(),
@@ -971,6 +980,7 @@ fn compile_nations<M: RulesModule>(
                 .map(TechId)
                 .collect(),
             free_units,
+            start_units,
             inert: compile_inert(ix, key, &c.inert)?,
             city_names: c.city_names.clone(),
             module: RowExtension::compile(&c.module, key, ix, rules)?,

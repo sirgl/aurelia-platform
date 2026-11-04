@@ -334,6 +334,9 @@ pub struct NationDefinition<M: RulesModule> {
     pub start_regions: StartRegions,
     pub free_techs: Vec<TechId>,
     pub free_units: Vec<(UnitKindId, u16)>,
+    /// The nation's own unit for a starting slot (`starting_units`); a slot
+    /// not listed here takes the slot's unit or its `replaces` variant.
+    pub start_units: Vec<(StartingUnit, UnitKindId)>,
     pub inert: Vec<InertEffect>,
     /// Ordered, validated names for newly founded cities.
     pub city_names: Vec<String>,
@@ -552,8 +555,9 @@ impl<M: RulesModule> CompiledRuleset<M> {
 
     /// Units a player of nation `nation` starts with in the first era
     /// (Classic: the nation's free units, then the era's defense, worker
-    /// and explore units as the nation's variant of the units playing
-    /// those `StartingUnit` roles). Content without eras or free units: one
+    /// and explore units: the nation's own unit for the slot when its
+    /// `start_units` name one, else the nation's variant of the unit playing
+    /// that `StartingUnit` role). Content without eras or free units: one
     /// founder.
     pub fn starting_units(&self, nation: u8) -> Vec<UnitKindId> {
         let mut units = Vec::new();
@@ -579,12 +583,22 @@ impl<M: RulesModule> CompiledRuleset<M> {
             let Some(regular) = self.roles.starting_unit(role) else {
                 continue;
             };
-            let kind = self.nation_variant_of(nation, regular);
+            let own = self.nations.get(nation as usize).and_then(|def| {
+                def.start_units.iter().find(|(slot, _)| *slot == role).map(|(_, kind)| *kind)
+            });
+            let kind = own.unwrap_or_else(|| self.nation_variant_of(nation, regular));
             for _ in 0..count {
                 units.push(kind);
             }
         }
         units
+    }
+
+    /// Does `nation` have a unique unit that replaces the regular unit `kind`?
+    /// Such a nation does not build `kind` (the unit counterpart of the rule
+    /// on buildings, `world::building_rules::nation_rule`).
+    pub fn replaced_for(&self, nation: u8, kind: UnitKindId) -> bool {
+        self.units.iter().any(|unit| unit.nation == Some(nation) && unit.replaces == Some(kind))
     }
 
     /// The unit of `nation` for the regular unit `key`: its unique replacement

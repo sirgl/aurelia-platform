@@ -580,6 +580,10 @@ pub struct SourceNation<M: RulesModule> {
     pub start_regions: StartRegions,
     pub free_techs: Vec<StableContentKey>,
     pub free_units: Vec<KeyCount>,
+    /// The unit this nation starts with in a starting slot, instead of the
+    /// slot's regular unit or its `replaces` variant (the Shoshone's
+    /// Pathfinder in the defense slot). The unit must be the nation's own.
+    pub start_units: Vec<(crate::rules::roles::StartingUnit, StableContentKey)>,
     pub inert: Vec<SourceInertEffect>,
     /// Ordered city names; an empty pool uses a readable generic fallback.
     pub city_names: Vec<String>,

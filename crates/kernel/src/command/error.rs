@@ -34,6 +34,8 @@ pub enum Refusal {
     OtherNation,
     /// Content that production never makes (great people, the palace).
     NotProducible,
+    /// A regular unit the player's nation replaces with a unique unit of its own.
+    ReplacedByUniqueUnit,
 }
 
 /// Why a city cannot be founded on a tile.
@@ -75,6 +77,7 @@ impl Refusal {
             Refusal::WonderBuilt => "wonder already built",
             Refusal::OtherNation => "unique to another nation",
             Refusal::NotProducible => "not producible",
+            Refusal::ReplacedByUniqueUnit => "replaced by a unique unit",
         }
     }
 }

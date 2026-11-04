@@ -365,6 +365,17 @@ fn check_uniques<M: RulesModule>(rules: &CompiledRuleset<M>) -> Result<(), Rules
             nation.unique_improvements.iter().map(|m| m.0),
         )?;
     }
+    for (c, nation) in rules.nations.iter().enumerate() {
+        for (slot, kind) in &nation.start_units {
+            let unit = &rules.units[kind.0 as usize];
+            if unit.nation != Some(c as u8) {
+                return Err(RulesError::Inconsistent(format!(
+                    "{}: the {slot:?} start unit {} is not the nation's own unit",
+                    nation.key, unit.key
+                )));
+            }
+        }
+    }
     for unit in &rules.units {
         if let Some(replaced) = unit.replaces {
             let regular = &rules.units[replaced.0 as usize];
