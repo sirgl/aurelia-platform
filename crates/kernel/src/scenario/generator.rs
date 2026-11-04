@@ -8,6 +8,7 @@ use crate::rules::roles::{Climate, FeatureRole, Ground, StartingUnit};
 use crate::rules::source::StartBias;
 use crate::rules::CompiledRuleset;
 use super::landscape;
+use super::start_balance::{self, StartBalance};
 use crate::world::builder::WorldBuilder;
 use crate::world::state::{GameConfig, GameState};
 use crate::scenario::map_script::MapScript;
@@ -248,13 +249,17 @@ fn generate_player_game_inner<'r, M: RulesModule>(
     };
     let mut game = generate_scripted_builder(&empty, rules, script);
     let nations = assign_nations(rules, cfg.players, human_nation, cfg.seed);
-    let starts = pick_starts(game.state(), rules, &nations, cfg.players);
+    // The kernel's own generators make fixtures: their starts stay as they were. A rules module that
+    // plays real games (Classic's `generate_new_game_on`) asks for the balance.
+    let balance = StartBalance::OFF;
+    let starts = pick_starts_with(game.state(), rules, &nations, cfg.players, &balance);
     super::sea_resources::support_starts(&mut game, &starts, cfg.seed);
     for (p, &tile) in starts.iter().enumerate() {
         let player = PlayerId(p as u8);
         game.set_player_nation(player, nations[p]);
         start_player(&mut game, player, nations[p], tile);
     }
+    start_balance::balance_starts(&mut game, &starts, cfg.seed, &balance);
     game
 }
 
@@ -335,6 +340,20 @@ pub const START_MARGIN: i32 = 3;
 /// the nation bias (coastal is closer to the sea). Only map data, no RNG
 /// (the seed has already played its part in terrain generation).
 pub fn pick_starts<M: RulesModule>(game: &GameState<M>, rules: &CompiledRuleset<M>, nations: &[u8], players: u8) -> Vec<TileId> {
+    pick_starts_with(game, rules, nations, players, &StartBalance::OFF)
+}
+
+/// `pick_starts` with the policy of `balance`: with `balance.fair` off, the old pick bit for bit.
+/// With it on, a candidate is also valued by the real yields round it (`start_balance`): one that
+/// reaches the minimum food and production and the floor value beats any that does not, and the
+/// nearer a value is to the target the better, so the first nations do not take the best land.
+pub fn pick_starts_with<M: RulesModule>(
+    game: &GameState<M>,
+    rules: &CompiledRuleset<M>,
+    nations: &[u8],
+    players: u8,
+    balance: &StartBalance,
+) -> Vec<TileId> {
     let map = game.view().auth.map();
     let dims = map.dimensions;
     let w = dims.width as i32;
@@ -408,7 +427,9 @@ pub fn pick_starts<M: RulesModule>(game: &GameState<M>, rules: &CompiledRuleset<
         }
         score
     };
-    let score_tile = |i: usize, bias: StartBias| -> i32 {
+    // The terrain part of a candidate's score (what the old pick valued of the land) and the
+    // water part (closeness to the sea and the nation's bias for it).
+    let terrain_part = |i: usize| -> i32 {
         let coord = dims.to_coord(TileId(i as u32)).expect("in-bounds tile");
         if map.terrain(TileId(i as u32)).is_none() {
             return i32::MIN / 4;
@@ -438,7 +459,10 @@ pub fn pick_starts<M: RulesModule>(game: &GameState<M>, rules: &CompiledRuleset<
                 }
             }
         }
-        let mut score = base * 2 + ring_food.min(9) + ring_prod.min(5);
+        base * 2 + ring_food.min(9) + ring_prod.min(5)
+    };
+    let water_part = |i: usize, bias: StartBias| -> i32 {
+        let mut score = 0;
         let wd = water_dist[i];
         if wd == i32::MAX {
             // No water on the map: there can be no "coastal" without a sea.
@@ -459,6 +483,18 @@ pub fn pick_starts<M: RulesModule>(game: &GameState<M>, rules: &CompiledRuleset<
         score
     };
 
+    // Fair pick: the value of every candidate by the real yields round it.
+    let in_margin = |t: TileId| -> bool {
+        let c = dims.to_coord(t).expect("in-bounds tile");
+        !(c.q < START_MARGIN || c.r < START_MARGIN || c.q >= w - START_MARGIN || c.r >= h - START_MARGIN)
+    };
+    let fair = if balance.fair && players > 0 {
+        let eligible: Vec<bool> = (0..tiles).map(|i| in_margin(TileId(i as u32)) && passable(TileId(i as u32))).collect();
+        start_balance::fair_pick(game.view().auth, rules, &eligible, &balance.policy)
+    } else {
+        None
+    };
+
     // 3. Greedy: among tiles at least MIN_START_DIST from every chosen start
     // (when any is), the best land (Classic never starts a nation on
     // the polar fringe because it is far away), then the farthest, then the
@@ -473,42 +509,51 @@ pub fn pick_starts<M: RulesModule>(game: &GameState<M>, rules: &CompiledRuleset<
             Some(c) => c.start_bias,
             None => StartBias::default(),
         };
-        let mut best: Option<(bool, i32, i32, usize, TileId)> = None;
+        // Larger is better: reaches the distance, reaches the minimum, reaches the floor, the
+        // score, the distance (clamped when fair), the raw value; then the lower index.
+        type Key = (bool, bool, bool, i32, i32, i64);
+        let mut best: Option<(Key, usize, TileId)> = None;
         for i in 0..tiles {
-            let coord = dims.to_coord(TileId(i as u32)).expect("in-bounds tile");
-            if coord.q < START_MARGIN
-                || coord.r < START_MARGIN
-                || coord.q >= w - START_MARGIN
-                || coord.r >= h - START_MARGIN
-            {
-                continue;
-            }
             let t = TileId(i as u32);
-            if !passable(t) {
+            if !in_margin(t) || !passable(t) {
                 continue;
             }
+            let coord = dims.to_coord(t).expect("in-bounds tile");
             let md = chosen
                 .iter()
                 .map(|&o| coord.distance(o))
                 .min()
                 .unwrap_or(i32::MAX);
             let meets = md >= MIN_START_DIST;
-            let score = score_tile(i, bias) + region_score(i, &regions);
+            let key: Key = match &fair {
+                Some(f) => {
+                    let a = &f.around[i];
+                    let points = f.points(a.value, balance.policy.target_points);
+                    let score = points + water_part(i, bias) + region_score(i, &regions);
+                    (
+                        meets,
+                        a.food2 >= balance.policy.min_food && a.prod2 >= balance.policy.min_production,
+                        a.value >= f.floor,
+                        score,
+                        md.min(balance.policy.distance_clamp),
+                        a.value,
+                    )
+                }
+                None => {
+                    let score = terrain_part(i) + water_part(i, bias) + region_score(i, &regions);
+                    (meets, true, true, score, md, 0)
+                }
+            };
             let better = match best {
                 None => true,
-                Some(b) => meets
-                    .cmp(&b.0)
-                    .then(score.cmp(&b.2))
-                    .then(md.cmp(&b.1))
-                    .then(b.3.cmp(&i))
-                    .is_gt(),
+                Some((b, bi, _)) => key.cmp(&b).then(bi.cmp(&i)).is_gt(),
             };
             if better {
-                best = Some((meets, md, score, i, t));
+                best = Some((key, i, t));
             }
         }
         match best {
-            Some((_, _, _, _, t)) => {
+            Some((_, _, t)) => {
                 chosen.push(dims.to_coord(t).expect("in-bounds tile"));
                 starts.push(t);
             }
