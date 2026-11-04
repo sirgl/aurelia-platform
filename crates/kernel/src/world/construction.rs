@@ -88,6 +88,18 @@ pub(crate) fn place_resources<M: RulesModule>(
     }
 }
 
+/// Deposits of the amount each entry names.
+pub(crate) fn place_deposits<M: RulesModule>(
+    auth: &mut AuthWorld<M>,
+    journal: &mut ChangeJournal<M>,
+    tiles: &[(TileId, ResourceId, u8)],
+) {
+    for (tile, resource, amount) in tiles {
+        auth.map.set_resource_amount(*tile, Some(*resource), *amount);
+        journal.tile_changes.push(TileChange::ResourceSet { tile: *tile });
+    }
+}
+
 /// A deposit of `amount` copies on a tile.
 #[cfg(any(test, feature = "harness"))]
 pub(crate) fn set_deposit<M: RulesModule>(

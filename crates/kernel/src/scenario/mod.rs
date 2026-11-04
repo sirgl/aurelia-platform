@@ -7,6 +7,7 @@ pub mod generator;
 pub mod landscape;
 pub mod map_script;
 pub mod sea_resources;
+pub mod start_balance;
 
 pub use generator::{
     deposit_amount, generate, generate_new_game, generate_new_game_builder, generate_player_game, generate_player_game_scripted,
@@ -14,3 +15,4 @@ pub use generator::{
 };
 pub use landscape::LandOptions;
 pub use map_script::MapScript;
+pub use start_balance::{balance_starts, BalanceReport, StartBalance, StartPolicy};

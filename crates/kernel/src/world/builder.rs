@@ -147,6 +147,12 @@ impl<'r, M: RulesModule> WorldBuilder<'r, M> {
         self.land(|a, j| write::place_resources(a, j, rules, tiles));
     }
 
+    /// Deposits of a given amount each (map setup that decides the amount, as the guaranteed
+    /// strategic resources of a start do).
+    pub fn place_deposits(&mut self, tiles: &[(TileId, ResourceId, u8)]) {
+        self.land(|a, j| write::place_deposits(a, j, tiles));
+    }
+
     pub fn set_improvements(&mut self, tiles: &[(TileId, ImprovementId)]) {
         self.land(|a, j| write::set_improvements(a, j, tiles));
     }
