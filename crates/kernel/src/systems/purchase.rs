@@ -37,7 +37,9 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             return Err(CommandError::Refused(crate::systems::production::refusal_for(reason)));
         }
         let treasury = self.world.players.treasury_of(player);
-        if treasury < price {
+        // As before the order check: the gold leaves the treasury before the order is
+        // completed, so every handler the completion fires sees the treasury paid.
+        if !self.world.players.spend(player, price) {
             return Err(CommandError::Refused(Refusal::NotEnoughGold { price, treasury }));
         }
         // The item is bought whole: the stock invested so far stays for the
@@ -45,20 +47,20 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         let _ = stock;
         match self.world.cities.add_production(city, cost) {
             CityWrite::Applied => {}
-            CityWrite::TargetGone => return Err(CommandError::UnknownCity),
+            CityWrite::TargetGone => {
+                self.world.players.earn(player, price);
+                return Err(CommandError::UnknownCity);
+            }
             CityWrite::QueueFull => unreachable!("add_production never queues"),
         }
         let created_before = self.journal.unit_changes.len();
-        // Gold is taken in the one arm where the order was built, never before:
-        // an order that is not built costs nothing, whatever the caller checked.
+        // Nothing built means nothing charged: give back the top-up and the gold.
+        // (`earn` is the treasury's plain write, like `spend`; neither is journaled.)
         match self.complete_head(player, city, tile, cost, rules) {
-            HeadOutcome::Built => {
-                let paid = self.world.players.spend(player, price);
-                debug_assert!(paid, "the treasury was checked and nothing in between spends it");
-            }
+            HeadOutcome::Built => {}
             HeadOutcome::Lost | HeadOutcome::NotEnough => {
-                // Nothing was built: take the top-up back; no gold was touched.
                 let _ = self.world.cities.spend_production(city, cost);
+                self.world.players.earn(player, price);
                 return Err(CommandError::Refused(Refusal::NotProducible));
             }
         }
