@@ -6,7 +6,7 @@ use crate::ids::{CityHandle, PlayerId, ProductionItem, TileId, UnitHandle};
 use crate::module::RulesModule;
 use crate::rules::CompiledRuleset;
 use crate::systems::module::{KernelEvent, ModuleSystems};
-use crate::systems::production::purchase_only;
+use crate::systems::production::HeadOutcome;
 use crate::transaction::journal::UnitChange;
 use crate::transaction::transaction::WorldTransaction;
 use crate::world::city::CityWrite;
@@ -37,22 +37,30 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             return Err(CommandError::Refused(crate::systems::production::refusal_for(reason)));
         }
         let treasury = self.world.players.treasury_of(player);
-        if !self.world.players.spend(player, price) {
+        if treasury < price {
             return Err(CommandError::Refused(Refusal::NotEnoughGold { price, treasury }));
         }
         // The item is bought whole: the stock invested so far stays for the
         // next item (Classic: the price does not count it either).
         let _ = stock;
-        let topup = cost;
-        match self.world.cities.add_production(city, topup) {
+        match self.world.cities.add_production(city, cost) {
             CityWrite::Applied => {}
             CityWrite::TargetGone => return Err(CommandError::UnknownCity),
             CityWrite::QueueFull => unreachable!("add_production never queues"),
         }
         let created_before = self.journal.unit_changes.len();
-        if purchase_only(rules, head) {
-            // Production never completes it: the purchase does.
-            self.complete_head(player, city, tile, cost, rules);
+        // Gold is taken in the one arm where the order was built, never before:
+        // an order that is not built costs nothing, whatever the caller checked.
+        match self.complete_head(player, city, tile, cost, rules) {
+            HeadOutcome::Built => {
+                let paid = self.world.players.spend(player, price);
+                debug_assert!(paid, "the treasury was checked and nothing in between spends it");
+            }
+            HeadOutcome::Lost | HeadOutcome::NotEnough => {
+                // Nothing was built: take the top-up back; no gold was touched.
+                let _ = self.world.cities.spend_production(city, cost);
+                return Err(CommandError::Refused(Refusal::NotProducible));
+            }
         }
         // The rest of the stock goes on into the queue as production would.
         self.drain_queue(player, city, tile, rules, &mods);

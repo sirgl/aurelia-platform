@@ -55,6 +55,18 @@ pub(crate) fn order_impossible<M: RulesModule>(
     None
 }
 
+/// What `complete_head` did with the head of a queue.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum HeadOutcome {
+    /// Production was spent and the order is in the world.
+    Built,
+    /// The rules cannot complete the order: it left the queue with a record,
+    /// nothing was spent and nothing was built.
+    Lost,
+    /// The stock does not reach the cost (or there is no head or city).
+    NotEnough,
+}
+
 /// `order_impossible` plus the module's veto (`queue_item_blocked`).
 pub(crate) fn order_lost<M: RulesModule>(
     auth: &AuthWorld<M>,
@@ -157,10 +169,11 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         self.journal.city_changes.push(CityChange::OrderRemoved { city, owner, item, reason });
     }
 
-    /// A wonder has just been completed in `city`: its order leaves the queue
-    /// of every other city that holds it, at any position (a world wonder: of
-    /// every player; a national wonder: of the same owner). The production stock
-    /// of those cities is not touched. Cities are visited in slot order.
+    /// A wonder has just been completed in `city`: every order for it leaves every
+    /// queue that holds it, at any position and however many times it stands there
+    /// (a world wonder: of every player; a national wonder: of the same owner). The
+    /// completing city's own remaining orders go too (`AlreadyBuilt`). One record per
+    /// removed order; the production stock is not touched. Cities in slot order.
     fn sweep_lost_orders(&mut self, city: CityHandle, building: BuildingKindId, rules: &CompiledRuleset<M>) {
         let Some(def) = rules.buildings.get(building.0 as usize) else {
             return;
@@ -177,12 +190,18 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             .world
             .cities
             .iter()
-            .filter(|(h, c)| *h != city && c.queue.contains(&item) && (def.wonder || c.owner == owner))
+            .filter(|(h, c)| c.queue.contains(&item) && (*h == city || def.wonder || c.owner == owner))
             .map(|(h, c)| (h, c.owner))
             .collect();
-        let reason = if def.wonder { OrderRemoval::WonderBuilt } else { OrderRemoval::NationalWonderBuilt };
         for (other, other_owner) in holders {
-            if let Some(at) = self.world.cities.remove_queued(other, item) {
+            let reason = if other == city {
+                OrderRemoval::AlreadyBuilt
+            } else if def.wonder {
+                OrderRemoval::WonderBuilt
+            } else {
+                OrderRemoval::NationalWonderBuilt
+            };
+            while let Some(at) = self.world.cities.remove_queued(other, item) {
                 if at == 0 {
                     self.journal.city_changes.push(CityChange::QueueChanged { city: other });
                 }
@@ -225,14 +244,15 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             let Some(cost) = mods.production_cost(rules, item) else {
                 return;
             };
-            if !self.complete_head(owner, city, tile, cost, rules) {
+            if self.complete_head(owner, city, tile, cost, rules) == HeadOutcome::NotEnough {
                 return;
             }
         }
     }
 
     /// Spend `cost` of the city's production on the head of its queue and
-    /// complete it; false when the production does not reach it.
+    /// complete it. An order the rules cannot complete is removed with a record
+    /// before anything is spent (`Lost`); the caller must not treat it as built.
     pub(crate) fn complete_head(
         &mut self,
         owner: PlayerId,
@@ -240,23 +260,21 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         tile: TileId,
         cost: u32,
         rules: &CompiledRuleset<M>,
-    ) -> bool {
+    ) -> HeadOutcome {
         let Some(item) = self.world.cities.get(city).and_then(|c| c.queue.first().copied()) else {
-            return false;
+            return HeadOutcome::NotEnough;
         };
-        // The check comes before the spend: an order that can no longer be
-        // completed costs nothing and is removed with a record.
         if let Some(reason) = order_lost(&*self.world, rules, owner, city, item) {
             self.remove_head_lost(owner, city, item, reason);
-            return true;
+            return HeadOutcome::Lost;
         }
         match self.world.cities.spend_production(city, cost) {
             SpendOutcome::Spent => {}
-            SpendOutcome::NotEnough | SpendOutcome::TargetGone => return false,
+            SpendOutcome::NotEnough | SpendOutcome::TargetGone => return HeadOutcome::NotEnough,
         }
         self.pop_head(city);
         self.complete_item(owner, city, tile, item, rules);
-        true
+        HeadOutcome::Built
     }
 
     /// A completed order goes into the world: the unit spawns, the building stands

@@ -8,7 +8,7 @@ use crate::command::{CommandError, KernelCommand, Refusal};
 use crate::ids::{BuildingKindId, CityHandle, PlayerId, ProductionItem, TileId};
 use crate::rules::compile::compile_rules;
 use crate::rules::content::BuildingKind;
-use crate::rules::source::{SourceBuilding, SourceRules, StableContentKey};
+use crate::rules::source::{KeyCount, SourceBuilding, SourceResource, SourceRules, StableContentKey};
 use crate::rules::CompiledRuleset;
 use crate::transaction::journal::{CityChange, OrderRemoval};
 use crate::world::state::{GameConfig, GameState};
@@ -19,6 +19,8 @@ const P1: PlayerId = PlayerId(1);
 const NATIONAL: BuildingKindId = BuildingKindId(0);
 const PLAIN: BuildingKindId = BuildingKindId(1);
 const WONDER: BuildingKindId = BuildingKindId(2);
+/// Consumes a resource the test empire never has: the test module vetoes it.
+const VETOED: BuildingKindId = BuildingKindId(3);
 const WONDER_COST: u32 = 10;
 const PLAIN_COST: u32 = 5;
 
@@ -32,7 +34,12 @@ fn rules() -> CompiledRuleset<TestModule> {
         building("test:building/wonder", WONDER_COST, true, BuildingKind::WorldWonder),
         building("test:building/plain", PLAIN_COST, false, BuildingKind::Regular),
         building("test:building/national", WONDER_COST, false, BuildingKind::NationalWonder),
+        SourceBuilding {
+            consumes_resources: vec![KeyCount { key: StableContentKey::new("test:resource/ore"), count: 1 }],
+            ..building("test:building/zz-vetoed", PLAIN_COST, false, BuildingKind::Regular)
+        },
     ];
+    source.resources = vec![SourceResource { id: Some(StableContentKey::new("test:resource/ore")), ..Default::default() }];
     compile_rules(source).expect("the rules compile")
 }
 
@@ -219,4 +226,50 @@ fn a_plain_building_is_bought_with_gold() {
     w.game.execute(&w.rules, hurry).expect("bought");
     assert!(w.has(w.b, PLAIN));
     assert!(w.treasury(P1) < gold);
+}
+
+/// W6, `Blocked`: the module's veto pops the order with a record at the drain; the stock is kept
+/// and builds the next order.
+#[test]
+fn a_vetoed_order_is_popped_with_a_record_and_the_stock_stays() {
+    let mut w = world();
+    w.queue(w.a, &[VETOED, PLAIN], 7);
+    let changes = w.end_turn(P0);
+    assert_eq!(removals(&changes), vec![(w.a, P0, item(VETOED), OrderRemoval::Blocked)]);
+    assert!(!w.has(w.a, VETOED));
+    assert!(w.has(w.a, PLAIN), "the stock went to the next order");
+    assert_eq!(w.stock(w.a), 7 - PLAIN_COST);
+}
+
+/// A vetoed head cannot be hurried: refused with the treasury, stock and queue unchanged.
+#[test]
+fn a_vetoed_head_cannot_be_bought() {
+    let mut w = world();
+    w.queue(w.a, &[VETOED], 2);
+    w.game.debug_earn(P0, 10_000);
+    let gold = w.treasury(P0);
+    let hurry = Order::Kernel(KernelCommand::HurryProduction { player: P0, city: w.a });
+    assert!(matches!(w.game.execute(&w.rules, hurry), Err(CommandError::Refused(Refusal::NotProducible))));
+    assert_eq!(w.treasury(P0), gold);
+    assert_eq!(w.stock(w.a), 2);
+    assert_eq!(w.queued(w.a), vec![item(VETOED)]);
+}
+
+/// Another arrival of a wonder (the harness here; a module's grant) does not sweep at that
+/// moment: the kernel has no single entry for a building entering a city. The fallback holds:
+/// hurry is refused, nothing is spent, and the drain removes the order with a record.
+#[test]
+fn a_granted_wonder_is_refused_for_hurry_and_cleaned_at_the_drain() {
+    let mut w = world();
+    w.queue(w.a, &[WONDER, PLAIN], 12);
+    w.game.debug_add_building(&w.rules, w.b, WONDER);
+    assert_eq!(w.queued(w.a).len(), 2, "no sweep at the grant");
+    w.game.debug_earn(P0, 10_000);
+    let gold = w.treasury(P0);
+    let hurry = Order::Kernel(KernelCommand::HurryProduction { player: P0, city: w.a });
+    assert!(matches!(w.game.execute(&w.rules, hurry), Err(CommandError::Refused(Refusal::WonderBuilt))));
+    assert_eq!((w.treasury(P0), w.stock(w.a)), (gold, 12));
+    let changes = w.end_turn(P0);
+    assert_eq!(removals(&changes), vec![(w.a, P0, item(WONDER), OrderRemoval::WonderBuilt)]);
+    assert_eq!(w.stock(w.a), 12 - PLAIN_COST);
 }

@@ -340,8 +340,15 @@ impl ModuleSystems<TestModule> for Nothing {
     fn run_process(_: &mut WorldTransaction<'_, TestModule>, _: PlayerId, _: CityHandle, _: Process, _: u32) -> (i32, i32) {
         (0, 0)
     }
-    fn queue_item_blocked(_: &AuthWorld<TestModule>, _: &CompiledRuleset<TestModule>, _: PlayerId, _: crate::ids::ProductionItem) -> bool {
-        false
+    /// The test empire owns no resources: a building whose rules row consumes one
+    /// is vetoed (data in the test ruleset, no names here).
+    fn queue_item_blocked(_: &AuthWorld<TestModule>, rules: &CompiledRuleset<TestModule>, _: PlayerId, item: crate::ids::ProductionItem) -> bool {
+        match item {
+            crate::ids::ProductionItem::Building(b) => {
+                rules.buildings.get(b.0 as usize).is_some_and(|d| !d.consumes_resources.is_empty())
+            }
+            _ => false,
+        }
     }
     fn gold_balance(_: &AuthWorld<TestModule>, _: &CompiledRuleset<TestModule>, _: PlayerId, cities_gold: i32) -> i64 {
         i64::from(cities_gold)
@@ -428,6 +435,9 @@ mod cancel_order;
 
 #[cfg(test)]
 mod lost_order;
+
+#[cfg(test)]
+mod lost_order_review;
 
 #[cfg(test)]
 mod seat_table;
