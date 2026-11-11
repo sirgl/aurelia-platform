@@ -620,7 +620,9 @@ impl<M: RulesModule> Delta<'_, M> {
             | CityChange::WorkedChanged { .. }
             | CityChange::StatusChanged { .. }
             | CityChange::QueueChanged { .. }
-            | CityChange::Renamed { .. } => {}
+            | CityChange::Renamed { .. }
+            // A report for the owner; the removal's QueueChanged does the rest.
+            | CityChange::OrderRemoved { .. } => {}
         }
     }
 }

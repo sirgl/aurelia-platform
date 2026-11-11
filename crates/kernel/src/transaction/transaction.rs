@@ -101,7 +101,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             ResolvedKernel::PlanResearch { player, target, ref queue } => {
                 self.apply_research_plan(player, target, queue, rules)
             }
-            ResolvedKernel::EnqueueProduction { player, city, item } => self.enqueue_production(player, city, item),
+            ResolvedKernel::EnqueueProduction { player, city, item } => self.enqueue_production(player, city, item, rules),
             ResolvedKernel::ClearProduction { player, city } => self.clear_production(player, city),
             ResolvedKernel::HurryProduction { player, city } => self.hurry_production(player, city, rules),
             ResolvedKernel::PurchaseTile { player, city, tile } => self.purchase_tile(player, city, tile, rules),

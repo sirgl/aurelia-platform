@@ -348,6 +348,8 @@ impl YieldState {
             | CityChange::StatusChanged { city } => self.recompute(*city, auth, rules, c),
             // A name changes no yield.
             CityChange::Renamed { .. } => {}
+            // A report only: the removal journals QueueChanged where the head changes.
+            CityChange::OrderRemoved { .. } => {}
             CityChange::QueueChanged { city } => {
                 // Only production percents toward the item read the queue.
                 if rules.effect_index.has_production_percents {
@@ -641,7 +643,8 @@ fn owner_wide_city_change<M: RulesModule>(
         | CityChange::WorkedChanged { .. }
         | CityChange::StatusChanged { .. }
         | CityChange::QueueChanged { .. }
-        | CityChange::Renamed { .. } => Vec::new(),
+        | CityChange::Renamed { .. }
+        | CityChange::OrderRemoved { .. } => Vec::new(),
     }
 }
 

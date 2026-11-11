@@ -32,6 +32,10 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             .ok_or(CommandError::RuleViolation("unknown item".into()))?;
         let price = crate::effects::city::head_hurry_price(self.world, rules, core)
             .ok_or(CommandError::RuleViolation("unknown item".into()))?;
+        // Gold is never spent on an order the rules can no longer complete.
+        if let Some(reason) = crate::systems::production::order_lost(&*self.world, rules, player, city, head) {
+            return Err(CommandError::Refused(crate::systems::production::refusal_for(reason)));
+        }
         let treasury = self.world.players.treasury_of(player);
         if !self.world.players.spend(player, price) {
             return Err(CommandError::Refused(Refusal::NotEnoughGold { price, treasury }));

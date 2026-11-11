@@ -545,6 +545,20 @@ impl<M: RulesModule> CityStore<M> {
         }
     }
 
+    /// Remove the first order equal to `item` from the queue, wherever it
+    /// stands; its position (0: the head), None when it is not queued.
+    pub(crate) fn remove_queued(&mut self, h: CityHandle, item: ProductionItem) -> Option<usize> {
+        match self.slots.get_mut(h.index as usize) {
+            Some(slot) if slot.generation == h.generation => {
+                let core = slot.core.as_mut()?;
+                let at = core.queue.iter().position(|i| *i == item)?;
+                core.queue.remove(at);
+                Some(at)
+            }
+            _ => None,
+        }
+    }
+
     /// Accumulate culture (saturating).
     pub fn add_culture(&mut self, h: CityHandle, amount: u32) -> CityWrite {
         match self.slots.get_mut(h.index as usize) {

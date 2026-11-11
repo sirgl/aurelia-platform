@@ -427,6 +427,9 @@ impl YieldTerms<TestModule> for Nothing {
 mod cancel_order;
 
 #[cfg(test)]
+mod lost_order;
+
+#[cfg(test)]
 mod seat_table;
 
 #[cfg(test)]

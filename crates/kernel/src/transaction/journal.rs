@@ -113,6 +113,31 @@ pub enum CityChange {
     Renamed {
         city: CityHandle,
     },
+    /// An order left the city's queue by itself because the rules can no
+    /// longer complete it (`OrderRemoval`). Nothing was spent: the city's
+    /// production stock is untouched and goes to the next order. The record
+    /// is transient (a journal entry, never saved); a UI shows its message
+    /// from `owner`, `city`, `item` and `reason`.
+    OrderRemoved {
+        city: CityHandle,
+        owner: PlayerId,
+        item: crate::ids::ProductionItem,
+        reason: OrderRemoval,
+    },
+}
+
+/// Why an order was taken out of a queue by the rules.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OrderRemoval {
+    /// A world wonder stands in some city (this order lost the race).
+    WonderBuilt,
+    /// A national wonder stands in another city of the same player.
+    NationalWonderBuilt,
+    /// The city has this building already.
+    AlreadyBuilt,
+    /// The rules module says the empire cannot produce it any more
+    /// (`ModuleSystems::queue_item_blocked`; Classic: the resources are gone).
+    Blocked,
 }
 
 #[derive(Debug, Clone)]
