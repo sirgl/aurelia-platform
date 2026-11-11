@@ -445,6 +445,9 @@ mod cancel_order;
 mod lost_order;
 
 #[cfg(test)]
+mod resistance;
+
+#[cfg(test)]
 mod lost_order_review;
 
 #[cfg(test)]

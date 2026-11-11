@@ -159,6 +159,10 @@ pub(crate) fn city_breakdown_with<M: RulesModule>(
 ) -> CityBreakdown<M> {
     let modifiers = city_modifiers(auth, rules, core);
     let work = assign(auth, rules, core, empire, &modifiers.stats);
+    // A city in resistance gives nothing, whatever the ruleset's yields are.
+    if core.resistance_turns > 0 {
+        return CityBreakdown { work, base: Yields::default(), rates: Yields::default(), modifiers, visited: work.visited, production: ProductionRate::default() };
+    }
     let mut base = work.tile_yields.plus(work.specialist_yields);
     if work.specialist_count() > 0 {
         add_any_specialist_yields(&mut base, &modifiers.stats);

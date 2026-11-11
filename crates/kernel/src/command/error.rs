@@ -36,6 +36,8 @@ pub enum Refusal {
     NotProducible,
     /// A regular unit the player's nation replaces with a unique unit of its own.
     ReplacedByUniqueUnit,
+    /// A captured city in resistance produces nothing, builds nothing and sells nothing for this many more turns.
+    CityInResistance { turns: u16 },
 }
 
 /// Why a city cannot be founded on a tile.
@@ -78,6 +80,7 @@ impl Refusal {
             Refusal::OtherNation => "unique to another nation",
             Refusal::NotProducible => "not producible",
             Refusal::ReplacedByUniqueUnit => "replaced by a unique unit",
+            Refusal::CityInResistance { .. } => "city in resistance",
         }
     }
 }

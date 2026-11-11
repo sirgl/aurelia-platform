@@ -107,6 +107,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         if core.owner != player {
             return Err(CommandError::RuleViolation("not your city".into()));
         }
+        crate::command::validate::resting(core)?;
         if let ProductionItem::Building(kind) = item {
             if core.buildings.contains(&kind) || core.queue.contains(&item) {
                 return Err(CommandError::RuleViolation(

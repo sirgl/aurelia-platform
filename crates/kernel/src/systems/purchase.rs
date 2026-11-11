@@ -102,6 +102,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         if core.owner != player {
             return Err(CommandError::RuleViolation("not your city".into()));
         }
+        crate::command::validate::resting(core)?;
         match core.queue.first() {
             Some(head) => Ok((core.tile, *head, core.production)),
             None => Err(CommandError::Refused(Refusal::NothingQueued)),
@@ -125,6 +126,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         if core.owner != player {
             return Err(CommandError::RuleViolation("not your city".into()));
         }
+        crate::command::validate::resting(core)?;
         let offer = crate::world::territory::tile_purchase_offer(self.world, rules, city, tile)
             .ok_or(CommandError::Refused(Refusal::TileNotForSale))?;
         let treasury = self.world.players.treasury_of(player);

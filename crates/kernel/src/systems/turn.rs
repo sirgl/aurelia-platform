@@ -171,6 +171,10 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             None => Vec::new(),
         };
         for city in cities {
+            // A city in resistance runs no step: no yield, no growth or starvation, nothing built.
+            if self.world.cities.get(city).is_some_and(|c| c.resistance_turns > 0) {
+                continue;
+            }
             let snapshot = {
                 let _span = prof::span("turn/city_snapshot");
                 self.city_snapshot(city, rules)

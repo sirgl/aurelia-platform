@@ -96,7 +96,7 @@ pub fn validate_kernel<M: RulesModule>(
             Ok(ResolvedKernel::HurryProduction { player, city })
         }
         KernelCommand::PurchaseTile { player, city, tile } => {
-            own_city(auth, player, city)?;
+            resting(own_city(auth, player, city)?)?;
             let offer = crate::world::territory::tile_purchase_offer(auth, rules, city, tile)
                 .ok_or(CommandError::Refused(Refusal::TileNotForSale))?;
             let treasury = auth.players().treasury_of(player);
@@ -154,6 +154,14 @@ fn own_city<'w, M: RulesModule>(
         return Err(violation("not your city"));
     }
     Ok(core)
+}
+
+/// A city in resistance takes no order that builds or buys (it gives nothing meanwhile).
+pub(crate) fn resting(core: &crate::world::city::CityCore) -> Result<(), CommandError> {
+    match core.resistance_turns {
+        0 => Ok(()),
+        turns => Err(CommandError::Refused(Refusal::CityInResistance { turns })),
+    }
 }
 
 fn validate_move<M: RulesModule>(
@@ -279,6 +287,7 @@ fn validate_enqueue<M: RulesModule>(
     item: ProductionItem,
 ) -> Result<(), CommandError> {
     let core = own_city(auth, player, city)?;
+    resting(core)?;
     let nation = auth.players().nation_of(player);
     match rules.production_gate(item, nation) {
         Some(crate::rules::compiled::ProductionBlock::Unbuildable) => return Err(CommandError::Refused(Refusal::NotProducible)),
@@ -346,6 +355,7 @@ fn validate_hurry<M: RulesModule>(
     city: CityHandle,
 ) -> Result<(), CommandError> {
     let core = own_city(auth, player, city)?;
+    resting(core)?;
     if core.queue.is_empty() {
         return Err(CommandError::Refused(Refusal::NothingQueued));
     }
