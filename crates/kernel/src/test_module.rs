@@ -381,7 +381,15 @@ impl ModuleSystems<TestModule> for Nothing {
     fn unit_for_sale(_: &AuthWorld<TestModule>, _: &CompiledRuleset<TestModule>, _: PlayerId, _: UnitKindId) -> bool {
         true
     }
-    fn hurry_problem(_: &AuthWorld<TestModule>, _: &CompiledRuleset<TestModule>, _: PlayerId, _: &CityCore) -> Result<(), crate::command::CommandError> {
+    /// A building that consumes two or more of a resource says so (data in the test ruleset);
+    /// every other order is bought without a module reason.
+    fn hurry_problem(_: &AuthWorld<TestModule>, rules: &CompiledRuleset<TestModule>, _: PlayerId, city: &CityCore) -> Result<(), crate::command::CommandError> {
+        if let Some(crate::ids::ProductionItem::Building(b)) = city.queue.first() {
+            let heavy = rules.buildings.get(b.0 as usize).is_some_and(|d| d.consumes_resources.iter().any(|(_, n)| *n >= 2));
+            if heavy {
+                return Err(crate::command::CommandError::RuleViolation("needs more resources".into()));
+            }
+        }
         Ok(())
     }
     fn stays_alive(_: &AuthWorld<TestModule>, _: PlayerId) -> bool {

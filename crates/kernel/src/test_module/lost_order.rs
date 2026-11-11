@@ -21,6 +21,8 @@ const PLAIN: BuildingKindId = BuildingKindId(1);
 const WONDER: BuildingKindId = BuildingKindId(2);
 /// Consumes a resource the test empire never has: the test module vetoes it.
 const VETOED: BuildingKindId = BuildingKindId(3);
+/// Like `VETOED`, but needs two of the resource: the test module explains it in `hurry_problem`.
+const VETOED_WITH_REASON: BuildingKindId = BuildingKindId(4);
 const WONDER_COST: u32 = 10;
 const PLAIN_COST: u32 = 5;
 
@@ -37,6 +39,10 @@ fn rules() -> CompiledRuleset<TestModule> {
         SourceBuilding {
             consumes_resources: vec![KeyCount { key: StableContentKey::new("test:resource/ore"), count: 1 }],
             ..building("test:building/zz-vetoed", PLAIN_COST, false, BuildingKind::Regular)
+        },
+        SourceBuilding {
+            consumes_resources: vec![KeyCount { key: StableContentKey::new("test:resource/ore"), count: 2 }],
+            ..building("test:building/zz-vetoed-with-reason", PLAIN_COST, false, BuildingKind::Regular)
         },
     ];
     source.resources = vec![SourceResource { id: Some(StableContentKey::new("test:resource/ore")), ..Default::default() }];
@@ -253,6 +259,24 @@ fn a_vetoed_head_cannot_be_bought() {
     assert_eq!(w.treasury(P0), gold);
     assert_eq!(w.stock(w.a), 2);
     assert_eq!(w.queued(w.a), vec![item(VETOED)]);
+}
+
+/// The module's own reason for refusing a purchase comes before the generic refusal of a lost
+/// order, so the player learns why; gold is not charged either way.
+#[test]
+fn a_vetoed_head_with_a_module_reason_is_refused_with_that_reason() {
+    let mut w = world();
+    w.queue(w.a, &[VETOED_WITH_REASON], 2);
+    w.game.debug_earn(P0, 10_000);
+    let gold = w.treasury(P0);
+    let hurry = Order::Kernel(KernelCommand::HurryProduction { player: P0, city: w.a });
+    match w.game.execute(&w.rules, hurry) {
+        Err(CommandError::RuleViolation(why)) => assert_eq!(why, "needs more resources"),
+        other => panic!("the module's reason was expected, got {other:?}"),
+    }
+    assert_eq!(w.treasury(P0), gold);
+    assert_eq!(w.stock(w.a), 2);
+    assert_eq!(w.queued(w.a), vec![item(VETOED_WITH_REASON)]);
 }
 
 /// Another arrival of a wonder (the harness here; a module's grant) does not sweep at that

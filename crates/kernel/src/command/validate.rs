@@ -349,12 +349,14 @@ fn validate_hurry<M: RulesModule>(
     if core.queue.is_empty() {
         return Err(CommandError::Refused(Refusal::NothingQueued));
     }
+    // The module's own reason comes first (Classic: "needs Iron"), so the player is told why;
+    // only then the generic refusal of an order the rules can no longer complete.
+    M::Systems::hurry_problem(auth, rules, player, core)?;
     if let Some(head) = core.queue.first() {
         if let Some(reason) = crate::systems::production::order_lost(auth, rules, player, city, *head) {
             return Err(CommandError::Refused(crate::systems::production::refusal_for(reason)));
         }
     }
-    M::Systems::hurry_problem(auth, rules, player, core)?;
     // Same price as the commit (one query).
     let price = crate::effects::city::head_hurry_price(auth, rules, core).ok_or(violation("cannot be purchased"))?;
     let treasury = auth.players().treasury_of(player);
