@@ -632,3 +632,36 @@ impl<M: RulesModule> SimulationDriver<M> {
         self.humans.iter().any(|(human, _)| *human == player)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sandbox_rules::Sandbox;
+
+    /// A driver that records the AI's journal for the client (it was asked to) goes on
+    /// recording it after a reset for a new or loaded game, whichever reset it is: the AI's
+    /// cues and the notices built from its applied commands (an answered peace offer, a lost
+    /// order) depend on it.
+    #[test]
+    fn a_reset_driver_keeps_recording_the_ai_journal() {
+        let rules = sandbox_content::rules().expect("the sandbox pack compiles");
+        let mut driver = SimulationDriver::<Sandbox>::new(DriverConfig::default(), &rules);
+        assert!(!driver.ai().records_journal(), "nothing records until the client asks");
+        driver.record_journal();
+        assert!(driver.ai().records_journal());
+
+        driver.reset(&rules);
+        assert!(driver.ai().records_journal(), "reset keeps the recording");
+        driver.reset_with_difficulty(&rules, rules.default_difficulty());
+        assert!(driver.ai().records_journal(), "reset_with_difficulty keeps the recording");
+    }
+
+    /// A driver that never recorded does not start recording by a reset.
+    #[test]
+    fn a_reset_driver_that_never_recorded_stays_silent() {
+        let rules = sandbox_content::rules().expect("the sandbox pack compiles");
+        let mut driver = SimulationDriver::<Sandbox>::new(DriverConfig::default(), &rules);
+        driver.reset_with_difficulty(&rules, rules.default_difficulty());
+        assert!(!driver.ai().records_journal());
+    }
+}
