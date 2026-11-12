@@ -601,10 +601,16 @@ impl<M: RulesModule> SimulationDriver<M> {
         }
     }
 
-    /// Forget the AI memory for a new game at `difficulty`.
+    /// Forget the AI memory for a new game at `difficulty`. A driver that recorded the AI's
+    /// journal for the client goes on recording it (as `reset`): a loaded or new game keeps
+    /// the AI's cues and notices.
     pub fn reset_with_difficulty(&mut self, rules: &CompiledRuleset<M>, difficulty: &str) {
+        let recording = self.ai().records_journal();
         let worker = self.take_worker();
         *self = Self::with_difficulty(self.config, rules, difficulty);
+        if recording {
+            self.ai_mut().record_journal();
+        }
         if let Some((worker, read)) = worker {
             self.offload_with(worker, read);
         }
