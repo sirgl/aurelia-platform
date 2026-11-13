@@ -83,21 +83,38 @@ pub struct PurchasePercents {
     pub kind: i32,
 }
 
+/// Fraction bits of the fixed-point `(30·P)^0.75` inside `gold_purchase_price`.
+const PRICE_FRACTION_BITS: u32 = 16;
+
 /// Gold price of an item of `cost` production (rules.md):
-/// ⌊(30·P)^0.75⌋ — in integers ⌊((30·P)³)^¼⌋ — × (100 + hurry %), × (100 +
-/// the item's HurryCostModifier) %, × (100 + the kind's purchase %), each
-/// truncated, then rounded down to 10. The production already invested does
-/// not lower it. None: not for sale (HurryCostModifier −1: wonders).
+/// (30·P)^0.75 × (1 + hurry %) × (1 + the item's HurryCostModifier %) × (1 +
+/// the kind's purchase %), rounded down to 10 once, at the end. Unciv:
+/// `IConstruction.getBaseGoldCost` multiplies the unrounded power by the
+/// modifier and `Building`/`BaseUnitCost.getStatBuyCost` rounds the product
+/// down to 10, equal. In integers: the power in fixed point with 16 fraction
+/// bits, ⌊((30·P)³·2⁶⁴)^¼⌋, the percents as exact fractions. The production
+/// already invested does not lower it. None: not for sale (HurryCostModifier
+/// −1: wonders).
 pub fn gold_purchase_price(cost: u32, hurry_cost_modifier: i32, percents: PurchasePercents) -> Option<u32> {
     if hurry_cost_modifier == -1 {
         return None;
     }
-    let x = u64::from(cost) * GOLD_PER_PRODUCTION;
-    let mut price = x.saturating_mul(x).saturating_mul(x).isqrt().isqrt() as i64;
+    let x = u128::from(cost) * u128::from(GOLD_PER_PRODUCTION);
+    let cube = x.saturating_mul(x).saturating_mul(x);
+    let shift = 4 * PRICE_FRACTION_BITS;
+    // A cost beyond any rule set's (above ~87 000) loses the fraction instead of overflowing.
+    let power = if cube >> (u128::BITS - shift) == 0 {
+        (cube << shift).isqrt().isqrt()
+    } else {
+        cube.isqrt().isqrt() << PRICE_FRACTION_BITS
+    };
+    let mut numerator = power;
+    let mut denominator: u128 = 1 << PRICE_FRACTION_BITS;
     for percent in [percents.hurry, hurry_cost_modifier, percents.kind] {
-        price = price * (100 + i64::from(percent.max(-100))) / 100;
+        numerator = numerator.saturating_mul((100 + i128::from(percent.max(-100))) as u128);
+        denominator *= 100;
     }
-    let price = price.clamp(0, i64::from(u32::MAX)) as u32;
+    let price = (numerator / denominator).min(u128::from(u32::MAX)) as u32;
     Some(price / PURCHASE_DIVISOR * PURCHASE_DIVISOR)
 }
 

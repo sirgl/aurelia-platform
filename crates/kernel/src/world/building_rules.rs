@@ -8,7 +8,8 @@
 //!                      regular building the own unique one replaces
 //! national wonder      one per player (built or in a queue)
 //! buildings            in the city; in every non-puppet city (national
-//!                      wonders: `requires_buildings_in_empire`)
+//!                      wonders: `requires_buildings_in_empire`); a unique
+//!                      building counts for the one it replaces
 //! placement            water (a sea of ≥ 10 tiles next to the city), river,
 //!                      mountain next to the city, mountain or terrain in
 //!                      the city's territory, fresh water, flat city tile,
@@ -50,10 +51,25 @@ pub(crate) fn building_site<M: RulesModule>(
     if first_missing(rules, core, &def.requires_buildings).is_some() {
         return Err("needs a building in the city");
     }
-    if !in_every_city(auth, core, &def.requires_buildings_in_empire) {
+    if !in_every_city(auth, rules, core, &def.requires_buildings_in_empire) {
         return Err("needs a building in every city");
     }
     placement_rule(auth, rules, city, core, &def.placement)
+}
+
+/// Is a building the order needs missing: in the city (`requires_buildings`), or in every
+/// non-puppet city of the owner (`requires_buildings_in_empire`)? The one question of
+/// placing an order and of keeping it in the queue: a city founded later drops a national
+/// wonder that wants a building in every city (Unciv: CityConstructions.validateConstructionQueue
+/// keeps only `isBuildable` orders, at the city's turn and after a build or a purchase).
+pub(crate) fn requirement_missing<M: RulesModule>(
+    auth: &AuthWorld<M>,
+    rules: &CompiledRuleset<M>,
+    core: &CityCore,
+    def: &BuildingDefinition<M>,
+) -> bool {
+    first_missing(rules, core, &def.requires_buildings).is_some()
+        || !in_every_city(auth, rules, core, &def.requires_buildings_in_empire)
 }
 
 /// Does the city have `kind`, or the unique building of its owner that
@@ -120,8 +136,17 @@ fn national_wonder_rule<M: RulesModule>(
     Ok(())
 }
 
-/// Every non-puppet city of the owner has all of `buildings`.
-pub(crate) fn in_every_city<M: RulesModule>(auth: &AuthWorld<M>, core: &CityCore, buildings: &[BuildingKindId]) -> bool {
+/// Every non-puppet city of the owner has all of `buildings`, or the unique buildings that
+/// replace them (`has_class`). A captured city whose fate is not decided yet is not counted:
+/// Unciv moves it to the conqueror only at the decision (`CityConquestFunctions.moveToCiv`), so
+/// until then it is no city of the conqueror. Unciv: Building.getRejectionReasons,
+/// `ConditionalBuildingBuiltAll` (`!it.isPuppet && !containsBuildingOrEquivalent`), equal.
+pub(crate) fn in_every_city<M: RulesModule>(
+    auth: &AuthWorld<M>,
+    rules: &CompiledRuleset<M>,
+    core: &CityCore,
+    buildings: &[BuildingKindId],
+) -> bool {
     if buildings.is_empty() {
         return true;
     }
@@ -129,8 +154,17 @@ pub(crate) fn in_every_city<M: RulesModule>(auth: &AuthWorld<M>, core: &CityCore
         .cities_of(core.owner)
         .iter()
         .filter_map(|c| auth.cities().get(*c))
-        .filter(|c| c.status != crate::world::city::CityStatus::Puppet)
-        .all(|c| buildings.iter().all(|b| c.buildings.contains(b)))
+        .filter(|c| counts_for_every_city(c.status))
+        .all(|c| first_missing(rules, c, buildings).is_none())
+}
+
+/// Does a city of this status count for the requirement "in every city"?
+fn counts_for_every_city(status: crate::world::city::CityStatus) -> bool {
+    use crate::world::city::CityStatus;
+    match status {
+        CityStatus::Own | CityStatus::Occupied | CityStatus::Razing => true,
+        CityStatus::Puppet | CityStatus::AwaitingDecision => false,
+    }
 }
 
 fn placement_rule<M: RulesModule>(

@@ -50,6 +50,9 @@ pub struct SourceUnit<M: RulesModule> {
     /// Cost in production points (must be >0: the compiler rejects 0),
     /// except `unbuildable`.
     pub cost: u32,
+    /// Percent added to the gold price of buying it (Unciv `hurryCostModifier`:
+    /// Settler, Horseman, Catapult +20, Caravel +30).
+    pub hurry_cost_modifier: i32,
     pub effects: Vec<SourceEffect<M>>,
     /// Unlocked by a technology (TechId = index in the second pass);
     /// None: the unit is available from turn one (settler/warrior/worker).

@@ -262,7 +262,7 @@ pub enum HandicapPlace {
 impl<M: RulesModule> Hash for UnitDefinition<M> {
     fn hash<H: Hasher>(&self, h: &mut H) {
         let UnitDefinition {
-            key, movement, strength, founder, builder, cost, required_tech, effects, name, class,
+            key, movement, strength, founder, builder, cost, hurry_cost_modifier, required_tech, effects, name, class,
             role, domain, ranged_strength, range, sight, unbuildable, obsolete_tech,
             required_resources, upgrades_to, free_promotions, era, nation, replaces,
             requires_buildings, combat, required_project, spaceship_project, inert, module,
@@ -273,6 +273,10 @@ impl<M: RulesModule> Hash for UnitDefinition<M> {
         founder.hash(h);
         builder.hash(h);
         cost.hash(h);
+        // Hashed only when set: a rule set without unit modifiers keeps its earlier fingerprint.
+        if *hurry_cost_modifier != 0 {
+            hurry_cost_modifier.hash(h);
+        }
         required_tech.hash(h);
         effects.hash(h);
         name.hash(h);

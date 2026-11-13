@@ -52,10 +52,7 @@ pub(crate) fn order_impossible<M: RulesModule>(
     if def.kind == crate::rules::content::BuildingKind::NationalWonder && elsewhere(true) {
         return Some(OrderRemoval::NationalWonderBuilt);
     }
-    // Only the city's own requirement: a city founded later does not drop a national wonder that
-    // wants a building in every city (Unciv would; the sale sweep below does for the cities it
-    // reached, `sweep_unbuildable_orders`).
-    if crate::world::building_rules::first_missing(rules, core, &def.requires_buildings).is_some() {
+    if crate::world::building_rules::requirement_missing(auth, rules, core, def) {
         return Some(OrderRemoval::NeedsBuilding);
     }
     None
@@ -218,20 +215,18 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         }
     }
 
-    /// Every order of the owner's cities whose required building is gone, in the city or (a
-    /// national wonder) in some city of the empire, leaves its queue, at any position, with a
-    /// record (`OrderRemoved`, `NeedsBuilding`); the production stock is not touched. Unciv
-    /// validates the whole queue (`isBuildable`) at the start of the city's turn step and after a
-    /// purchase; a sale calls this at once so the order is not seen standing.
+    /// Every order of the owner's cities whose required building is gone leaves its queue, at any
+    /// position, with a record (`OrderRemoved`, `NeedsBuilding`); the production stock is not
+    /// touched. Unciv validates the whole queue (`isBuildable`) at the start of the city's turn
+    /// step and after a purchase; a sale calls this at once so the order is not seen standing.
     pub fn sweep_unbuildable_orders(&mut self, owner: PlayerId, rules: &CompiledRuleset<M>) {
         let cities: Vec<CityHandle> = self.world.indexes().cities_of(owner).to_vec();
         for city in cities {
-            self.sweep_city_unbuildable(city, rules, true);
+            self.sweep_city_unbuildable(city, rules);
         }
     }
 
-    /// The same for one city. `in_empire`: also the buildings a national wonder wants in every city.
-    fn sweep_city_unbuildable(&mut self, city: CityHandle, rules: &CompiledRuleset<M>, in_empire: bool) {
+    fn sweep_city_unbuildable(&mut self, city: CityHandle, rules: &CompiledRuleset<M>) {
         let Some(core) = self.world.cities.get(city) else {
             return;
         };
@@ -240,13 +235,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             .queue
             .iter()
             .copied()
-            .filter(|item| {
-                order_impossible(&*self.world, rules, city, *item) == Some(OrderRemoval::NeedsBuilding)
-                    || (in_empire
-                        && matches!(item, ProductionItem::Building(kind) if rules.buildings.get(kind.0 as usize).is_some_and(|def| {
-                            !crate::world::building_rules::in_every_city(&*self.world, core, &def.requires_buildings_in_empire)
-                        })))
-            })
+            .filter(|item| order_impossible(&*self.world, rules, city, *item) == Some(OrderRemoval::NeedsBuilding))
             .collect();
         for item in lost {
             while let Some(at) = self.world.cities.remove_queued(city, item) {
@@ -270,7 +259,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         rules: &CompiledRuleset<M>,
         mods: &CityModifiers<M>,
     ) {
-        self.sweep_city_unbuildable(city, rules, false);
+        self.sweep_city_unbuildable(city, rules);
         loop {
             let head = match self.world.cities.get(city) {
                 Some(core) => core.queue.first().copied(),
