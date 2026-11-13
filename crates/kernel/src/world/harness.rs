@@ -153,6 +153,16 @@ impl<M: RulesModule> GameState<M> {
         self.construct(rules, |auth, j| write::add_building(auth, j, city, building));
     }
 
+    /// A building taken out of a city without any system running (the world as an old save
+    /// holds it: queue orders may now lack their requirement).
+    pub fn debug_remove_building(&mut self, city: CityHandle, building: BuildingKindId) {
+        self.silently(|auth| {
+            if let Some(core) = auth.cities.get_mut(city) {
+                core.buildings.retain(|b| *b != building);
+            }
+        });
+    }
+
     /// A unit of `kind` for `owner` on `tile`, with the move points and free promotions a trained unit gets.
     pub fn debug_spawn_unit(&mut self, rules: &CompiledRuleset<M>, owner: PlayerId, tile: TileId, kind: UnitKindId) -> UnitHandle {
         self.construct_with_journal(rules, |auth| write::spawn_unit(auth, rules, owner, tile, kind))

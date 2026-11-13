@@ -23,6 +23,8 @@ const WONDER: BuildingKindId = BuildingKindId(2);
 const VETOED: BuildingKindId = BuildingKindId(3);
 /// Like `VETOED`, but needs two of the resource: the test module explains it in `hurry_problem`.
 const VETOED_WITH_REASON: BuildingKindId = BuildingKindId(4);
+/// Needs `PLAIN` in its city.
+const NEEDS_PLAIN: BuildingKindId = BuildingKindId(5);
 const WONDER_COST: u32 = 10;
 const PLAIN_COST: u32 = 5;
 
@@ -43,6 +45,10 @@ fn rules() -> CompiledRuleset<TestModule> {
         SourceBuilding {
             consumes_resources: vec![KeyCount { key: StableContentKey::new("test:resource/ore"), count: 2 }],
             ..building("test:building/zz-vetoed-with-reason", PLAIN_COST, false, BuildingKind::Regular)
+        },
+        SourceBuilding {
+            requires_buildings: vec![StableContentKey::new("test:building/plain")],
+            ..building("test:building/zzz-needs-plain", PLAIN_COST, false, BuildingKind::Regular)
         },
     ];
     source.resources = vec![SourceResource { id: Some(StableContentKey::new("test:resource/ore")), ..Default::default() }];
@@ -296,4 +302,40 @@ fn a_granted_wonder_is_refused_for_hurry_and_cleaned_at_the_drain() {
     let changes = w.end_turn(P0);
     assert_eq!(removals(&changes), vec![(w.a, P0, item(WONDER), OrderRemoval::WonderBuilt)]);
     assert_eq!(w.stock(w.a), 12 - PLAIN_COST);
+}
+
+/// A building the order needs is gone (sold, lost): the purchase is refused with the reason and
+/// nothing is spent; the drain takes the order out with a record, and the stock goes on.
+#[test]
+fn an_order_whose_required_building_is_gone_is_refused_for_hurry_and_cleaned_at_the_drain() {
+    let mut w = world();
+    w.game.debug_add_building(&w.rules, w.a, PLAIN);
+    w.queue(w.a, &[NEEDS_PLAIN, PLAIN], 12);
+    w.game.debug_remove_building(w.a, PLAIN);
+    w.game.debug_earn(P0, 10_000);
+    let gold = w.treasury(P0);
+    let hurry = Order::Kernel(KernelCommand::HurryProduction { player: P0, city: w.a });
+    assert!(matches!(w.game.execute(&w.rules, hurry), Err(CommandError::Refused(Refusal::NeedsBuilding))));
+    assert_eq!((w.treasury(P0), w.stock(w.a)), (gold, 12));
+    let changes = w.end_turn(P0);
+    assert_eq!(removals(&changes), vec![(w.a, P0, item(NEEDS_PLAIN), OrderRemoval::NeedsBuilding)]);
+    assert!(!w.has(w.a, NEEDS_PLAIN));
+}
+
+/// The sweep takes the order out at any position, once per order, and only the orders that
+/// lost a requirement; the stock is untouched.
+#[test]
+fn the_sweep_takes_only_the_unbuildable_orders_out_of_any_position() {
+    let mut w = world();
+    w.game.debug_add_building(&w.rules, w.a, PLAIN);
+    w.queue(w.a, &[WONDER, NEEDS_PLAIN], 3);
+    w.game.debug_remove_building(w.a, PLAIN);
+    let owner = P0;
+    let rules = &w.rules;
+    let mut tx = crate::transaction::transaction::WorldTransaction::new(w.game.world_mut());
+    tx.sweep_unbuildable_orders(owner, rules);
+    let removed = removals(&tx.journal.city_changes);
+    assert_eq!(removed, vec![(w.a, P0, item(NEEDS_PLAIN), OrderRemoval::NeedsBuilding)]);
+    assert_eq!(w.queued(w.a), vec![item(WONDER)]);
+    assert_eq!(w.stock(w.a), 3);
 }

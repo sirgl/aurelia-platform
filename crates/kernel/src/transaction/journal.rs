@@ -135,6 +135,9 @@ pub enum OrderRemoval {
     NationalWonderBuilt,
     /// The city has this building already.
     AlreadyBuilt,
+    /// A building the order needs is gone from the city (or from some city of the empire):
+    /// it was sold or lost (Unciv `CityConstructions.validateConstructionQueue`).
+    NeedsBuilding,
     /// The rules module says the empire cannot produce it any more
     /// (`ModuleSystems::queue_item_blocked`; Classic: the resources are gone).
     Blocked,

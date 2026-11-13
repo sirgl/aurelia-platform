@@ -24,6 +24,8 @@ pub enum Refusal {
     NeedsTechnology(crate::ids::TechId),
     /// The city has built it already.
     AlreadyBuilt,
+    /// A building it needs is not in the city (or not in every city) any more.
+    NeedsBuilding,
     /// The city has it in its queue already.
     AlreadyQueued,
     /// A world or national wonder another own city has in its queue.
@@ -74,6 +76,7 @@ impl Refusal {
             Refusal::NameTaken => "name not available",
             Refusal::NeedsTechnology(_) => "technology required",
             Refusal::AlreadyBuilt => "already built",
+            Refusal::NeedsBuilding => "needs a building in the city",
             Refusal::AlreadyQueued => "already queued",
             Refusal::QueuedElsewhere => "queued in another city",
             Refusal::WonderBuilt => "wonder already built",

@@ -52,6 +52,9 @@ pub(crate) fn order_impossible<M: RulesModule>(
     if def.kind == crate::rules::content::BuildingKind::NationalWonder && elsewhere(true) {
         return Some(OrderRemoval::NationalWonderBuilt);
     }
+    if crate::world::building_rules::requirement_missing(auth, rules, core, def) {
+        return Some(OrderRemoval::NeedsBuilding);
+    }
     None
 }
 
@@ -85,6 +88,7 @@ pub(crate) fn refusal_for(reason: OrderRemoval) -> crate::command::Refusal {
     match reason {
         OrderRemoval::WonderBuilt => Refusal::WonderBuilt,
         OrderRemoval::NationalWonderBuilt | OrderRemoval::AlreadyBuilt => Refusal::AlreadyBuilt,
+        OrderRemoval::NeedsBuilding => Refusal::NeedsBuilding,
         OrderRemoval::Blocked => Refusal::NotProducible,
     }
 }
@@ -211,6 +215,38 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         }
     }
 
+    /// Every order of the owner's cities whose required building is gone leaves its queue, at any
+    /// position, with a record (`OrderRemoved`, `NeedsBuilding`); the production stock is not
+    /// touched. Unciv validates the whole queue (`isBuildable`) at the start of the city's turn
+    /// step and after a purchase; a sale calls this at once so the order is not seen standing.
+    pub fn sweep_unbuildable_orders(&mut self, owner: PlayerId, rules: &CompiledRuleset<M>) {
+        let cities: Vec<CityHandle> = self.world.indexes().cities_of(owner).to_vec();
+        for city in cities {
+            self.sweep_city_unbuildable(city, rules);
+        }
+    }
+
+    fn sweep_city_unbuildable(&mut self, city: CityHandle, rules: &CompiledRuleset<M>) {
+        let Some(core) = self.world.cities.get(city) else {
+            return;
+        };
+        let owner = core.owner;
+        let lost: Vec<ProductionItem> = core
+            .queue
+            .iter()
+            .copied()
+            .filter(|item| order_impossible(&*self.world, rules, city, *item) == Some(OrderRemoval::NeedsBuilding))
+            .collect();
+        for item in lost {
+            while let Some(at) = self.world.cities.remove_queued(city, item) {
+                if at == 0 {
+                    self.journal.city_changes.push(CityChange::QueueChanged { city });
+                }
+                self.journal.city_changes.push(CityChange::OrderRemoved { city, owner, item, reason: OrderRemoval::NeedsBuilding });
+            }
+        }
+    }
+
     /// Build everything affordable from the head of the queue (prices after the city's
     /// ModifyCost at the start of the step). Loops terminate: the stockpile melts at prices
     /// >= 1 (the compiler rejects zero ones, caps do not let it go lower).
@@ -223,6 +259,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
         rules: &CompiledRuleset<M>,
         mods: &CityModifiers<M>,
     ) {
+        self.sweep_city_unbuildable(city, rules);
         loop {
             let head = match self.world.cities.get(city) {
                 Some(core) => core.queue.first().copied(),
