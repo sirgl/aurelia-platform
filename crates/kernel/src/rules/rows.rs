@@ -273,7 +273,10 @@ impl<M: RulesModule> Hash for UnitDefinition<M> {
         founder.hash(h);
         builder.hash(h);
         cost.hash(h);
-        hurry_cost_modifier.hash(h);
+        // Hashed only when set: a rule set without unit modifiers keeps its earlier fingerprint.
+        if *hurry_cost_modifier != 0 {
+            hurry_cost_modifier.hash(h);
+        }
         required_tech.hash(h);
         effects.hash(h);
         name.hash(h);
