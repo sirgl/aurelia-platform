@@ -56,19 +56,6 @@ pub(crate) fn building_site<M: RulesModule>(
     placement_rule(auth, rules, city, core, &def.placement)
 }
 
-/// Is a building the order needs missing: in the city (`requires_buildings`), or in every
-/// non-puppet city of the owner (`requires_buildings_in_empire`)? The one question of
-/// placing an order and of keeping it in the queue.
-pub(crate) fn requirement_missing<M: RulesModule>(
-    auth: &AuthWorld<M>,
-    rules: &CompiledRuleset<M>,
-    core: &CityCore,
-    def: &BuildingDefinition<M>,
-) -> bool {
-    first_missing(rules, core, &def.requires_buildings).is_some()
-        || !in_every_city(auth, core, &def.requires_buildings_in_empire)
-}
-
 /// Does the city have `kind`, or the unique building of its owner that
 /// replaces it (Classic: a requirement names the building class)?
 pub fn has_class<M: RulesModule>(rules: &CompiledRuleset<M>, core: &CityCore, kind: BuildingKindId) -> bool {
