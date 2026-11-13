@@ -352,6 +352,7 @@ fn compile_units<M: RulesModule>(
             founder: u.founder,
             builder: u.builder,
             cost: u.cost,
+            hurry_cost_modifier: u.hurry_cost_modifier,
             required_tech: tech(ix, &u.required_tech)?,
             effects: EffectSet::default(),
             name: u.name.clone(),

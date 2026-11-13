@@ -36,6 +36,8 @@ pub struct UnitDefinition<M: RulesModule> {
     pub builder: bool,
     /// Production cost (0 when `unbuildable`).
     pub cost: u32,
+    /// Percent added to the gold price of buying it (Unciv `hurryCostModifier`).
+    pub hurry_cost_modifier: i32,
     /// Unlocking technology (None = available at once). Resolved in
     /// a second pass, as for buildings; an unknown key is an error.
     pub required_tech: Option<TechId>,

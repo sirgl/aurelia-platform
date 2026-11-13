@@ -155,17 +155,15 @@ pub fn head_hurry_price<M: RulesModule>(auth: &AuthWorld<M>, rules: &CompiledRul
     let head = *core.queue.first()?;
     let mods = city_modifiers(auth, rules, core);
     let cost = mods.production_cost(rules, head)?;
-    let (modifier, kind) = match head {
-        ProductionItem::Building(b) => {
-            (rules.buildings.get(b.0 as usize)?.hurry_cost_modifier, CostTarget::<M>::BuildingPurchase)
-        }
+    let modifier = hurry_cost_modifier(rules, head)?;
+    let kind = match head {
+        ProductionItem::Building(_) => CostTarget::<M>::BuildingPurchase,
         ProductionItem::Unit(u) => {
             if !<M::Systems as crate::systems::module::ModuleSystems<M>>::unit_for_sale(auth, rules, core.owner, u) {
                 return None;
             }
-            (0, CostTarget::UnitPurchase)
+            CostTarget::UnitPurchase
         }
-        // Projects are not for sale.
         ProductionItem::Project(_) => return None,
     };
     let percents = crate::world::city::PurchasePercents {
@@ -173,6 +171,17 @@ pub fn head_hurry_price<M: RulesModule>(auth: &AuthWorld<M>, rules: &CompiledRul
         kind: mods.cost_percent[kind.index()],
     };
     crate::world::city::gold_purchase_price(cost, modifier, percents)
+}
+
+/// The item's own percent on its gold price (Unciv `hurryCostModifier`: a
+/// Settler +20, a Monument +40; −1: a wonder, not for sale). None: a project
+/// (not for sale) or an unknown item.
+pub fn hurry_cost_modifier<M: RulesModule>(rules: &CompiledRuleset<M>, item: ProductionItem) -> Option<i32> {
+    match item {
+        ProductionItem::Building(b) => rules.buildings.get(b.0 as usize).map(|d| d.hurry_cost_modifier),
+        ProductionItem::Unit(u) => rules.units.get(u.0 as usize).map(|d| d.hurry_cost_modifier),
+        ProductionItem::Project(_) => None,
+    }
 }
 
 pub fn city_modifiers<M: RulesModule>(auth: &AuthWorld<M>, rules: &CompiledRuleset<M>, core: &CityCore) -> CityModifiers<M> {
