@@ -137,8 +137,10 @@ fn national_wonder_rule<M: RulesModule>(
 }
 
 /// Every non-puppet city of the owner has all of `buildings`, or the unique buildings that
-/// replace them (`has_class`). Unciv: Building.getRejectionReasons, `ConditionalBuildingBuiltAll`
-/// (`!it.isPuppet && !containsBuildingOrEquivalent`), equal.
+/// replace them (`has_class`). A captured city whose fate is not decided yet is not counted:
+/// Unciv moves it to the conqueror only at the decision (`CityConquestFunctions.moveToCiv`), so
+/// until then it is no city of the conqueror. Unciv: Building.getRejectionReasons,
+/// `ConditionalBuildingBuiltAll` (`!it.isPuppet && !containsBuildingOrEquivalent`), equal.
 pub(crate) fn in_every_city<M: RulesModule>(
     auth: &AuthWorld<M>,
     rules: &CompiledRuleset<M>,
@@ -152,8 +154,17 @@ pub(crate) fn in_every_city<M: RulesModule>(
         .cities_of(core.owner)
         .iter()
         .filter_map(|c| auth.cities().get(*c))
-        .filter(|c| c.status != crate::world::city::CityStatus::Puppet)
+        .filter(|c| counts_for_every_city(c.status))
         .all(|c| first_missing(rules, c, buildings).is_none())
+}
+
+/// Does a city of this status count for the requirement "in every city"?
+fn counts_for_every_city(status: crate::world::city::CityStatus) -> bool {
+    use crate::world::city::CityStatus;
+    match status {
+        CityStatus::Own | CityStatus::Occupied | CityStatus::Razing => true,
+        CityStatus::Puppet | CityStatus::AwaitingDecision => false,
+    }
 }
 
 fn placement_rule<M: RulesModule>(
