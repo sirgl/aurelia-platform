@@ -8,7 +8,8 @@
 //!                      regular building the own unique one replaces
 //! national wonder      one per player (built or in a queue)
 //! buildings            in the city; in every non-puppet city (national
-//!                      wonders: `requires_buildings_in_empire`)
+//!                      wonders: `requires_buildings_in_empire`); a unique
+//!                      building counts for the one it replaces
 //! placement            water (a sea of ≥ 10 tiles next to the city), river,
 //!                      mountain next to the city, mountain or terrain in
 //!                      the city's territory, fresh water, flat city tile,
@@ -50,7 +51,7 @@ pub(crate) fn building_site<M: RulesModule>(
     if first_missing(rules, core, &def.requires_buildings).is_some() {
         return Err("needs a building in the city");
     }
-    if !in_every_city(auth, core, &def.requires_buildings_in_empire) {
+    if !in_every_city(auth, rules, core, &def.requires_buildings_in_empire) {
         return Err("needs a building in every city");
     }
     placement_rule(auth, rules, city, core, &def.placement)
@@ -68,7 +69,7 @@ pub(crate) fn requirement_missing<M: RulesModule>(
     def: &BuildingDefinition<M>,
 ) -> bool {
     first_missing(rules, core, &def.requires_buildings).is_some()
-        || !in_every_city(auth, core, &def.requires_buildings_in_empire)
+        || !in_every_city(auth, rules, core, &def.requires_buildings_in_empire)
 }
 
 /// Does the city have `kind`, or the unique building of its owner that
@@ -135,8 +136,15 @@ fn national_wonder_rule<M: RulesModule>(
     Ok(())
 }
 
-/// Every non-puppet city of the owner has all of `buildings`.
-pub(crate) fn in_every_city<M: RulesModule>(auth: &AuthWorld<M>, core: &CityCore, buildings: &[BuildingKindId]) -> bool {
+/// Every non-puppet city of the owner has all of `buildings`, or the unique buildings that
+/// replace them (`has_class`). Unciv: Building.getRejectionReasons, `ConditionalBuildingBuiltAll`
+/// (`!it.isPuppet && !containsBuildingOrEquivalent`), equal.
+pub(crate) fn in_every_city<M: RulesModule>(
+    auth: &AuthWorld<M>,
+    rules: &CompiledRuleset<M>,
+    core: &CityCore,
+    buildings: &[BuildingKindId],
+) -> bool {
     if buildings.is_empty() {
         return true;
     }
@@ -145,7 +153,7 @@ pub(crate) fn in_every_city<M: RulesModule>(auth: &AuthWorld<M>, core: &CityCore
         .iter()
         .filter_map(|c| auth.cities().get(*c))
         .filter(|c| c.status != crate::world::city::CityStatus::Puppet)
-        .all(|c| buildings.iter().all(|b| c.buildings.contains(b)))
+        .all(|c| first_missing(rules, c, buildings).is_none())
 }
 
 fn placement_rule<M: RulesModule>(
