@@ -52,7 +52,7 @@ impl Ui {
         });
         let (text, clicked) = (&mut self.text, &mut self.clicked);
         let (mut button, mut field) = (Rect::NOTHING, Rect::NOTHING);
-        let _ = self.ctx.run_ui(raw, |ui| {
+        let mut output = self.ctx.run_ui(raw, |ui| {
             let response = ui.button("Go");
             button = response.rect;
             if response.clicked() {
@@ -60,6 +60,9 @@ impl Ui {
             }
             field = ui.text_edit_singleline(text).rect;
         });
+        // No renderer uploads the font atlas here. A debug build of egui asserts that a dropped
+        // `TexturesDelta` was handled, so the test says it drops this one on purpose.
+        output.textures_delta.clear();
         self.button = button;
         self.field = field;
     }
