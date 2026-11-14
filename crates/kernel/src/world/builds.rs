@@ -10,7 +10,7 @@
 //!               (and are used up); great person improvements come from
 //!               great people (systems::great_people)
 //! the tile      land / water as the improvement says; not a city; own land
-//!               (or next to it for in_adjacent_friendly, unowned land for
+//!               (or next to it, anybody's, for in_adjacent_friendly, unowned land for
 //!               outside_borders, anybody's for ignore_ownership, only a
 //!               a host player's for only_host_land); over another
 //!               improvement for requires_improvement
@@ -196,7 +196,10 @@ fn check_ownership<M: RulesModule>(
     if owner == Some(player) || def.placement.outside_borders && owner.is_none() {
         return Ok(());
     }
-    if def.placement.in_adjacent_friendly && owner.is_none() {
+    // "Can be built just outside your borders" (Unciv:
+    // ImprovementFunctions.kt): any tile next to own land, nobody's or
+    // another player's.
+    if def.placement.in_adjacent_friendly {
         let next_to_own = facts
             .dimensions()
             .neighbors(tile)
