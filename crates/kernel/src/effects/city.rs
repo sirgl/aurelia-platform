@@ -13,7 +13,7 @@ use crate::rules::effects::{
 };
 use crate::rules::modifiers::{Caps, StageTotals};
 use crate::rules::CompiledRuleset;
-use crate::world::city::CityCore;
+use crate::world::city::{CityCore, PurchasePercents};
 use crate::world::effects::EffectTarget;
 use crate::world::state::AuthWorld;
 
@@ -27,6 +27,10 @@ pub struct CityModifiers<M: RulesModule> {
     /// Additive cost percents, index = `CostTarget::index()` (all but
     /// Technologies, a player cost). Costs have no flat/multiplicative stage.
     pub cost_percent: [i32; MAX_COST_TARGETS],
+    /// The purchase costs (`CostTarget::compounds`) by `CostTarget::index()`:
+    /// one factor per source, multiplied (`PurchasePercents`); their
+    /// `cost_percent` stays 0.
+    pub purchase: [PurchasePercents; MAX_COST_TARGETS],
     /// Stats of the economy and society systems (`rules::stats`).
     pub stats: crate::rules::stats::StatTotals<M>,
     /// The AI handicap's production cost percents of the owner (None: a
@@ -60,6 +64,11 @@ impl<M: RulesModule> CityModifiers<M> {
                 population,
             ),
             Modifier::ModifyGrowth { percent } => self.growth_percent += percent * n,
+            Modifier::ModifyCost { target, percent } if target.compounds() => {
+                for _ in 0..n.max(0) {
+                    self.purchase[target.index()].push(percent);
+                }
+            }
             Modifier::ModifyCost { target, percent } => {
                 self.cost_percent[target.index()] += percent * n
             }
@@ -166,10 +175,8 @@ pub fn head_hurry_price<M: RulesModule>(auth: &AuthWorld<M>, rules: &CompiledRul
         }
         ProductionItem::Project(_) => return None,
     };
-    let percents = crate::world::city::PurchasePercents {
-        hurry: mods.cost_percent[CostTarget::<M>::Hurry.index()],
-        kind: mods.cost_percent[kind.index()],
-    };
+    let mut percents = mods.purchase[CostTarget::<M>::Hurry.index()];
+    percents.merge(&mods.purchase[kind.index()]);
     crate::world::city::gold_purchase_price(cost, modifier, percents)
 }
 
@@ -494,6 +501,9 @@ impl<M: RulesModule> CityModifiers<M> {
 
     /// A cost after the city's ModifyCost of `target` (at least 1).
     pub fn adjusted_cost(&self, target: CostTarget<M>, base: u32) -> u32 {
+        if target.compounds() {
+            return (self.purchase[target.index()].scale(u64::from(base)).min(u64::from(u32::MAX)) as u32).max(1);
+        }
         let base = base.min(i32::MAX as u32) as i32;
         percent_stage(self.cost_percent[target.index()]).evaluate(base, Caps::at_least(1)) as u32
     }
