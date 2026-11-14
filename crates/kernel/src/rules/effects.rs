@@ -423,6 +423,16 @@ impl<M: RulesModule> CostTarget<M> {
         }
     }
 
+    /// Costs of a purchase for gold: each source multiplies the price, as
+    /// Unciv's `getStatBuyCost` and `getGoldCostOfTile` do, instead of
+    /// adding its percent to the others (`world::city::PurchasePercents`).
+    pub fn compounds(self) -> bool {
+        matches!(
+            self,
+            CostTarget::TilePurchase | CostTarget::Hurry | CostTarget::UnitPurchase | CostTarget::BuildingPurchase
+        )
+    }
+
     /// Player-level costs (the rest are city costs).
     pub fn is_player_cost(self) -> bool {
         match self {

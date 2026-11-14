@@ -72,23 +72,71 @@ pub fn hurry_price(cost: u32, hurry_cost_modifier: i32) -> Option<u32> {
     gold_purchase_price(cost, hurry_cost_modifier, PurchasePercents::default())
 }
 
-/// The city's percents of a gold purchase (additive sums of `ModifyCost`).
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+/// The percents of a gold purchase or of a tile purchase, one per source,
+/// multiplied one after the other as Unciv does (`Building`/`BaseUnitCost.
+/// getStatBuyCost`: `cost *= unique.params[..].toPercent()` for every
+/// unique; `CityExpansionManager.getGoldCostOfTile` the same): −25 % and
+/// −15 % leave 0.75 × 0.85 = 63.75 %, not 60 %. Exact: the product of the
+/// factors in percent over 100^count.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PurchasePercents {
-    /// Every purchase (`CostTarget::Hurry`: Mercantilism,
-    /// Big Ben).
-    pub hurry: i32,
-    /// Purchases of the item's kind (`UnitPurchase`: Mobilization;
-    /// `BuildingPurchase`: Skyscrapers).
-    pub kind: i32,
+    product: u128,
+    count: u8,
+}
+
+impl Default for PurchasePercents {
+    fn default() -> Self {
+        Self { product: 1, count: 0 }
+    }
+}
+
+impl PurchasePercents {
+    /// Sources counted; a further one is not multiplied in (no rule set has
+    /// more than three on one price).
+    pub const MAX_SOURCES: u8 = 8;
+    /// A source cannot take more than its whole price (−100 %), and gives
+    /// no more than +1000 %: the product stays far inside `u128`.
+    const MAX_PERCENT: i32 = 1000;
+
+    /// The factors of `percents`, one per source.
+    pub fn of(percents: &[i32]) -> Self {
+        let mut all = Self::default();
+        for &percent in percents {
+            all.push(percent);
+        }
+        all
+    }
+
+    /// One more source of `percent`.
+    pub fn push(&mut self, percent: i32) {
+        if self.count >= Self::MAX_SOURCES {
+            return;
+        }
+        self.product *= (100 + percent.clamp(-100, Self::MAX_PERCENT)) as u128;
+        self.count += 1;
+    }
+
+    /// The sources of `other` after these (as many as fit).
+    pub fn merge(&mut self, other: &Self) {
+        if self.count + other.count <= Self::MAX_SOURCES {
+            self.product *= other.product;
+            self.count += other.count;
+        }
+    }
+
+    /// `value` × the product of the factors, rounded down.
+    pub fn scale(&self, value: u64) -> u64 {
+        (u128::from(value) * self.product / 100u128.pow(u32::from(self.count))).min(u128::from(u64::MAX)) as u64
+    }
 }
 
 /// Fraction bits of the fixed-point `(30·P)^0.75` inside `gold_purchase_price`.
 const PRICE_FRACTION_BITS: u32 = 16;
 
 /// Gold price of an item of `cost` production (rules.md):
-/// (30·P)^0.75 × (1 + hurry %) × (1 + the item's HurryCostModifier %) × (1 +
-/// the kind's purchase %), rounded down to 10 once, at the end. Unciv:
+/// (30·P)^0.75 × (1 + the item's HurryCostModifier %) × (1 + the percent of
+/// each purchase source), the factors multiplied, rounded down to 10 once,
+/// at the end. Unciv:
 /// `IConstruction.getBaseGoldCost` multiplies the unrounded power by the
 /// modifier and `Building`/`BaseUnitCost.getStatBuyCost` rounds the product
 /// down to 10, equal. In integers: the power in fixed point with 16 fraction
@@ -108,12 +156,9 @@ pub fn gold_purchase_price(cost: u32, hurry_cost_modifier: i32, percents: Purcha
     } else {
         cube.isqrt().isqrt() << PRICE_FRACTION_BITS
     };
-    let mut numerator = power;
-    let mut denominator: u128 = 1 << PRICE_FRACTION_BITS;
-    for percent in [percents.hurry, hurry_cost_modifier, percents.kind] {
-        numerator = numerator.saturating_mul((100 + i128::from(percent.max(-100))) as u128);
-        denominator *= 100;
-    }
+    let modifier = (100 + i128::from(hurry_cost_modifier.max(-100))) as u128;
+    let numerator = power.saturating_mul(percents.product).saturating_mul(modifier);
+    let denominator = (1u128 << PRICE_FRACTION_BITS) * 100u128.pow(u32::from(percents.count) + 1);
     let price = (numerator / denominator).min(u128::from(u32::MAX)) as u32;
     Some(price / PURCHASE_DIVISOR * PURCHASE_DIVISOR)
 }
@@ -705,6 +750,19 @@ mod tests {
             *CULTURE_COSTS.last().unwrap(),
             "beyond table saturates"
         );
+    }
+
+    #[test]
+    fn purchase_percents_multiply_instead_of_adding() {
+        // -25 % and -15 % leave x 0.6375, the sum would leave 0.60; -50 % twice leave 25 %.
+        assert_eq!(PurchasePercents::of(&[-25, -15]).scale(10_000), 6_375);
+        assert_eq!(PurchasePercents::of(&[-50, -50]).scale(10_000), 2_500);
+        assert_eq!(PurchasePercents::of(&[]).scale(77), 77);
+        assert_eq!(gold_purchase_price(200, 0, PurchasePercents::of(&[-50, -50])), Some(170), "(30 * 200)^0.75 = 681.7, a quarter of it");
+        let mut both = PurchasePercents::of(&[-25]);
+        both.merge(&PurchasePercents::of(&[-15]));
+        assert_eq!(both, PurchasePercents::of(&[-25, -15]));
+        assert_eq!(PurchasePercents::of(&[-300]).scale(500), 0, "a source takes at most the whole price");
     }
 
     #[test]
