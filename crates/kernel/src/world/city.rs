@@ -77,27 +77,27 @@ pub fn hurry_price(cost: u32, hurry_cost_modifier: i32) -> Option<u32> {
 /// getStatBuyCost`: `cost *= unique.params[..].toPercent()` for every
 /// unique; `CityExpansionManager.getGoldCostOfTile` the same): −25 % and
 /// −15 % leave 0.75 × 0.85 = 63.75 %, not 60 %. Exact: the product of the
-/// factors in percent over 100^count.
+/// factors as a fraction in lowest terms; any number of sources.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PurchasePercents {
-    product: u128,
-    count: u8,
+    numerator: u128,
+    denominator: u128,
 }
 
 impl Default for PurchasePercents {
     fn default() -> Self {
-        Self { product: 1, count: 0 }
+        Self { numerator: 1, denominator: 1 }
     }
 }
 
-impl PurchasePercents {
-    /// Sources counted; a further one is not multiplied in (no rule set has
-    /// more than three on one price).
-    pub const MAX_SOURCES: u8 = 8;
-    /// A source cannot take more than its whole price (−100 %), and gives
-    /// no more than +1000 %: the product stays far inside `u128`.
-    const MAX_PERCENT: i32 = 1000;
+fn gcd(mut a: u128, mut b: u128) -> u128 {
+    while b != 0 {
+        (a, b) = (b, a % b);
+    }
+    a
+}
 
+impl PurchasePercents {
     /// The factors of `percents`, one per source.
     pub fn of(percents: &[i32]) -> Self {
         let mut all = Self::default();
@@ -107,26 +107,48 @@ impl PurchasePercents {
         all
     }
 
-    /// One more source of `percent`.
+    /// One more source of `percent`; a source cannot take more than the
+    /// whole price (below −100 % the price is 0).
     pub fn push(&mut self, percent: i32) {
-        if self.count >= Self::MAX_SOURCES {
-            return;
-        }
-        self.product *= (100 + percent.clamp(-100, Self::MAX_PERCENT)) as u128;
-        self.count += 1;
+        self.times(Self { numerator: (100 + i64::from(percent)).max(0) as u128, denominator: 100 });
     }
 
-    /// The sources of `other` after these (as many as fit).
+    /// The sources of `other` as well.
     pub fn merge(&mut self, other: &Self) {
-        if self.count + other.count <= Self::MAX_SOURCES {
-            self.product *= other.product;
-            self.count += other.count;
+        self.times(*other);
+    }
+
+    fn times(&mut self, other: Self) {
+        let (mut n, mut d) = (self.numerator.checked_mul(other.numerator), self.denominator.checked_mul(other.denominator));
+        if n.is_none() || d.is_none() {
+            // Beyond 128 bits (dozens of sources, never in a rule set): keep the top bits of both.
+            let shift = (self.numerator.max(self.denominator).max(other.numerator).max(other.denominator).ilog2() / 2) + 1;
+            let (a, b) = (self.numerator >> shift, self.denominator >> shift);
+            n = a.checked_mul(other.numerator >> shift);
+            d = b.max(1).checked_mul((other.denominator >> shift).max(1));
         }
+        let (n, d) = (n.unwrap_or(u128::MAX), d.unwrap_or(u128::MAX).max(1));
+        let g = gcd(n, d).max(1);
+        self.numerator = n / g;
+        self.denominator = d / g;
     }
 
     /// `value` × the product of the factors, rounded down.
     pub fn scale(&self, value: u64) -> u64 {
-        (u128::from(value) * self.product / 100u128.pow(u32::from(self.count))).min(u128::from(u64::MAX)) as u64
+        let wide = u128::from(value);
+        let scaled = match wide.checked_mul(self.numerator) {
+            Some(product) => product / self.denominator,
+            None => wide / self.denominator * self.numerator,
+        };
+        scaled.min(u128::from(u64::MAX)) as u64
+    }
+
+    /// `value` × `scale_percent` / 100 × the product of the factors, rounded to the nearest
+    /// whole, halves up (Kotlin `roundToInt`), at least 0.
+    pub fn scale_rounded(&self, value: u64, scale_percent: u32) -> u64 {
+        let top = u128::from(value) * u128::from(scale_percent) * self.numerator;
+        let bottom = self.denominator * 100;
+        ((top.saturating_mul(2).saturating_add(bottom)) / bottom.saturating_mul(2)).min(u128::from(u64::MAX)) as u64
     }
 }
 
@@ -157,8 +179,8 @@ pub fn gold_purchase_price(cost: u32, hurry_cost_modifier: i32, percents: Purcha
         cube.isqrt().isqrt() << PRICE_FRACTION_BITS
     };
     let modifier = (100 + i128::from(hurry_cost_modifier.max(-100))) as u128;
-    let numerator = power.saturating_mul(percents.product).saturating_mul(modifier);
-    let denominator = (1u128 << PRICE_FRACTION_BITS) * 100u128.pow(u32::from(percents.count) + 1);
+    let numerator = power.saturating_mul(percents.numerator).saturating_mul(modifier);
+    let denominator = (1u128 << PRICE_FRACTION_BITS).saturating_mul(percents.denominator).saturating_mul(100);
     let price = (numerator / denominator).min(u128::from(u32::MAX)) as u32;
     Some(price / PURCHASE_DIVISOR * PURCHASE_DIVISOR)
 }
