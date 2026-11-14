@@ -151,7 +151,7 @@ pub struct ImprovementPlacement {
     pub no_two_adjacent: bool,
     /// Next to a luxury resource (chateau).
     pub adjacent_luxury: bool,
-    /// On own land or next to it (citadel).
+    /// On own land or on any tile next to it, foreign too (citadel).
     pub in_adjacent_friendly: bool,
     /// Also outside own borders (fort).
     pub outside_borders: bool,

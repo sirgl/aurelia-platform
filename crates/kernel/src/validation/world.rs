@@ -111,7 +111,8 @@ fn validate_entity_order<M: RulesModule>(state: &GameState<M>) -> Result<(), Val
 }
 
 /// Every owned tile belongs to one live city of its owner, every unowned
-/// tile to none, and every city owns its own tile.
+/// tile to none, a tile lies within `CULTURE_RADIUS_MAX` of its city (capture and razing release
+/// only that disc), and every city owns its own tile.
 fn validate_tile_cities<M: RulesModule>(state: &GameState<M>) -> Result<(), ValidationError> {
     let auth = state.view().auth;
     let map = auth.map();
@@ -130,6 +131,17 @@ fn validate_tile_cities<M: RulesModule>(state: &GameState<M>) -> Result<(), Vali
             return Err(ValidationError::IndexMismatch(format!(
                 "tile {i}: owner {owner:?}, owning city {city_owner:?}"
             )));
+        }
+        if let Some(core) = map.owning_city(tile).and_then(|city| auth.cities().get(city)) {
+            let far = map
+                .dimensions
+                .distance(core.tile, tile)
+                .is_none_or(|d| d > i32::from(crate::world::city::CULTURE_RADIUS_MAX));
+            if far {
+                return Err(ValidationError::IndexMismatch(format!(
+                    "tile {i} lies beyond the culture radius of its city"
+                )));
+            }
         }
     }
     for (handle, core) in auth.cities().iter() {
