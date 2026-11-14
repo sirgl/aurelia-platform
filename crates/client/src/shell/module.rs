@@ -208,6 +208,8 @@ pub struct TopBarValue {
 pub struct TopBarClick {
     pub id: &'static str,
     pub hint: String,
+    /// The shortcut row (`ActionDef::id`) that opens the same screen: its key ends the hint.
+    pub shortcut: Option<&'static str>,
 }
 
 /// A module's own cell at the right end of the top bar, in place of the nation
