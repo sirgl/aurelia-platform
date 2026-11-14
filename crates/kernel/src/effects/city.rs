@@ -502,7 +502,8 @@ impl<M: RulesModule> CityModifiers<M> {
     /// A cost after the city's ModifyCost of `target` (at least 1).
     pub fn adjusted_cost(&self, target: CostTarget<M>, base: u32) -> u32 {
         if target.compounds() {
-            return (self.purchase[target.index()].scale(u64::from(base)).min(u64::from(u32::MAX)) as u32).max(1);
+            // Unciv's tile price is `roundToInt` of the product (`getGoldCostOfTile`).
+            return (self.purchase[target.index()].scale_rounded(u64::from(base), 100).min(u64::from(u32::MAX)) as u32).max(1);
         }
         let base = base.min(i32::MAX as u32) as i32;
         percent_stage(self.cost_percent[target.index()]).evaluate(base, Caps::at_least(1)) as u32

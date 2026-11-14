@@ -95,7 +95,14 @@ pub fn purchasable_ring<M: RulesModule>(auth: &AuthWorld<M>, city: CityHandle, t
     if owner.is_some() {
         return None;
     }
-    let city_tile = auth.cities().get(city)?.tile;
+    let core = auth.cities().get(city)?;
+    // Unciv: CityExpansionManager.canBuyTile refuses a puppet, a razing city and a city in resistance.
+    if matches!(core.status, crate::world::city::CityStatus::Puppet | crate::world::city::CityStatus::Razing)
+        || core.resistance_turns > 0
+    {
+        return None;
+    }
+    let city_tile = core.tile;
     let dims = auth.map().dimensions;
     let dc = dims.to_coord(city_tile)?;
     let tc = dims.to_coord(tile)?;
@@ -187,9 +194,11 @@ fn offer_at<M: RulesModule>(
     let claimed = tiles_claimed(auth, city);
     let price = PLOT_BASE_COST * (ring.max(1) as u32 - 1) + PLOT_COST_PER_PLOT_BOUGHT * claimed;
     let mods = crate::effects::city::city_modifiers(auth, rules, core);
-    // × the game speed's gold percent (Unciv: getGoldCostOfTile, `goldCostModifier`).
-    let price = crate::rules::speeds::SpeedValues::scale(price, mods.speed.gold_percent);
-    let price = mods.adjusted_cost(crate::rules::effects::CostTarget::TilePurchase, price);
+    // × the game speed's gold percent × the city's TilePurchase factors, rounded once to the
+    // nearest gold, halves up (Unciv: getGoldCostOfTile, `goldCostModifier`, the uniques, then
+    // `roundToInt`).
+    let tile_percents = mods.purchase[crate::rules::effects::CostTarget::<M>::TilePurchase.index()];
+    let price = (tile_percents.scale_rounded(u64::from(price), mods.speed.gold_percent).min(u64::from(u32::MAX)) as u32).max(1);
     Some(TileOffer { ring: ring as u8, price })
 }
 
