@@ -96,6 +96,12 @@ pub fn purchasable_ring<M: RulesModule>(auth: &AuthWorld<M>, city: CityHandle, t
         return None;
     }
     let core = auth.cities().get(city)?;
+    // Unciv: CityExpansionManager.canBuyTile refuses a puppet, a razing city and a city in resistance.
+    if matches!(core.status, crate::world::city::CityStatus::Puppet | crate::world::city::CityStatus::Razing)
+        || core.resistance_turns > 0
+    {
+        return None;
+    }
     let city_tile = core.tile;
     let dims = auth.map().dimensions;
     let dc = dims.to_coord(city_tile)?;
