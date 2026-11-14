@@ -15,7 +15,7 @@ use crate::scene::style::CompiledTerrainStyle;
 use crate::world::state::RenderWorld;
 use kernel::ids::TileId;
 use std::collections::HashMap;
-use std::sync::atomic::{AtomicU16, Ordering};
+use std::sync::atomic::{AtomicU16, AtomicU32, AtomicUsize, Ordering};
 
 /// Chunk size in tiles.
 pub const CHUNK: u32 = 32;
@@ -154,11 +154,36 @@ pub fn set_outsider(owner: Option<u8>) {
     OUTSIDER.store(owner.map_or(NO_OUTSIDER, u16::from), Ordering::Relaxed);
 }
 
+/// The most slots a module can paint with [`set_owner_palette`].
+pub const MAX_PAINTED_OWNERS: usize = 32;
+const NO_COLOR: AtomicU32 = AtomicU32::new(0);
+/// The module's colours of the owners, one 0xRRGGBB per player slot. Written once before a match
+/// is drawn, read by the drawing; the same hand-off as [`OUTSIDER`].
+static PAINTED: [AtomicU32; MAX_PAINTED_OWNERS] = [NO_COLOR; MAX_PAINTED_OWNERS];
+static PAINTED_COUNT: AtomicUsize = AtomicUsize::new(0);
+
+/// A module's own colour for each player slot (the classic module: the colour of the nation,
+/// changed where two nations of the match look alike). Slots past the list, and every slot
+/// of an empty list, keep the default palette. Set it before the first frame of a match:
+/// units' figures keep the colour they were built with.
+pub fn set_owner_palette(colors: &[[u8; 3]]) {
+    let count = colors.len().min(MAX_PAINTED_OWNERS);
+    for (slot, [r, g, b]) in PAINTED.iter().zip(colors) {
+        slot.store(u32::from(*r) << 16 | u32::from(*g) << 8 | u32::from(*b), Ordering::Relaxed);
+    }
+    PAINTED_COUNT.store(count, Ordering::Relaxed);
+}
+
 pub fn owner_color(owner: u8) -> [f32; 3] {
     if u16::from(owner) == OUTSIDER.load(Ordering::Relaxed) {
         return OUTSIDER_COLOR;
     }
-    OWNER_COLORS[(owner as usize) % OWNER_COLORS.len()]
+    let slot = owner as usize;
+    if slot < PAINTED_COUNT.load(Ordering::Relaxed) {
+        let packed = PAINTED[slot].load(Ordering::Relaxed);
+        return [(packed >> 16 & 0xff) as f32 / 255.0, (packed >> 8 & 0xff) as f32 / 255.0, (packed & 0xff) as f32 / 255.0];
+    }
+    OWNER_COLORS[slot % OWNER_COLORS.len()]
 }
 
 /// Gluing several meshes into one vertex buffer + ranges
