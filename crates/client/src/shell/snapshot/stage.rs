@@ -15,6 +15,10 @@ use super::super::shortcuts::Routed;
 /// opened by the previous frame shows from the next.
 const SETTLE_FRAMES: u32 = 3;
 
+/// The version and commit the menu and the settings screen show in a snapshot (`Version 9.9.9 (abcdef0)`).
+pub const STAGE_VERSION: &str = "9.9.9";
+pub const STAGE_COMMIT: &str = "abcdef0123456";
+
 pub struct Stage<U: ModuleUi> {
     pub ctx: egui::Context,
     pub module: U,
@@ -30,6 +34,9 @@ impl<U: ModuleUi> Stage<U> {
     /// The module in the game's shell at `size` points, on the main menu like the app
     /// starts, with the module's theme and no art loaded.
     pub fn new(mut module: U, size: egui::Vec2) -> Self {
+        // The menu and the settings screen show the build: every snapshot is drawn with this one, so a
+        // release that bumps a launcher's version does not move the snapshots.
+        super::super::report::set_build(STAGE_VERSION, Some(STAGE_COMMIT));
         let ctx = egui::Context::default();
         super::super::theme::install(&ctx, module.theme());
         super::super::art::stay_offline(&ctx);

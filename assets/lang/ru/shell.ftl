@@ -22,6 +22,9 @@ shell.choose-production = Выберите производство
 shell.cover.kicker = СТРАТЕГИЧЕСКАЯ ИГРА
 shell.cover.tagline = Мир, который ещё предстоит написать
 
+## shell.version
+shell.version = Версия { $build }
+
 ## shell.main-menu
 shell.main-menu.resume = Продолжить
 shell.main-menu.new-game = Новая партия

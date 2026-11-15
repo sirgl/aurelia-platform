@@ -53,6 +53,36 @@ pub fn build() -> Build {
     BUILD.get().copied().unwrap_or(Build { version: env!("CARGO_PKG_VERSION"), git: None })
 }
 
+/// Registers the build of the launcher crate that expands it: its `CARGO_PKG_VERSION` and the commit
+/// `AURELIA_GIT_HASH` names (the launchers' `build.rs` sets it; a build outside a git checkout has none).
+/// Every launcher calls this one macro, so the version the player reads and the version a bug report
+/// states have one source.
+#[macro_export]
+macro_rules! register_build {
+    () => {
+        $crate::shell::report::set_build(env!("CARGO_PKG_VERSION"), option_env!("AURELIA_GIT_HASH"))
+    };
+}
+
+/// How many characters of the commit the player is shown.
+const SHORT_COMMIT: usize = 7;
+
+impl Build {
+    /// What the player reads after the word "Version": `0.3.0`, or `0.3.0 (a02edeb)` when the build
+    /// knows its commit.
+    pub fn label(&self) -> String {
+        match self.git {
+            Some(hash) => format!("{} ({})", self.version, hash.chars().take(SHORT_COMMIT).collect::<String>()),
+            None => self.version.to_owned(),
+        }
+    }
+}
+
+/// The line the main menu and the settings screen show: the words of the language and `build().label()`.
+pub fn version_line() -> String {
+    i18n::tf!("shell.version", build = build().label())
+}
+
 pub(crate) fn page() -> PageFacts {
     PAGE.get().map(|source| source()).unwrap_or_default()
 }

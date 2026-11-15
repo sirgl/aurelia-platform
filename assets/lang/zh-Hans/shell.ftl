@@ -332,6 +332,9 @@ shell.observer.key-follow.what@lal = 镜头跟随该势力的领土
 ## Added after the first draft: cover, save drift notice, file errors, showcase sample
 shell.cover.kicker = 一款策略游戏
 shell.cover.tagline = 一个等待书写的世界
+
+## shell.version
+shell.version = 版本 { $build }
 shell.saves.drift = 存档使用其他规则（{ $saved }）；按当前规则（{ $current }）载入；{ $changed }
 shell.saves.drift-changed = 已变更：{ $parts }
 shell.saves.drift-none = 没有不同的部分

@@ -353,6 +353,9 @@ shell.observer.key-follow.what@lal = La cámara sigue el territorio de la facci�
 ## Added after the first draft: cover, save drift notice, file errors, showcase sample
 shell.cover.kicker = UN JUEGO DE ESTRATEGIA
 shell.cover.tagline = Un mundo a la espera de ser escrito
+
+## shell.version
+shell.version = Versión { $build }
 shell.saves.drift = Guardado con otras reglas ({ $saved }); cargado con las reglas actuales ({ $current }); { $changed }
 shell.saves.drift-changed = cambiado: { $parts }
 shell.saves.drift-none = ninguna parte difiere

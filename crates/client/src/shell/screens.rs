@@ -387,6 +387,9 @@ pub fn draw(ctx: &egui::Context, state: &mut ScreenState, module: &mut dyn Modul
             };
             if !(compact_chrome(r, wants_world(rendered_screen, module)) && rendered_screen != Screen::Menu) {
                 text(ui.painter(), pos2(r.left() + 26.0, r.bottom() - 23.0), footer, 11.0, c.muted);
+                if matches!(rendered_screen, Screen::Menu | Screen::Settings) {
+                    version_label(ui.painter(), r, c.muted);
+                }
             }
         });
     navigation_panel(ctx, state, module);
@@ -395,6 +398,15 @@ pub fn draw(ctx: &egui::Context, state: &mut ScreenState, module: &mut dyn Modul
     }
     // This frame began as a modal screen, even when a navigation click closes it.
     true
+}
+
+/// The version of the build in the bottom right corner (the footer's line, on the other side), on a
+/// dim plate so that the menu's art does not drown it.
+fn version_label(painter: &egui::Painter, r: Rect, color: Color32) {
+    let galley = painter.layout_no_wrap(super::report::version_line(), egui::FontId::proportional(11.0), color);
+    let at = pos2(r.right() - 26.0 - galley.size().x, r.bottom() - 23.0);
+    painter.rect_filled(Rect::from_min_size(at, galley.size()).expand2(vec2(6.0, 2.0)), 3.0, Color32::from_black_alpha(120));
+    painter.galley(at, galley, color);
 }
 
 fn draw_body(

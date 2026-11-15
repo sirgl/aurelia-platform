@@ -332,6 +332,9 @@ shell.observer.key-follow.what@lal = カメラが勢力の領土を追う
 ## Added after the first draft: cover, save drift notice, file errors, showcase sample
 shell.cover.kicker = ストラテジーゲーム
 shell.cover.tagline = 書かれるのを待つ世界
+
+## shell.version
+shell.version = バージョン { $build }
 shell.saves.drift = 別のルール（{ $saved }）で保存されたデータを、現在のルール（{ $current }）で読み込みました。{ $changed }
 shell.saves.drift-changed = 変更点: { $parts }
 shell.saves.drift-none = 異なる部分はありません

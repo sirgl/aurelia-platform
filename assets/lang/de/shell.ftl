@@ -350,6 +350,9 @@ shell.observer.key-follow.what@lal = Die Kamera folgt dem Land der Fraktion
 ## Added after the first draft: cover, save drift notice, file errors, showcase sample
 shell.cover.kicker = EIN STRATEGIESPIEL
 shell.cover.tagline = Eine Welt, die darauf wartet, geschrieben zu werden
+
+## shell.version
+shell.version = Version { $build }
 shell.saves.drift = Mit anderen Regeln gespeichert ({ $saved }); mit den aktuellen Regeln geladen ({ $current }); { $changed }
 shell.saves.drift-changed = geändert: { $parts }
 shell.saves.drift-none = kein Teil unterscheidet sich

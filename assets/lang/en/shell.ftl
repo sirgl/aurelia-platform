@@ -23,6 +23,9 @@ shell.choose-production = Choose production
 shell.cover.kicker = A STRATEGY GAME
 shell.cover.tagline = A world waiting to be written
 
+## shell.version
+shell.version = Version { $build }
+
 ## shell.main-menu
 shell.main-menu.resume = Continue
 shell.main-menu.new-game = New game
