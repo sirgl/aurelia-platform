@@ -154,8 +154,11 @@ pub fn set_outsider(owner: Option<u8>) {
     OUTSIDER.store(owner.map_or(NO_OUTSIDER, u16::from), Ordering::Relaxed);
 }
 
-/// The most slots a module can paint with [`set_owner_palette`].
-pub const MAX_PAINTED_OWNERS: usize = 32;
+/// The most slots a module can paint with [`set_owner_palette`]. A slot past it falls back to the
+/// eight colours of the default palette, which another owner already wears, so a module's most
+/// players (the classic new-game screen: 16 powers, 24 city-states, the barbarians = 41) must
+/// fit in it; the classic tests tie the two numbers.
+pub const MAX_PAINTED_OWNERS: usize = 64;
 const NO_COLOR: AtomicU32 = AtomicU32::new(0);
 /// The module's colours of the owners, one 0xRRGGBB per player slot. Written once before a match
 /// is drawn, read by the drawing; the same hand-off as [`OUTSIDER`].
