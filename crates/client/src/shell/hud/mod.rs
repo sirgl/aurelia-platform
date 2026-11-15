@@ -303,7 +303,13 @@ fn top_bar(ctx: &egui::Context, frame: HudFrame, rects: &FrameRects, state: &mut
                                 response.on_hover_ui(|ui| {
                                     if let Some(tip) = &value.tip { tips::yield_tip(ui, tip); }
                                     else { ui.label(&value.text); }
-                                    if let Some(click) = &value.click { tips::click_hint(ui, &click.hint); }
+                                    if let Some(click) = &value.click {
+                                        let hint = match click.shortcut {
+                                            Some(row) => super::keymap::with_hint(ui.ctx(), &click.hint, row),
+                                            None => click.hint.clone(),
+                                        };
+                                        tips::click_hint(ui, &hint);
+                                    }
                                 });
                             }
                         });
@@ -1723,7 +1729,7 @@ mod visibility_badge_tests {
         let mut state = VisualHudState::default();
         let value = |text: &str, click: Option<&'static str>, ready| super::super::module::TopBarValue {
             icon: Icon::Flask, tint: GOLD, text: text.into(), compact: text.into(), tip: None,
-            click: click.map(|id| TopBarClick { id, hint: "Click to open: Research".into() }), ready,
+            click: click.map(|id| TopBarClick { id, hint: "Click to open: Research".into(), shortcut: None }), ready,
         };
         state.feed = Some(HudFeed {
             turn: 3,
