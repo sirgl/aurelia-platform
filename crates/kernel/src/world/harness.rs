@@ -139,6 +139,12 @@ impl<M: RulesModule> GameState<M> {
         self.silently(|auth| auth.players.earn(p, amount));
     }
 
+    /// Beakers into a player's pool (the stress exam's "science doubled": each round the
+    /// player is given what it earned). Nothing derived reads the pool: no journal.
+    pub fn debug_earn_science(&mut self, p: PlayerId, amount: u32) {
+        self.silently(|auth| auth.players.earn_science(p, amount));
+    }
+
     /// A city's conquest status (conquest sets it; happiness reads occupied cities and puppets).
     pub fn debug_set_city_status(&mut self, city: CityHandle, status: crate::world::city::CityStatus) {
         self.silently(|auth| {
