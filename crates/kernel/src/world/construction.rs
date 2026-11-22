@@ -113,6 +113,13 @@ pub(crate) fn set_deposit<M: RulesModule>(
     journal.tile_changes.push(TileChange::ResourceSet { tile });
 }
 
+/// No resource on a tile.
+#[cfg(any(test, feature = "harness"))]
+pub(crate) fn clear_resource<M: RulesModule>(auth: &mut AuthWorld<M>, journal: &mut ChangeJournal<M>, tile: TileId) {
+    auth.map.set_resource_amount(tile, None, 0);
+    journal.tile_changes.push(TileChange::ResourceSet { tile });
+}
+
 pub(crate) fn set_improvements<M: RulesModule>(
     auth: &mut AuthWorld<M>,
     journal: &mut ChangeJournal<M>,
