@@ -8,6 +8,7 @@ shortcut.group.game = Game
 shortcut.group.screens = Screens
 shortcut.group.units = Units
 shortcut.group.cities = Cities
+shortcut.group.civics = Social policies
 
 shortcut.end-turn = End the turn
 shortcut.center-selection = Centre the map on the selection
@@ -58,6 +59,12 @@ shortcut.order-intercept = Stand ready to intercept enemy aircraft
 shortcut.order-sweep = Air sweep: attack the aircraft over a tile
 shortcut.next-city = Next city
 shortcut.previous-city = Previous city
+shortcut.civics-previous = Previous branch or offer
+shortcut.civics-next = Next branch or offer
+shortcut.civics-previous-policy = Previous policy
+shortcut.civics-next-policy = Next policy
+shortcut.civics-switch = Switch between Available now and the branches
+shortcut.civics-take = Adopt the focused policy
 
 shortcut.diplomacy = Diplomacy
 shortcut.laws = Laws
