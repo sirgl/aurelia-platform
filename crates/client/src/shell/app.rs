@@ -41,6 +41,9 @@ pub struct App<U: ModuleUi> {
     pub camera: CameraController,
     /// The map camera while a world-showing screen moved the camera.
     map_camera: Option<CameraController>,
+    /// A world just started: the next frame, which knows the window, fits the camera to the land
+    /// the player knows (`fit`).
+    fit_pending: bool,
     pub ctx: egui::Context,
     ui_renderer: egui_wgpu::Renderer,
     /// Ledger tickets of the egui textures the UI renderer holds.
@@ -75,7 +78,7 @@ pub struct App<U: ModuleUi> {
     applied: Option<Settings>,
     /// The fallback fonts of the language in force (`theme::language_fonts`); empty while only
     /// the theme's own fonts are installed.
-    language_fonts: &'static [&'static str],
+    language_fonts: Option<&'static [&'static str]>,
     config: Option<std::path::PathBuf>,
     saved: Settings,
     /// Offscreen captures freeze animation at this time whatever the quality preset.
@@ -187,6 +190,7 @@ impl<U: ModuleUi> App<U> {
             renderer,
             camera: CameraController::fit_map(1, 1),
             map_camera: None,
+            fit_pending: false,
             ui_renderer: egui_wgpu::Renderer::new(&core.device, ui_format, Default::default()),
             ui_textures: Default::default(),
             ctx,
@@ -207,7 +211,7 @@ impl<U: ModuleUi> App<U> {
             overlay_time: 0.0,
             last_frame_time: None,
             applied: None,
-            language_fonts: &[],
+            language_fonts: None,
             config,
             saved: settings,
             fixed_animation_time: None,
@@ -257,9 +261,9 @@ impl<U: ModuleUi> App<U> {
         // The glyphs of the language (Chinese, Japanese) come from a fallback font; a browser
         // gets the file a frame or two later.
         let wanted = super::theme::language_fonts(&i18n::language());
-        if wanted != self.language_fonts {
+        if self.language_fonts != Some(wanted) {
             if super::theme::install_fonts(&self.ctx, self.module.theme(), &i18n::language()) {
-                self.language_fonts = wanted;
+                self.language_fonts = Some(wanted);
             } else {
                 self.ctx.request_repaint();
             }
@@ -269,7 +273,7 @@ impl<U: ModuleUi> App<U> {
         if settings != self.saved && !held {
             if let Some(path) = &self.config {
                 if let Err(error) = settings.save(path) {
-                    self.screens.menu_status = Some(error);
+                    self.screens.error(error);
                 }
             }
             self.saved = settings;
@@ -281,7 +285,7 @@ impl<U: ModuleUi> App<U> {
     fn show_storage_failure(&mut self) {
         if let Some(failure) = super::storage::take_failure() {
             let error = if failure.full { i18n::t!("shell.errors.storage-full").to_owned() } else { failure.message };
-            self.screens.menu_status = Some(i18n::tf!("shell.errors.cannot-save", error = error));
+            self.screens.error(i18n::tf!("shell.errors.cannot-save", error = error));
         }
     }
 
@@ -301,7 +305,7 @@ impl<U: ModuleUi> App<U> {
                 self.screens.save_available = true;
                 self.begin_journal(&slot);
             }
-            Err(error) => self.screens.menu_status = Some(error.to_string()),
+            Err(error) => self.screens.error(error.to_string()),
         }
     }
 
@@ -313,7 +317,7 @@ impl<U: ModuleUi> App<U> {
         };
         match JournalFile::create(save.path(), &match_journal.begin_journal()) {
             Ok(file) => self.journal = Some(file),
-            Err(error) => self.screens.menu_status = Some(error.to_string()),
+            Err(error) => self.screens.error(error.to_string()),
         }
     }
 
@@ -325,7 +329,7 @@ impl<U: ModuleUi> App<U> {
         };
         if let Err(error) = file.append(&match_journal.take_journal()) {
             self.journal = None;
-            self.screens.menu_status = Some(error.to_string());
+            self.screens.error(error.to_string());
         }
     }
 
@@ -348,6 +352,7 @@ impl<U: ModuleUi> App<U> {
         self.ended = self.module.outcome() != Outcome::Playing;
         self.camera = map_camera(self.view());
         self.map_camera = None;
+        self.fit_pending = true;
         self.hover_cache = HoverCache::default();
         self.forget_old_match();
         self.center_on_selection();
@@ -444,6 +449,7 @@ impl<U: ModuleUi> App<U> {
         let screen = raw.screen_rect.unwrap_or_else(|| {
             egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(size.0 as f32, size.1 as f32) / self.ctx.pixels_per_point())
         });
+        self.fit_new_world(screen);
         self.sync_screen_camera(screen);
         self.present();
         let map_visible = self.map_visible();
@@ -721,7 +727,7 @@ impl<U: ModuleUi> App<U> {
         let hall_of_fame = self.saves.hall_of_fame();
         match hall_of_fame.append(&line) {
             Ok(()) => self.module.set_hall_of_fame(&hall_of_fame.lines()),
-            Err(error) => self.screens.menu_status = Some(error),
+            Err(error) => self.screens.error(error),
         }
         self.module.game_ended();
         self.apply_module_actions();
@@ -985,24 +991,25 @@ impl<U: ModuleUi> App<U> {
 
     fn save(&mut self) {
         if self.observer.is_some() {
-            self.screens.menu_status = Some(self.module.words().observer.no_save.into());
+            self.screens.info(self.module.words().observer.no_save);
             return;
         }
         if self.module.view().is_none() {
             return;
         }
         let Some(bytes) = self.module.save_bytes() else {
-            self.screens.menu_status = Some(self.module.words().saves.wait_for_turns.into());
+            self.screens.info(self.module.words().saves.wait_for_turns);
             return;
         };
         let quick_save = self.saves.quick_save();
         let words = &self.module.words().saves;
-        let status = match quick_save.write(&bytes) {
-            Ok(()) => i18n::tf!("shell.saves.saved", turn = self.module.turn()),
-            Err(error) => error.describe(words),
-        };
+        let written = quick_save.write(&bytes);
+        let (saved, failed) = (i18n::tf!("shell.saves.saved", turn = self.module.turn()), written.as_ref().err().map(|error| error.describe(words)));
         self.refresh_save_flags();
-        self.screens.menu_status = Some(status);
+        match failed {
+            None => self.screens.info(saved),
+            Some(error) => self.screens.error(error),
+        }
     }
 
     /// The menu learns whether there is a save to load or continue.
@@ -1109,6 +1116,18 @@ impl<U: ModuleUi> App<U> {
                 false
             }
         }
+    }
+
+    /// The first frame of a new or loaded world: zoom to the known land, on the selection when
+    /// there is one (`fit`). A player who moved the camera before this frame keeps no say: it is the first.
+    fn fit_new_world(&mut self, screen: egui::Rect) {
+        if !std::mem::take(&mut self.fit_pending) {
+            return;
+        }
+        let Some((zoom, centre)) = super::fit::fit(self.view(), screen.size()) else { return };
+        self.camera.zoom = zoom;
+        (self.camera.x, self.camera.y) = centre;
+        self.center_on_selection();
     }
 
     /// A world-showing screen fits the camera around its panels; leaving it restores
@@ -1238,6 +1257,7 @@ pub(super) fn draw_shell_ui(ctx: &egui::Context, shell: ShellUi<'_>, module: &mu
     if screens::draw(ctx, shell.screens, module, None) {
         super::shortcuts::overlay(ctx, shell.screens, &*module);
         super::report::overlay(ctx, shell.screens);
+        super::status::overlay(ctx, shell.screens);
         super::saves_screen::overlay(ctx, shell.screens, &*module);
         return hud::VisualHudActions::default();
     }
@@ -1249,6 +1269,7 @@ pub(super) fn draw_shell_ui(ctx: &egui::Context, shell: ShellUi<'_>, module: &mu
     screens::draw_navigation(ctx, shell.screens, module);
     super::shortcuts::overlay(ctx, shell.screens, &*module);
     super::report::overlay(ctx, shell.screens);
+    super::status::overlay(ctx, shell.screens);
     super::saves_screen::overlay(ctx, shell.screens, &*module);
     actions
 }
