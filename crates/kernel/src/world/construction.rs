@@ -193,15 +193,19 @@ pub(crate) fn spawn_unit<M: RulesModule>(
 ) -> (UnitHandle, ChangeJournal<M>) {
     let mut tx = crate::transaction::WorldTransaction::new(auth);
     let unit = tx.spawn_unit(owner, tile, kind, rules);
-    (unit, tx.commit())
+    (unit, tx.commit(rules))
 }
 
 /// A unit removed outside a command (a scene cleared for a training
 /// ground): `WorldTransaction::destroy_unit`, its journal entry committed.
-pub(crate) fn remove_unit<M: RulesModule>(auth: &mut AuthWorld<M>, unit: UnitHandle) -> ((), ChangeJournal<M>) {
+pub(crate) fn remove_unit<M: RulesModule>(
+    auth: &mut AuthWorld<M>,
+    rules: &CompiledRuleset<M>,
+    unit: UnitHandle,
+) -> ((), ChangeJournal<M>) {
     let mut tx = crate::transaction::WorldTransaction::new(auth);
     let _ = tx.destroy_unit(unit);
-    ((), tx.commit())
+    ((), tx.commit(rules))
 }
 
 /// A building in a city, through the journal (the modifier path of yields).

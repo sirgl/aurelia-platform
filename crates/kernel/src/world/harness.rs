@@ -191,7 +191,7 @@ impl<M: RulesModule> GameState<M> {
     /// The unit removed (as a death leaves the world: store, indexes, the
     /// module's state); a training ground clears its scene with it.
     pub fn debug_remove_unit(&mut self, rules: &CompiledRuleset<M>, unit: UnitHandle) {
-        self.construct_with_journal(rules, |auth| write::remove_unit(auth, unit));
+        self.construct_with_journal(rules, |auth| write::remove_unit(auth, rules, unit));
     }
 
     /// A city of `owner` on `tile` with its founding ring and, for a first city, the Palace.

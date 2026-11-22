@@ -429,7 +429,22 @@ fn decode_world<M: RulesModule>(save: &SaveGameV1<M>, rules: &CompiledRuleset<M>
     };
     auth.module = M::World::decode(&w.module, &auth, rules)?;
     crate::persistence::economy::restore(&mut auth, &w.economy, rules)?;
+    forget_the_dead(&mut auth, rules);
     Ok(GameState::restore(auth, rules))
+}
+
+/// A save of a build before `ModuleSystems::player_eliminated` may still hold the module's ties
+/// with players that died in it: the module forgets every dead player once more (nothing changes
+/// in a later save). The journal is not needed: `GameState::restore` derives everything anew.
+fn forget_the_dead<M: RulesModule>(auth: &mut AuthWorld<M>, rules: &CompiledRuleset<M>) {
+    use crate::systems::module::ModuleSystems;
+    let players = auth.players.count();
+    let dead: Vec<crate::ids::PlayerId> =
+        (0..players).map(|i| crate::ids::PlayerId(i as u8)).filter(|p| !auth.players.is_alive(*p)).collect();
+    let mut tx = crate::transaction::WorldTransaction::new(auth);
+    for player in dead {
+        M::Systems::player_eliminated(&mut tx, rules, player);
+    }
 }
 
 fn decode_stance((tag, turns): (u8, u8)) -> Option<crate::world::unit::Stance> {
