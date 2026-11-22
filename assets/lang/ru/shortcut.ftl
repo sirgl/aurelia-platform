@@ -7,6 +7,7 @@ shortcut.group.game = Игра
 shortcut.group.screens = Экраны
 shortcut.group.units = Отряды
 shortcut.group.cities = Города
+shortcut.group.civics = Институты
 
 shortcut.end-turn = Завершить ход
 shortcut.center-selection = Центрировать карту на выбранном
@@ -57,6 +58,12 @@ shortcut.order-intercept = Встать на перехват вражеской
 shortcut.order-sweep = Воздушная зачистка: атаковать самолёты над клеткой
 shortcut.next-city = Следующий город
 shortcut.previous-city = Предыдущий город
+shortcut.civics-previous = Предыдущая ветвь или предложение
+shortcut.civics-next = Следующая ветвь или предложение
+shortcut.civics-previous-policy = Предыдущий институт
+shortcut.civics-next-policy = Следующий институт
+shortcut.civics-switch = Переключить «Доступно сейчас» и ветви
+shortcut.civics-take = Принять выбранный институт
 
 shortcut.diplomacy = Дипломатия
 shortcut.laws = Законы
