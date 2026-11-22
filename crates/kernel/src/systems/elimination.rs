@@ -8,7 +8,8 @@
 //! remembers cities it had (`ModuleSystems::had_city`).
 //! The module then ends every tie it keeps with the eliminated player
 //! (`ModuleSystems::player_eliminated`).
-//! Journal: UnitChange::Destroyed for the units of an eliminated player,
+//! Journal: PlayerChange::Eliminated (the one elimination event), then
+//! UnitChange::Destroyed for the units of an eliminated player,
 //! the module's changes, PlayerChange::EffectsChanged for every major
 //! nation (their bonuses from the eliminated player are gone).
 
@@ -54,9 +55,10 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             || self.world.cities.iter().any(|(_, c)| c.original_owner == p)
     }
 
-    /// The units of an eliminated player are removed, the module forgets
-    /// it; every nation's effects are recomputed.
+    /// The player is told eliminated in the journal, its units are removed,
+    /// the module forgets it; every nation's effects are recomputed.
     fn bury(&mut self, p: PlayerId, rules: &CompiledRuleset<M>) {
+        self.journal.player_changes.push(PlayerChange::Eliminated { player: p });
         let units = self.world.indexes.units_of(p).to_vec();
         for unit in units {
             let _ = self.destroy_unit(unit);

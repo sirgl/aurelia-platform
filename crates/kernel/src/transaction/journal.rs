@@ -195,6 +195,11 @@ pub enum PlayerChange {
         host: PlayerId,
         guest: PlayerId,
     },
+    /// The player lost its last city (or its last unit before a first city) and is out of the
+    /// game (`systems::elimination`); its units are destroyed in the same journal.
+    Eliminated {
+        player: PlayerId,
+    },
     /// Timed effects of the player started or expired (yields of its cities
     /// may change).
     EffectsChanged {
