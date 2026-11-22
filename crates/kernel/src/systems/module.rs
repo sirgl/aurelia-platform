@@ -273,5 +273,10 @@ pub trait ModuleSystems<M: RulesModule> {
     fn had_city(_auth: &AuthWorld<M>, _player: PlayerId) -> bool {
         false
     }
+
+    /// `player` was eliminated and its units are gone: the module ends every tie its state
+    /// keeps with it (no state may name a dead player, `systems::elimination`). Runs inside the
+    /// transaction of the elimination, before the nations' effects are recomputed.
+    fn player_eliminated(_tx: &mut WorldTransaction<'_, M>, _rules: &CompiledRuleset<M>, _player: PlayerId) {}
 }
 
