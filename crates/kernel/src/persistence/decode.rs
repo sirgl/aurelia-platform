@@ -430,6 +430,7 @@ fn decode_world<M: RulesModule>(save: &SaveGameV1<M>, rules: &CompiledRuleset<M>
     auth.module = M::World::decode(&w.module, &auth, rules)?;
     crate::persistence::economy::restore(&mut auth, &w.economy, rules)?;
     forget_the_dead(&mut auth, rules);
+    M::repair_loaded(&mut auth, rules);
     Ok(GameState::restore(auth, rules))
 }
 

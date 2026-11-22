@@ -113,6 +113,12 @@ pub trait RulesModule:
         Vec::new()
     }
 
+    /// A save written by an older build may break an invariant the module keeps now (Classic:
+    /// one palace per nation). Called once on a decoded world, before its derived state is built;
+    /// a world that keeps the invariant is left as it is, so a game that is saved and loaded plays
+    /// on exactly as the unbroken one does.
+    fn repair_loaded(_world: &mut AuthWorld<Self>, _rules: &CompiledRuleset<Self>) {}
+
     /// The command that ends `player`'s turn.
     fn end_turn(player: PlayerId) -> Self::Command;
 
