@@ -24,3 +24,4 @@ slow-timeout = { period = "10s", terminate-after = 3 }
 [profile.full]
 # Everything `cargo test --workspace` runs, the GPU tests too (they open the machine's GPU).
 default-filter = "all()"
+slow-timeout = { period = "120s" }
