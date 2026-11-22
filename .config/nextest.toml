@@ -17,7 +17,9 @@ fail-fast = false
 failure-output = "final"
 status-level = "fail"
 final-status-level = "slow"
-slow-timeout = { period = "30s" }
+# The guard of the time budget (classic/docs/testing.md, "The time budget"): a test that runs 10 s is reported
+# as SLOW, one that runs 30 s is terminated and fails. The whole run takes 7 s on 10 threads.
+slow-timeout = { period = "10s", terminate-after = 3 }
 
 [profile.full]
 # Everything `cargo test --workspace` runs, the GPU tests too (they open the machine's GPU).
