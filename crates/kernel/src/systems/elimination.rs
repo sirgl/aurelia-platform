@@ -54,6 +54,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
     /// The units of an eliminated player are removed; every nation's
     /// effects are recomputed.
     fn bury(&mut self, p: PlayerId) {
+        self.journal.player_changes.push(PlayerChange::Eliminated { player: p });
         let units = self.world.indexes.units_of(p).to_vec();
         for unit in units {
             let _ = self.destroy_unit(unit);
