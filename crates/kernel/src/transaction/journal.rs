@@ -312,6 +312,26 @@ pub(crate) fn claim_founding_ring<M: RulesModule>(
     }
 }
 
+/// A razed city leaves the world: its plots become unowned, the indexes and the timed effects
+/// forget it, the store frees its slot (the handle goes stale) and the journal tells it. The rules
+/// module forgets its own records of the city before (its city removal); nothing the kernel keeps
+/// names the city after.
+pub fn remove_city<M: RulesModule>(
+    world: &mut crate::world::state::AuthWorld<M>,
+    journal: &mut ChangeJournal<M>,
+    city: CityHandle,
+) {
+    let Some((owner, tile)) = world.cities.get(city).map(|core| (core.owner, core.tile)) else {
+        return;
+    };
+    release_city_tiles(world, journal, city);
+    world.indexes.unindex_city_owner(owner, city);
+    world.indexes.unindex_city_tile(tile);
+    world.effects.forget_city(city);
+    world.cities.remove(city);
+    journal.city_changes.push(CityChange::Removed { city, owner, tile });
+}
+
 /// A razed city's plots become unowned (journal per tile).
 pub fn release_city_tiles<M: RulesModule>(
     world: &mut crate::world::state::AuthWorld<M>,

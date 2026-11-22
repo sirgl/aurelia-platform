@@ -97,6 +97,11 @@ impl<M: RulesModule> ActiveEffectStore<M> {
         self.entries.len() != before
     }
 
+    /// The city is gone: its timed effects end with it.
+    pub fn forget_city(&mut self, city: CityHandle) {
+        self.entries.retain(|e| e.target != EffectTarget::City(city));
+    }
+
     pub(crate) fn from_entries(entries: Vec<ActiveEffect<M>>) -> Self {
         Self { entries }
     }

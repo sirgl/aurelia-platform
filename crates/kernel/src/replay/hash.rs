@@ -105,7 +105,7 @@ pub fn authoritative_hash<M: RulesModule>(game: &GameState<M>) -> u64 {
 
     // Map: all layers in TileId order.
     let n = auth.map().tile_count();
-    let city_ordinals = crate::persistence::encode::city_ordinals(auth);
+    let city_ordinals = crate::persistence::encode::CityOrdinals::new(auth);
     for i in 0..n {
         let t = TileId(i as u32);
         mix(
@@ -160,8 +160,8 @@ pub fn authoritative_hash<M: RulesModule>(game: &GameState<M>) -> u64 {
         }
         mix(&mut h, u64::from(auth.map().river(t)));
         // Owning city (position in store order), mixed only on owned tiles.
-        if let Some(city) = auth.map().owning_city(t) {
-            mix(&mut h, 0x6369_7479 + city_ordinals[city.index as usize] as u64);
+        if let Some(ordinal) = auth.map().owning_city(t).and_then(|city| city_ordinals.of(city)) {
+            mix(&mut h, 0x6369_7479 + u64::from(ordinal));
         }
     }
     // River beds: canonical pairs (sorted, so deterministic).
