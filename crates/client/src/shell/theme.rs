@@ -208,6 +208,10 @@ pub fn touch_targets(ctx: &egui::Context) {
     });
 }
 
+/// Inter, behind egui's own fonts in every language: it has the arrows, dashes and signs the texts use
+/// and egui's fonts lack (the attack line's arrow was a box).
+pub const SYMBOL_FONT: &str = "fonts/Inter-Regular.ttf";
+
 /// The font files that give a language the glyphs Inter and egui's fonts lack, first choice
 /// first (subsets of Noto Sans CJK, built by `platform/tools/i18n/subset_fonts.py`). Chinese and
 /// Japanese share Han characters but draw them differently, so each language lists its own
@@ -228,7 +232,7 @@ pub fn install_fonts(ctx: &egui::Context, theme: &Theme, language: &str) -> bool
     let read = |path: &str| super::assets::read(&super::assets::path(path));
     let mut pending = false;
     let mut extra = Vec::new();
-    for path in language_fonts(language) {
+    for path in std::iter::once(&SYMBOL_FONT).chain(language_fonts(language)) {
         match read(path) {
             Some(bytes) => extra.push((*path, bytes)),
             None if super::assets::is_file(&super::assets::path(path)) => pending = true,
