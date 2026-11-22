@@ -139,6 +139,20 @@ impl<M: RulesModule> GameState<M> {
         self.silently(|auth| auth.players.earn(p, amount));
     }
 
+    /// Gold out of a treasury, at most what it holds (the stress exam's bankrupt treasury).
+    /// Nothing derived reads the treasury: no journal.
+    pub fn debug_spend(&mut self, p: PlayerId, amount: u32) {
+        self.silently(|auth| {
+            let spent = amount.min(auth.players.treasury_of(p));
+            auth.players.spend(p, spent);
+        });
+    }
+
+    /// The resource of a tile gone (the stress exam's lost strategic resource).
+    pub fn debug_clear_resource(&mut self, rules: &CompiledRuleset<M>, tile: TileId) {
+        self.construct(rules, |auth, j| write::clear_resource(auth, j, tile));
+    }
+
     /// Beakers into a player's pool (the stress exam's "science doubled": each round the
     /// player is given what it earned). Nothing derived reads the pool: no journal.
     pub fn debug_earn_science(&mut self, p: PlayerId, amount: u32) {
