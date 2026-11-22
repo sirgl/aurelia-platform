@@ -55,6 +55,17 @@ impl<M: RulesModule> GameState<M> {
         });
     }
 
+    /// Set a unit's move points left this turn (the ai-stress exam's scripted seats spend the moves of
+    /// the units they hold, so no later order of the turn moves them). No derived system reads the
+    /// moves: no journal.
+    pub fn debug_set_unit_moves(&mut self, unit: UnitHandle, moves: u16) {
+        self.silently(|auth| {
+            if let Some(core) = auth.units.get_mut_core(unit) {
+                core.moves_left = moves.min(core.moves_max);
+            }
+        });
+    }
+
     /// `a` and `b` have met (contact memory both ways), as if their units had seen each other.
     pub fn debug_meet(&mut self, a: PlayerId, b: PlayerId) {
         self.silently(|auth| {
@@ -191,7 +202,7 @@ impl<M: RulesModule> GameState<M> {
     /// The unit removed (as a death leaves the world: store, indexes, the
     /// module's state); a training ground clears its scene with it.
     pub fn debug_remove_unit(&mut self, rules: &CompiledRuleset<M>, unit: UnitHandle) {
-        self.construct_with_journal(rules, |auth| write::remove_unit(auth, unit));
+        self.construct_with_journal(rules, |auth| write::remove_unit(auth, rules, unit));
     }
 
     /// A city of `owner` on `tile` with its founding ring and, for a first city, the Palace.

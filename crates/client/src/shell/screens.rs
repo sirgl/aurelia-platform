@@ -35,6 +35,8 @@ pub struct ScreenState {
     /// Player settings; the app applies and persists them.
     pub settings: Settings,
     pub menu_status: Option<String>,
+    /// The shell's message over every screen (`status`): errors raised during play and saves.
+    pub status: Option<super::status::ShellStatus>,
     /// Save, Load and Continue clicked in the menu, applied by the app.
     pub requests: Vec<ShellAction>,
     match_summary: String,
@@ -67,6 +69,7 @@ impl Default for ScreenState {
             continue_available: false,
             settings: Default::default(),
             menu_status: None,
+            status: None,
             requests: Vec::new(),
             match_summary: String::new(),
             art: Default::default(),
@@ -82,6 +85,16 @@ impl Default for ScreenState {
 }
 
 impl ScreenState {
+    /// An error of the shell, shown until clicked.
+    pub fn error(&mut self, text: impl Into<String>) {
+        self.status = Some(super::status::ShellStatus::new(text, super::status::Level::Error));
+    }
+
+    /// A message of the shell that goes by itself.
+    pub fn info(&mut self, text: impl Into<String>) {
+        self.status = Some(super::status::ShellStatus::new(text, super::status::Level::Info));
+    }
+
     pub fn flags(&self) -> ShellFlags {
         ShellFlags {
             game_mode: self.game_mode,
@@ -447,6 +460,7 @@ fn draw_body(
     // ScrollArea checks the topmost registered Area, not only widget hit
     // tests. A bare UiBuilder layer paints and clicks correctly but never
     // receives wheel input because the enclosing fullscreen Area wins.
+    let from = super::crisp::mark(ui.ctx(), layer);
     egui::Area::new(layer.id)
         .order(layer.order)
         .fixed_pos(egui::Pos2::ZERO)
@@ -458,6 +472,9 @@ fn draw_body(
             ui.set_clip_rect(canvas);
             module.draw_screen(ui, canvas, id, state.flags(), scene);
         });
+    // egui scales the finished text mesh with the layer, which fades thin glyphs: lay the texts
+    // out again at the size they are drawn at (`crisp`).
+    super::crisp::sharpen(ui.ctx(), layer, from, scale);
 }
 
 fn menu(ui: &mut egui::Ui, r: Rect, state: &mut ScreenState, module: &dyn ModuleUi) {

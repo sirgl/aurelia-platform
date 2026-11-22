@@ -1,5 +1,5 @@
 use crate::module::RulesModule;
-use crate::ids::TileId;
+use crate::ids::{CityHandle, TileId};
 use crate::persistence::schema::{SaveGameV1, SaveHeader, SavedCity, SavedUnit, SavedWorldV1};
 use crate::rules::CompiledRuleset;
 use crate::persistence::codec::ModuleSections;
@@ -67,7 +67,7 @@ pub fn encode<M: RulesModule>(game: &GameState<M>, rules: &CompiledRuleset<M>) -
     let mut resource_amount = Vec::with_capacity(n);
     let mut owner = Vec::with_capacity(n);
     let mut tile_city = Vec::with_capacity(n);
-    let city_ordinals = city_ordinals(auth);
+    let city_ordinals = CityOrdinals::new(auth);
     let mut improvement = Vec::with_capacity(n);
     let mut road = Vec::with_capacity(n);
     let mut pillaged = Vec::new();
@@ -80,7 +80,7 @@ pub fn encode<M: RulesModule>(game: &GameState<M>, rules: &CompiledRuleset<M>) -
         resource.push(auth.map().resource(t).and_then(|o| o).map(|x| x.0));
         resource_amount.push(auth.map().resource_amount(t));
         owner.push(auth.map().owner(t).and_then(|o| o).map(|p| p.0));
-        tile_city.push(auth.map().owning_city(t).map(|c| city_ordinals[c.index as usize]));
+        tile_city.push(auth.map().owning_city(t).and_then(|c| city_ordinals.of(c)));
         improvement.push(auth.map().improvement(t).and_then(|o| o).map(|x| x.0));
         road.push(auth.map().route(t).code());
         if auth.map().pillaged(t) {
@@ -269,14 +269,40 @@ pub(crate) fn encode_status(status: crate::world::city::CityStatus) -> u8 {
     }
 }
 
-/// Position of every live city in store order, indexed by the handle's
-/// slot (the save refers to cities by this position).
-pub fn city_ordinals<M: RulesModule>(auth: &crate::world::state::AuthWorld<M>) -> Vec<u32> {
-    let mut ordinals = vec![u32::MAX; auth.cities().capacity()];
-    for (ordinal, (handle, _)) in auth.cities().iter().enumerate() {
-        ordinals[handle.index as usize] = ordinal as u32;
+/// Position of every live city in store order (the save and the hash refer to cities by it).
+/// A handle of a removed city has no position: `of` says so instead of a number that would mean
+/// no city or another city.
+#[derive(Debug, Clone)]
+pub struct CityOrdinals {
+    /// By the handle's slot: the generation of the live city there and its position.
+    by_slot: Vec<Option<(u32, u32)>>,
+}
+
+impl CityOrdinals {
+    pub fn new<M: RulesModule>(auth: &crate::world::state::AuthWorld<M>) -> Self {
+        let mut by_slot = vec![None; auth.cities().capacity()];
+        for (ordinal, (handle, _)) in auth.cities().iter().enumerate() {
+            by_slot[handle.index as usize] = Some((handle.generation, ordinal as u32));
+        }
+        Self { by_slot }
     }
-    ordinals
+
+    /// The position of `city`, None when it was removed. The removal of a city forgets every
+    /// record that names it (the module's city removal), so a saved or hashed record that asks
+    /// for a removed city is a defect: loud in a debug build.
+    pub fn of(&self, city: CityHandle) -> Option<u32> {
+        let ordinal = self.get(city);
+        debug_assert!(ordinal.is_some(), "a record names the removed city {city:?}: its removal must forget it");
+        ordinal
+    }
+
+    /// `of` without the check, for a question about a city that may be gone.
+    pub fn get(&self, city: CityHandle) -> Option<u32> {
+        match self.by_slot.get(city.index as usize) {
+            Some(Some((generation, ordinal))) if *generation == city.generation => Some(*ordinal),
+            _ => None,
+        }
+    }
 }
 
 /// Memory of the explored tiles, in tile order.

@@ -35,7 +35,10 @@ pub enum Progress {
     Done,
     /// In the queue at this place (1 = studied now).
     Queued(u32),
+    /// Can be started now.
     Open,
+    /// Needs something first: drawn dimmed, so that what can be started stands out.
+    Locked,
 }
 
 /// The node's first unlock in the card's corner: its picture or initial, and how many more.
@@ -250,13 +253,24 @@ fn draw_node(ui: &mut egui::Ui, r: Rect, salt: &str, index: usize, node: &Node, 
         Progress::Done => Color32::from_rgb(26, 53, 45),
         Progress::Queued(_) => Color32::from_rgb(57, 54, 35),
         Progress::Open => RAISED,
+        Progress::Locked => Color32::from_rgb(20, 38, 43),
     };
     let lit = planned || selected || (response.hovered() && node.ready);
-    let edge = if lit { GOLD } else { Color32::from_rgb(69, 93, 96) };
+    let edge = if lit {
+        GOLD
+    } else if node.progress == Progress::Open {
+        TEAL
+    } else {
+        Color32::from_rgb(52, 70, 73)
+    };
     let width = if selected || response.hovered() { 1.8 } else { 1. };
     ui.painter().rect_filled(r, 5., fill);
     ui.painter().rect_stroke(r, 5., Stroke::new(width, edge), egui::StrokeKind::Inside);
     cards::paint(ui, r, &node.card, &cards::NODE, Some(pen));
+    if node.progress == Progress::Locked {
+        // 55 % of the card shows through.
+        ui.painter().rect_filled(r.shrink(1.0), 5., Color32::from_rgba_unmultiplied(15, 29, 34, 115));
+    }
     if let Some(corner) = &node.corner {
         draw_corner(ui, r, corner, pen);
     }

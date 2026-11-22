@@ -611,7 +611,8 @@ fn owner_wide_player_change(change: &PlayerChange) -> Option<PlayerId> {
         | PlayerChange::TileNoticed { .. }
         | PlayerChange::WarDeclared { .. }
         | PlayerChange::PeaceMade { .. }
-        | PlayerChange::BordersOpened { .. } => None,
+        | PlayerChange::BordersOpened { .. }
+        | PlayerChange::Eliminated { .. } => None,
     }
 }
 

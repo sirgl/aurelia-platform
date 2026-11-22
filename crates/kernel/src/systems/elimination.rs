@@ -6,19 +6,23 @@
 //!
 //! The module may keep a player alive (`ModuleSystems::stays_alive`) and
 //! remembers cities it had (`ModuleSystems::had_city`).
-//! Journal: UnitChange::Destroyed for the units of an eliminated player,
-//! PlayerChange::EffectsChanged for every major nation (their
-//! bonuses from the eliminated player are gone).
+//! The module then ends every tie it keeps with the eliminated player
+//! (`ModuleSystems::player_eliminated`).
+//! Journal: PlayerChange::Eliminated (the one elimination event), then
+//! UnitChange::Destroyed for the units of an eliminated player,
+//! the module's changes, PlayerChange::EffectsChanged for every major
+//! nation (their bonuses from the eliminated player are gone).
 
 use crate::ids::PlayerId;
 use crate::module::RulesModule;
+use crate::rules::CompiledRuleset;
 use crate::systems::module::ModuleSystems;
 use crate::transaction::journal::{ChangeJournal, PlayerChange};
 use crate::transaction::transaction::WorldTransaction;
 
 impl<'a, M: RulesModule> WorldTransaction<'a, M> {
     /// Alive reconciliation through the indexes: O(P), nobody touches the flags directly.
-    pub(crate) fn refresh_alive(&mut self) {
+    pub(crate) fn refresh_alive(&mut self, rules: &CompiledRuleset<M>) {
         let players = self.world.players.count();
         let mut eliminated = Vec::new();
         for i in 0..players {
@@ -31,7 +35,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             }
         }
         for p in eliminated {
-            self.bury(p);
+            self.bury(p, rules);
         }
     }
 
@@ -51,13 +55,15 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
             || self.world.cities.iter().any(|(_, c)| c.original_owner == p)
     }
 
-    /// The units of an eliminated player are removed; every nation's
-    /// effects are recomputed.
-    fn bury(&mut self, p: PlayerId) {
+    /// The player is told eliminated in the journal, its units are removed,
+    /// the module forgets it; every nation's effects are recomputed.
+    fn bury(&mut self, p: PlayerId, rules: &CompiledRuleset<M>) {
+        self.journal.player_changes.push(PlayerChange::Eliminated { player: p });
         let units = self.world.indexes.units_of(p).to_vec();
         for unit in units {
             let _ = self.destroy_unit(unit);
         }
+        M::Systems::player_eliminated(self, rules, p);
         let players = &self.world.players;
         let majors = (0..players.count()).map(|i| PlayerId(i as u8));
         let majors: Vec<PlayerId> = majors.filter(|p| players.is_major(*p) && players.is_alive(*p)).collect();
@@ -71,7 +77,7 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
     /// An eliminated active player hands the turn on (nobody else could end
     /// it: EndTurn requires an alive player). Runs after game commands only:
     /// harness setup (debug_*) may populate players in any order.
-    pub(crate) fn skip_eliminated_active(&mut self, rules: &crate::rules::CompiledRuleset<M>) {
+    pub(crate) fn skip_eliminated_active(&mut self, rules: &CompiledRuleset<M>) {
         let active = self.world.turn.active_player;
         if !self.world.players.is_alive(active) {
             self.pass_turn(active, rules);
@@ -80,15 +86,15 @@ impl<'a, M: RulesModule> WorldTransaction<'a, M> {
 
     /// Commit invariants that hold after any mutation (elimination), then
     /// the journal for derived systems.
-    pub fn commit(mut self) -> ChangeJournal<M> {
-        self.refresh_alive();
+    pub fn commit(mut self, rules: &CompiledRuleset<M>) -> ChangeJournal<M> {
+        self.refresh_alive(rules);
         self.journal
     }
 
     /// Commit of a game command: elimination, and the turn moves on when
     /// the active player was eliminated.
-    pub fn commit_command(mut self, rules: &crate::rules::CompiledRuleset<M>) -> ChangeJournal<M> {
-        self.refresh_alive();
+    pub fn commit_command(mut self, rules: &CompiledRuleset<M>) -> ChangeJournal<M> {
+        self.refresh_alive(rules);
         self.skip_eliminated_active(rules);
         self.journal
     }

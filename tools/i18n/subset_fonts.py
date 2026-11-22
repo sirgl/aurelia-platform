@@ -24,8 +24,11 @@ if '--source' in sys.argv:
 
 def chars_of(lang_dirs):
     out = set()
+    # The texts of every part of the checkout (platform and the games beside it): a character of a
+    # game's text that the subset lacks is drawn as a box.
+    roots = [ROOT] + sorted(p for p in glob.glob(os.path.join(ROOT, '..', '*')) if os.path.isdir(os.path.join(p, 'assets/lang')) and os.path.abspath(p) != ROOT)
     for d in lang_dirs:
-        for path in glob.glob(os.path.join(ROOT, 'assets/lang', d, '*.ftl')):
+        for path in [f for r in roots for f in glob.glob(os.path.join(r, 'assets/lang', d, '*.ftl'))]:
             text = open(path, encoding='utf-8').read()
             out.update(c for c in text if ord(c) > 0x7F)
     return out

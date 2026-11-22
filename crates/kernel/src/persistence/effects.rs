@@ -19,18 +19,16 @@ const TARGET_CITY: u8 = 1;
 const TARGET_UNITS: u8 = 2;
 
 pub(crate) fn encode_effects<M: RulesModule>(auth: &AuthWorld<M>) -> Vec<SavedEffect> {
-    let city_order: Vec<CityHandle> = auth.cities().iter().map(|(h, _)| h).collect();
+    let city_ordinals = crate::persistence::encode::CityOrdinals::new(auth);
     let mut out = Vec::with_capacity(auth.active_effects().len());
     for entry in auth.active_effects().iter() {
         let (target_tag, target) = match entry.target {
             EffectTarget::Player(p) => (TARGET_PLAYER, u32::from(p.0)),
             EffectTarget::Units(p) => (TARGET_UNITS, u32::from(p.0)),
+            // The removal of a city ends its timed effects (`remove_city`): none names a removed one.
             EffectTarget::City(c) => {
-                let ordinal = city_order.iter().position(|h| *h == c);
-                (
-                    TARGET_CITY,
-                    ordinal.expect("timed effect on a live city") as u32,
-                )
+                let Some(ordinal) = city_ordinals.of(c) else { continue };
+                (TARGET_CITY, ordinal)
             }
         };
         let (source_tag, source_id) = source_parts(entry.effect.source);
