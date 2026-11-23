@@ -168,6 +168,14 @@ pub fn step_points<M: RulesModule>(map: &KnownMap<'_, '_, M>, from: TileId, to: 
     }
 }
 
+/// Whether any known step leads into `tile` for the mover: some neighbour has a step into it that is possible as far
+/// as the player knows. When none has, no search can end on `tile` (a foreign city is such a tile: a unit attacks it,
+/// never enters it), so a path search to it floods the whole known map to find nothing.
+pub fn has_known_entry<M: RulesModule>(map: &KnownMap<'_, '_, M>, tile: TileId) -> bool {
+    let dims = view_dimensions(map.view);
+    dims.neighbors(tile).into_iter().any(|from| step_points(map, from, tile).is_some())
+}
+
 /// Whole turns a unit with `moves_max` points needs for `points`.
 pub fn turns_for(points: u32, moves_max: u16) -> u32 {
     let per_turn = u32::from(moves_max.max(1));
