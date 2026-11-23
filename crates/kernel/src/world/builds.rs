@@ -267,17 +267,29 @@ fn check_resource<M: RulesModule>(
     Err("another resource is here")
 }
 
-fn check_terrain<M: RulesModule>(
+/// Whether the terrain of `tile` suits `def`; fresh water is looked up only where a rule asks
+/// (`check_terrain_with` over `fresh_water`).
+pub fn check_terrain<M: RulesModule>(
     facts: &impl TileFacts,
     rules: &CompiledRuleset<M>,
     tile: TileId,
     def: &ImprovementDefinition<M>,
     connects: bool,
 ) -> Result<(), &'static str> {
+    check_terrain_with(facts, rules, tile, def, connects, || fresh_water(facts, rules, tile))
+}
+
+/// `check_terrain` with the fresh-water answer given: a scan of the tile's neighbours, run for every
+/// improvement the AI tries on every tile, so it is asked only where a rule needs it.
+pub fn check_terrain_with<M: RulesModule>(
+    facts: &impl TileFacts,
+    rules: &CompiledRuleset<M>,
+    tile: TileId,
+    def: &ImprovementDefinition<M>,
+    connects: bool,
+    fresh: impl Fn() -> bool,
+) -> Result<(), &'static str> {
     let hills = facts.terrain(tile).is_some_and(|t| rules.terrain_kinds.is_hills(t.0));
-    // Looked up only where a rule asks (a scan of the tile's neighbours, run for every improvement
-    // the AI tries on every tile).
-    let fresh = || fresh_water(facts, rules, tile);
     if def.placement.requires_flatlands_or_fresh_water && hills && !fresh() {
         return Err("hills need fresh water");
     }
