@@ -316,8 +316,20 @@ fn unit_bucket<M: RulesModule>(set: &EffectSet<M>) -> &[CompiledEffect<M>] {
     &set.passive_unit
 }
 
-/// Owner-level part: nation, technologies, owner-wide buildings.
+/// Owner-level part: nation, technologies, owner-wide buildings. A pure function of the world, asked once
+/// for each unit of the owner by every observation: answered from the effect memo while the world cannot
+/// change (`EffectMemo::owner_unit_modifiers`, checked by its verify mode).
 pub fn owner_unit_modifiers<M: RulesModule>(
+    auth: &AuthWorld<M>,
+    rules: &CompiledRuleset<M>,
+    owner: PlayerId,
+) -> UnitModifiers<M> {
+    (*auth.memo().owner_unit_modifiers(owner, || owner_unit_modifiers_fresh(auth, rules, owner))).clone()
+}
+
+/// `owner_unit_modifiers` computed from the sources (what the memo holds).
+#[doc(hidden)]
+pub fn owner_unit_modifiers_fresh<M: RulesModule>(
     auth: &AuthWorld<M>,
     rules: &CompiledRuleset<M>,
     owner: PlayerId,

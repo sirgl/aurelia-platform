@@ -154,3 +154,81 @@ fn is_host<M: RulesModule>(auth: &AuthWorld<M>, player: PlayerId) -> bool {
     use crate::world::player::ModulePlayerKind;
     auth.players().kind_of(player).module().is_some_and(|kind| kind.hosts_improvements())
 }
+
+/// A player's knowledge as `PlayerView` gives it, with the snapshot of the tile last asked about kept: a rule
+/// that asks several facts of one tile (a condition on its terrain, another on its improvement, its
+/// pillage) builds the snapshot once, not once for each. The view is a still picture of the world, so the
+/// answers are those of `PlayerView`'s own `TileFacts`, fact by fact.
+pub struct OneTileFacts<'v, 'a, M: RulesModule> {
+    view: &'v PlayerView<'a, M>,
+    last: std::cell::Cell<Option<(TileId, Option<crate::knowledge::view::TileSnapshot>)>>,
+}
+
+impl<'v, 'a, M: RulesModule> OneTileFacts<'v, 'a, M> {
+    pub fn new(view: &'v PlayerView<'a, M>) -> Self {
+        Self { view, last: std::cell::Cell::new(None) }
+    }
+
+    /// The snapshot of `tile` (None: unknown).
+    fn snapshot(&self, tile: TileId) -> Option<crate::knowledge::view::TileSnapshot> {
+        if let Some((at, snapshot)) = self.last.get() {
+            if at == tile {
+                return snapshot;
+            }
+        }
+        let snapshot = self.view.tile(tile).snapshot().copied();
+        self.last.set(Some((tile, snapshot)));
+        snapshot
+    }
+
+    /// The map's own lake and coast of a tile the player knows (`PlayerView::known_geography`).
+    fn geography(&self, tile: TileId) -> Option<crate::knowledge::view::Geography> {
+        self.snapshot(tile)?;
+        self.view.known_geography(tile)
+    }
+}
+
+impl<M: RulesModule> TileFacts for OneTileFacts<'_, '_, M> {
+    fn dimensions(&self) -> MapDimensions {
+        self.view.map_dimensions()
+    }
+    fn terrain(&self, tile: TileId) -> Option<TerrainId> {
+        self.snapshot(tile).map(|s| s.terrain)
+    }
+    fn feature(&self, tile: TileId) -> Option<FeatureId> {
+        self.snapshot(tile).and_then(|s| s.feature)
+    }
+    fn natural_wonder(&self, tile: TileId) -> Option<crate::rules::content::NaturalWonderId> {
+        self.snapshot(tile).and_then(|s| s.natural_wonder)
+    }
+    fn resource(&self, tile: TileId) -> Option<ResourceId> {
+        self.snapshot(tile).and_then(|s| s.resource)
+    }
+    fn improvement(&self, tile: TileId) -> Option<ImprovementId> {
+        self.snapshot(tile).and_then(|s| s.improvement)
+    }
+    fn pillaged(&self, tile: TileId) -> bool {
+        self.view.known_pillaged(tile)
+    }
+    fn owner(&self, tile: TileId) -> Option<PlayerId> {
+        self.snapshot(tile).and_then(|s| s.owner)
+    }
+    fn city(&self, tile: TileId) -> bool {
+        self.snapshot(tile).is_some_and(|s| s.city)
+    }
+    fn river(&self, tile: TileId) -> bool {
+        self.snapshot(tile).is_some_and(|s| s.river)
+    }
+    fn lake(&self, tile: TileId) -> bool {
+        self.geography(tile).is_some_and(|g| g.lake)
+    }
+    fn coastal_land(&self, tile: TileId) -> bool {
+        self.geography(tile).is_some_and(|g| g.coastal_land)
+    }
+    fn is_water(&self, tile: TileId) -> bool {
+        self.geography(tile).is_some_and(|g| g.water)
+    }
+    fn is_host(&self, player: PlayerId) -> bool {
+        TileFacts::is_host(self.view, player)
+    }
+}

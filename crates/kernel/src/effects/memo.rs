@@ -90,6 +90,8 @@ struct State<M: RulesModule> {
     /// The period the entries belong to.
     period: u64,
     players: Vec<Option<Arc<PlayerModifiers<M>>>>,
+    /// The owner-level part of the unit modifiers, by player.
+    owner_units: Vec<Option<Arc<crate::effects::unit::UnitModifiers<M>>>>,
     connected: Vec<Option<(CityHandle, Arc<Vec<CityHandle>>)>>,
     /// The module's own memo tables: one `HashMap<K, V>` per (K, V).
     module: HashMap<TypeId, Box<dyn Any + Send>>,
@@ -101,6 +103,7 @@ impl<M: RulesModule> State<M> {
         Self {
             period: 0,
             players: Vec::new(),
+            owner_units: Vec::new(),
             connected: Vec::new(),
             module: HashMap::new(),
             stats: MemoStats::default(),
@@ -111,6 +114,7 @@ impl<M: RulesModule> State<M> {
         if self.period != period {
             self.period = period;
             self.players.clear();
+            self.owner_units.clear();
             self.connected.clear();
             self.module.clear();
         }
@@ -248,6 +252,45 @@ impl<M: RulesModule> EffectMemo<M> {
                 state.players.resize(slot + 1, None);
             }
             state.players[slot] = Some(fresh.clone());
+        }
+        fresh
+    }
+
+    /// The owner-level part of `player`'s unit modifiers: from the memo, else `compute`d.
+    pub fn owner_unit_modifiers(
+        &self,
+        player: PlayerId,
+        compute: impl FnOnce() -> crate::effects::unit::UnitModifiers<M>,
+    ) -> Arc<crate::effects::unit::UnitModifiers<M>> {
+        let Some((period, mode)) = self.active() else {
+            return Arc::new(compute());
+        };
+        let slot = player.0 as usize;
+        let found = {
+            let mut state = self.lock();
+            state.enter(period);
+            let found = state.owner_units.get(slot).and_then(|e| e.clone());
+            if found.is_some() {
+                state.stats.hits += 1;
+            } else {
+                state.stats.misses += 1;
+            }
+            found
+        };
+        if let Some(found) = found {
+            if mode == MemoMode::Verify {
+                let fresh = compute();
+                assert_eq!(*found, fresh, "stale memo: owner_unit_modifiers of {player:?}");
+            }
+            return found;
+        }
+        let fresh = Arc::new(compute());
+        let mut state = self.lock();
+        if state.period == period {
+            if state.owner_units.len() <= slot {
+                state.owner_units.resize(slot + 1, None);
+            }
+            state.owner_units[slot] = Some(fresh.clone());
         }
         fresh
     }
