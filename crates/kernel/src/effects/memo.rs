@@ -192,6 +192,12 @@ impl<M: RulesModule> EffectMemo<M> {
             .unwrap_or_else(|poisoned| poisoned.into_inner())
     }
 
+    /// The id of the open period, 0 while the world may change or the memo is off: two reads that see
+    /// the same non-zero id saw the same world, so a result computed from the world alone holds for both.
+    pub fn open_period(&self) -> u64 {
+        self.active().map_or(0, |(period, _)| period)
+    }
+
     /// The open period and the mode when answering from the memo is on.
     #[inline]
     fn active(&self) -> Option<(u64, MemoMode)> {

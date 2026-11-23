@@ -274,6 +274,19 @@ impl<'a, M: RulesModule> PlayerView<'a, M> {
         })
     }
 
+    /// The id of the world's open period (`EffectMemo::open_period`): 0 while it may change.
+    pub fn world_period(&self) -> u64 {
+        self.auth.memo().open_period()
+    }
+
+    /// The map's own lake and coast of a tile, known to the player or not: what `TileFacts::lake` and
+    /// `coastal_land` answer for a tile it knows. A memo of what a rule read of a neighbourhood keys on
+    /// it beside the tiles' snapshots (which say whether each is known).
+    pub fn static_geography(&self, tile: TileId) -> (bool, bool) {
+        let map = self.auth.map();
+        (map.lake(tile), map.coastal_land(tile))
+    }
+
     /// The tile was seen at least once (Visible or Remembered).
     pub fn is_known(&self, tile: TileId) -> bool {
         if self.all_seen {
@@ -296,7 +309,14 @@ impl<'a, M: RulesModule> PlayerView<'a, M> {
     /// may not enter `to` as far as the player knows. Units and zones of
     /// control are not part of it: the mover sees those itself.
     pub fn known_step_cost_as(&self, profile: &MoveProfile<M>, from: TileId, to: TileId) -> Option<StepCost> {
-        let kernel = self.known_kernel_step_cost(profile, from, to);
+        let start = self.tile(from).snapshot().copied();
+        self.known_step_cost_from(profile, from, start.as_ref(), to)
+    }
+
+    /// `known_step_cost_as` with the player's snapshot of `from` given (`self.tile(from).snapshot()`): a
+    /// search that prices the steps out of one tile reads that tile once.
+    pub fn known_step_cost_from(&self, profile: &MoveProfile<M>, from: TileId, start: Option<&TileSnapshot>, to: TileId) -> Option<StepCost> {
+        let kernel = start.and_then(|start| self.known_kernel_step_cost(profile, from, start, to));
         M::Systems::step_cost(self.auth, self.rules, self.player, profile, from, to, kernel)
     }
 
@@ -306,8 +326,8 @@ impl<'a, M: RulesModule> PlayerView<'a, M> {
     /// to rival territory), the estimate its player's AI has always made,
     /// unless the module prices by profile (`ai_prices_by_profile`). Ships
     /// and units that take to the water are priced by their whole profile.
-    fn known_kernel_step_cost(&self, profile: &MoveProfile<M>, from: TileId, to: TileId) -> Option<StepCost> {
-        let facts = self.known_step_facts(from, to)?;
+    fn known_kernel_step_cost(&self, profile: &MoveProfile<M>, from: TileId, start: &TileSnapshot, to: TileId) -> Option<StepCost> {
+        let facts = self.known_step_facts(from, start, to)?;
         let techs = self.auth.players().techs_of(self.player);
         let plain;
         let profile = if profile.domain == Domain::Land && !profile.embarks() && !M::Systems::ai_prices_by_profile() {
@@ -322,10 +342,9 @@ impl<'a, M: RulesModule> PlayerView<'a, M> {
     }
 
     /// The facts of a step from the player's snapshots of the two tiles and
-    /// the public diplomacy (None: a tile is unknown). A known water tile
+    /// the public diplomacy (None: the target tile is unknown). A known water tile
     /// tells its depth: coast and deep water look different.
-    fn known_step_facts(&self, from: TileId, to: TileId) -> Option<StepFacts> {
-        let start = *self.tile(from).snapshot()?;
+    fn known_step_facts(&self, from: TileId, start: &TileSnapshot, to: TileId) -> Option<StepFacts> {
         let target = *self.tile(to).snapshot()?;
         let map = self.auth.map();
         let route = |s: &TileSnapshot| s.route != crate::world::map::Route::None || s.city;
@@ -337,7 +356,7 @@ impl<'a, M: RulesModule> PlayerView<'a, M> {
             owner: target.owner,
             may_enter: self.may_enter_known(target.owner),
             river_between: map.river_between(from, to),
-            route_from: route(&start),
+            route_from: route(start),
             route_to: route(&target),
             feature_from: start.feature,
             owner_from: start.owner,

@@ -162,9 +162,38 @@ pub enum PathOutcome {
 /// Move points of one known step; None when the step is impossible as far
 /// as the player knows.
 pub fn step_points<M: RulesModule>(map: &KnownMap<'_, '_, M>, from: TileId, to: TileId) -> Option<u32> {
-    match map.view.known_step_cost_as(&map.profile, from, to)? {
+    points_of(map.view.known_step_cost_as(&map.profile, from, to)?)
+}
+
+/// `step_points` with the snapshot of `from` given (`StepsFrom`): a search prices up to six steps out
+/// of a tile and reads the tile once.
+pub fn step_points_from<M: RulesModule>(map: &KnownMap<'_, '_, M>, from: TileId, start: Option<&crate::knowledge::view::TileSnapshot>, to: TileId) -> Option<u32> {
+    points_of(map.view.known_step_cost_from(&map.profile, from, start, to)?)
+}
+
+fn points_of(cost: StepCost) -> Option<u32> {
+    match cost {
         StepCost::Points(points) => Some(points),
         StepCost::AllMoves => Some(ALL_MOVES_POINTS),
+    }
+}
+
+/// The steps out of one tile: its snapshot, read when the first step is priced.
+pub struct StepsFrom<'m, 'v, 'a, M: RulesModule> {
+    map: &'m KnownMap<'v, 'a, M>,
+    from: TileId,
+    start: std::cell::OnceCell<Option<crate::knowledge::view::TileSnapshot>>,
+}
+
+impl<'m, 'v, 'a, M: RulesModule> StepsFrom<'m, 'v, 'a, M> {
+    pub fn new(map: &'m KnownMap<'v, 'a, M>, from: TileId) -> Self {
+        Self { map, from, start: std::cell::OnceCell::new() }
+    }
+
+    /// `step_points(map, from, to)`.
+    pub fn to(&self, to: TileId) -> Option<u32> {
+        let start = self.start.get_or_init(|| self.map.view.tile(self.from).snapshot().copied());
+        step_points_from(self.map, self.from, start.as_ref(), to)
     }
 }
 
@@ -229,6 +258,7 @@ fn relax_neighbors<M: RulesModule>(
     scratch: &mut MapScratch,
 ) {
     let base = scratch.cost_of(tile);
+    let steps = StepsFrom::new(map, tile);
     for next in dims.neighbors(tile) {
         if blockers.contains(next) && Some(next) != goal {
             continue;
@@ -239,7 +269,7 @@ fn relax_neighbors<M: RulesModule>(
         if scratch.cost_of(next) <= base {
             continue;
         }
-        let Some(points) = step_points(map, tile, next) else {
+        let Some(points) = steps.to(next) else {
             continue;
         };
         let cost = base.saturating_add(points);
