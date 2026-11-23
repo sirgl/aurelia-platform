@@ -275,8 +275,10 @@ fn check_terrain<M: RulesModule>(
     connects: bool,
 ) -> Result<(), &'static str> {
     let hills = facts.terrain(tile).is_some_and(|t| rules.terrain_kinds.is_hills(t.0));
-    let fresh = fresh_water(facts, rules, tile);
-    if def.placement.requires_flatlands_or_fresh_water && hills && !fresh {
+    // Looked up only where a rule asks (a scan of the tile's neighbours, run for every improvement
+    // the AI tries on every tile).
+    let fresh = || fresh_water(facts, rules, tile);
+    if def.placement.requires_flatlands_or_fresh_water && hills && !fresh() {
         return Err("hills need fresh water");
     }
     let terrain_listed = facts
@@ -297,7 +299,7 @@ fn check_terrain<M: RulesModule>(
         || feature_listed
         || connects
         || (def.placement.hills_makes_valid && hills)
-        || (def.placement.fresh_water_makes_valid && fresh)
+        || (def.placement.fresh_water_makes_valid && fresh())
         || (def.placement.water && facts.is_water(tile) && def.resources.is_empty());
     if valid {
         Ok(())
