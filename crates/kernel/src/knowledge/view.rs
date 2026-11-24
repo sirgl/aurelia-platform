@@ -274,11 +274,6 @@ impl<'a, M: RulesModule> PlayerView<'a, M> {
         })
     }
 
-    /// The id of the world's open period (`EffectMemo::open_period`): 0 while it may change.
-    pub fn world_period(&self) -> u64 {
-        self.auth.memo().open_period()
-    }
-
     /// The map's own lake and coast of a tile, known to the player or not: what `TileFacts::lake` and
     /// `coastal_land` answer for a tile it knows. A memo of what a rule read of a neighbourhood keys on
     /// it beside the tiles' snapshots (which say whether each is known).
